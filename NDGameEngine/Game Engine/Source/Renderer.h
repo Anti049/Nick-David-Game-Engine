@@ -1,5 +1,8 @@
 #pragma once
 
+typedef int (WINAPI *BeginEventSignature)(DWORD, LPCWSTR);
+typedef int (WINAPI *EndEventSignature)(void);
+
 class Renderer
 {
 public:
@@ -18,11 +21,14 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Static Members
-	static IDXGISwapChain* m_pSwapChain;
-	static ID3D11Device* m_pDevice;
-	static ID3D11DeviceContext* m_pImmediateContext;
-	static ID3D11RenderTargetView* m_pBackBuffer;
-	static D3D11_VIEWPORT m_tViewPort;
+	static IDXGISwapChain*						m_pSwapChain;
+	static ID3D11Device*						m_pDevice;
+	static ID3D11DeviceContext*					m_pImmediateContext;
+	static ID3D11RenderTargetView*				m_pBackBuffer;
+	static D3D11_VIEWPORT						m_tViewPort;
+	static HINSTANCE							dx9DLL;
+	static BeginEventSignature					BeginEvent;
+	static EndEventSignature					EndEvent;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Accessors

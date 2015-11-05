@@ -8,6 +8,9 @@ ID3D11Device*			Renderer::m_pDevice					= nullptr;
 ID3D11DeviceContext*	Renderer::m_pImmediateContext		= nullptr;
 ID3D11RenderTargetView*	Renderer::m_pBackBuffer				= nullptr;
 D3D11_VIEWPORT			Renderer::m_tViewPort;
+HINSTANCE				Renderer::dx9DLL					= nullptr;
+BeginEventSignature		Renderer::BeginEvent				= nullptr;
+EndEventSignature		Renderer::EndEvent					= nullptr;
 
 Renderer::Renderer(void)
 {
@@ -32,28 +35,33 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_bFullscreen = bFullscreen;
 	m_vClearColor = Vector4(0.01f, 0.01f, 0.01f, 1.0f);
 
-	DXGI_SWAP_CHAIN_DESC scd;
-	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-
-	scd.BufferCount = 1;                                    // one back buffer
-	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-	scd.OutputWindow = hWnd;                                // the window to be used
-	scd.SampleDesc.Count = 4;                               // how many multisamples
-	scd.Windowed = TRUE;                                    // windowed/full-screen mode
-
-	UINT unFlags = D3D11_CREATE_DEVICE_DEBUG;
-	D3D11CreateDeviceAndSwapChain(NULL,
+	DXGI_SWAP_CHAIN_DESC scDesc;
+	ZeroMemory(&scDesc, sizeof(scDesc));
+	scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	scDesc.SampleDesc.Count = 1;
+	scDesc.SampleDesc.Quality = 0;
+	scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	scDesc.BufferCount = 1;
+	scDesc.OutputWindow = m_hWnd;
+	scDesc.Windowed = !m_bFullscreen;
+	scDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	UINT flag = D3D11_CREATE_DEVICE_SINGLETHREADED | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+#ifdef _DEBUG
+	flag |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+	D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
+	D3D_FEATURE_LEVEL featureLevelCatch;
+	HRESULT hr = D3D11CreateDeviceAndSwapChain(NULL, 
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		unFlags,
-		NULL,
-		NULL,
+		flag,
+		&featureLevel,
+		1,
 		D3D11_SDK_VERSION,
-		&scd,
+		&scDesc,
 		&m_pSwapChain,
 		&m_pDevice,
-		NULL,
+		&featureLevelCatch,
 		&m_pImmediateContext);
 
 #ifdef _DEBUG
@@ -65,9 +73,12 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 		DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_pDebug);
 	}
 #endif
+	dx9DLL = LoadLibrary(L"d3d9.dll");
+	BeginEvent = (BeginEventSignature)GetProcAddress(dx9DLL, "D3DPERF_BeginEvent");
+	EndEvent = (EndEventSignature)GetProcAddress(dx9DLL, "D3DPERF_EndEvent");
 
 	ID3D11Texture2D* pBackBuffer;
-	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	m_pSwapChain->GetBuffer(0, __uuidof(pBackBuffer), reinterpret_cast<void**>(&pBackBuffer));
 	m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pBackBuffer);
 	SafeRelease(&pBackBuffer);
 
@@ -102,15 +113,22 @@ void Renderer::Terminate(void)
 
 void Renderer::Render(void)
 {
-	m_pImmediateContext->OMSetRenderTargets(1, &m_pBackBuffer, NULL);
-	m_pImmediateContext->RSSetViewports(1, &m_tViewPort);
-
-	float fColor[4] = {m_vClearColor.x, m_vClearColor.y, m_vClearColor.z, m_vClearColor.w};
-	m_pImmediateContext->ClearRenderTargetView(m_pBackBuffer, fColor);
+	BeginEvent(0, L"Prepare for Rendering");
+	{
+		m_pImmediateContext->OMSetRenderTargets(1, &m_pBackBuffer, NULL);
+		m_pImmediateContext->RSSetViewports(1, &m_tViewPort);
+		float fColor[4] = {m_vClearColor.x, m_vClearColor.y, m_vClearColor.z, m_vClearColor.w};
+		m_pImmediateContext->ClearRenderTargetView(m_pBackBuffer, fColor);
+	}
+	EndEvent();
 
 	// Draw Stuff
 
 
-	TwDraw();
+	BeginEvent(0, L"Draw AntTweakBar");
+	{
+		TwDraw();
+	}
+	EndEvent();
 	m_pSwapChain->Present(0, 0);
 }

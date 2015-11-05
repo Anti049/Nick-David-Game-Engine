@@ -23,7 +23,7 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 
 	Renderer::GetInstance()->Initialize(hWnd, nScreenWidth, nScreenHeight, bFullscreen);
 
-	m_cUIManager.Initialize(m_nScreenWidth, m_nScreenHeight);
+	m_cUIManager.Initialize();
 	vClearColor = Renderer::GetInstance()->GetClearColor();
 	EngineUI* pUI = m_cUIManager.AddUI("RendererBar", "Rendering Options");
 	pUI->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));

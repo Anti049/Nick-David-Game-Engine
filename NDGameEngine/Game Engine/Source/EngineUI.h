@@ -4,7 +4,7 @@ class EngineUI
 {
 public:
 	EngineUI(string szName, string szLabel);
-	EngineUI(string szName, string szLabel, Vector2 vPosition, Vector2 vSize = Vector2(250, 350), Vector4 vColor = Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+	EngineUI(string szName, string szLabel, Vector2 vPosition, Vector2 vSize = Vector2(250, 350), Vector4 vColor = Vector4(0.1f, 0.1f, 0.1f, 0.5f));
 	~EngineUI(void);
 
 	void AddParam(void* pParam, string szParamName, TwType eType, string szEtc = "");

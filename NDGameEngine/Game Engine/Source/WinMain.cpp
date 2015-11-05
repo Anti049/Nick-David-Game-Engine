@@ -6,35 +6,37 @@
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 
+BOOL IsAlreadyRunning(void);
+BOOL RegisterWindowClass(HINSTANCE hInstance);
+HWND MakeWindow(HINSTANCE hInstance);
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 Engine* pEngine = nullptr;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	SetUnhandledExceptionFilter(CrashHandler);
+	SetUnhandledExceptionFilter(ErrorFunction);
 
 	HWND hWnd;
-	WNDCLASSEX wc;
-
-	ZeroMemory(&wc, sizeof(WNDCLASSEX));
-
-	wc.cbSize = sizeof(WNDCLASSEX);
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	wc.lpszClassName = WINDOW_CLASS;
-
-	// register the window class
-	RegisterClassEx(&wc);
+	
+	WNDCLASSEX wndClass;
+	ZeroMemory(&wndClass, sizeof(wndClass));
+	wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wndClass.cbSize = sizeof(WNDCLASSEX);
+	wndClass.lpfnWndProc = WindowProc;
+	wndClass.lpszClassName = WINDOW_CLASS;
+	wndClass.hInstance = hInstance;
+	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	DWORD errorCode = GetLastError();
+	wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOWFRAME);
+	wndClass.hIcon = NULL;
+	RegisterClassEx(&wndClass);
 
 	// create the window and use the result as the handle
 	hWnd = CreateWindowEx(NULL,
 		WINDOW_CLASS,    // name of the window class
 		WINDOW_TITLE,   // title of the window
-		WS_OVERLAPPEDWINDOW,    // window style
+		WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME | WS_MAXIMIZEBOX),    // window style
 		CW_USEDEFAULT,    // x-position of the window
 		CW_USEDEFAULT,    // y-position of the window
 		WINDOW_WIDTH,    // width of the window
@@ -43,11 +45,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		NULL,    // we aren't using menus, NULL
 		hInstance,    // application handle
 		NULL);    // used with multiple windows, NULL
-
-	DWORD errorCode;
-	if (hWnd == NULL)
-		errorCode = GetLastError();
-
 	// display the window on the screen
 	ShowWindow(hWnd, nCmdShow);
 
@@ -80,18 +77,85 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 {
 	if (TwEventWin(hWnd, message, wParam, lParam))
 		return 0;
-	// sort through and find what code to run for the message given
-	switch(message)
+	switch (message)
 	{
-		// this message is read when the window is closed
-	case WM_DESTROY:
+	case WM_SETCURSOR:
+	{
+		return DefWindowProc(hWnd, message, wParam, lParam);
+		/*WORD ht = LOWORD(lParam);
+		static bool hiddencursor = false;
+		if (HTCLIENT == ht && !hiddencursor)
 		{
-			// close the application entirely
-			PostQuitMessage(0);
-			return 0;
-		} break;
+		hiddencursor = true;
+		ShowCursor(false);
+		}
+		else if (HTCLIENT != ht && hiddencursor)
+		{
+		hiddencursor = false;
+		ShowCursor(true);
+		}*/
+	}
+		break;
+
+	case WM_CREATE:
+	{
+	}
+		break;
+
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+	}
+		break;
+
+	case WM_CLOSE:
+	{
+		DestroyWindow(hWnd);
+	}
+		break;
+
+	case WM_ACTIVATE:
+	{
+		if (LOWORD(wParam) != WA_INACTIVE)
+		{
+			// Unpause game here
+		}
+		else
+		{
+			// Pause game here
+		}
+	}
+		break;
+
+	case WM_PAINT:
+	{
+		PAINTSTRUCT	ps;
+		HDC			hdc;
+
+		hdc = BeginPaint(hWnd, &ps);
+
+		EndPaint(hWnd, &ps);
+	}
+		break;
+
+	case WM_SYSKEYDOWN:
+	case WM_SYSKEYUP:
+	case WM_KEYUP:
+	case WM_KEYDOWN:
+	case WM_SYSCHAR:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	{
+		//Input::SetKeyboardState();
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+		break;
+
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
-	// Handle any messages the switch statement didn't
-	return DefWindowProc (hWnd, message, wParam, lParam);
+	return 0;
 }
