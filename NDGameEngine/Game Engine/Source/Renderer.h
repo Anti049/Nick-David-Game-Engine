@@ -42,9 +42,11 @@ private:
 	Renderer(void);
 	~Renderer(void);
 
-	HWND m_hWnd;
-	int m_nScreenWidth;
-	int m_nScreenHeight;
-	bool m_bFullscreen;
-	Vector4 m_vClearColor;
+	IDXGIDebug*									m_pDebug;
+
+	HWND										m_hWnd;
+	int											m_nScreenWidth;
+	int											m_nScreenHeight;
+	bool										m_bFullscreen;
+	Vector4										m_vClearColor;
 };

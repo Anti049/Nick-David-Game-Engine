@@ -9,7 +9,7 @@ EngineUIManager::EngineUIManager(void)
 
 EngineUIManager::~EngineUIManager(void)
 {
-	ClearUI();
+
 }
 
 void EngineUIManager::Initialize(int nScreenWidth, int nScreenHeight, Vector2 vDefaultSize /* = Vector2(250, 350) */)
@@ -21,6 +21,12 @@ void EngineUIManager::Initialize(int nScreenWidth, int nScreenHeight, Vector2 vD
 	TwInit(TW_DIRECT3D11, Renderer::m_pDevice);
 	TwWindowSize(m_nScreenWidth, m_nScreenHeight);
 	TwDefine(" GLOBAL fontsize=3 ");
+}
+
+void EngineUIManager::Terminate(void)
+{
+	ClearUI();
+	TwTerminate();
 }
 
 EngineUI* EngineUIManager::AddUI(string szName, string szLabel)

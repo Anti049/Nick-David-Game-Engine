@@ -32,10 +32,9 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 
 void Engine::Terminate(void)
 {
+	m_cUIManager.Terminate();
 	Renderer::GetInstance()->Terminate();
 	Renderer::DeleteInstance();
-
-	m_cUIManager.ClearUI();
 }
 
 bool Engine::Main(void)

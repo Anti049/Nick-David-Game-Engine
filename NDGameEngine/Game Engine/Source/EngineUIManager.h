@@ -9,6 +9,7 @@ public:
 	~EngineUIManager(void);
 
 	void Initialize(int nScreenWidth, int nScreenHeight, Vector2 vDefaultSize = Vector2(250, 350));
+	void Terminate(void);
 
 	void						AddUI(EngineUI* pUI)
 	{

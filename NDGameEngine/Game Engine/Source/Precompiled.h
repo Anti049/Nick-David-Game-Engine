@@ -71,3 +71,16 @@ static Type CLAMP(Type value, Type min, Type max)
 //////////////////////////////////////////////////////////////////////////
 // Macros
 #define SafeDelete(ptr) if (ptr) { delete ptr; ptr = nullptr; }
+#if defined(_DEBUG)
+#ifndef SetD3DName
+#define SetD3DName(pObject, szName)				\
+	if (pObject)									\
+{												\
+	D3D_SET_OBJECT_NAME_A(pObject, szName);		\
+}
+#endif
+#else
+#ifndef SetD3DName
+#define SetD3DName(pObject, szName)
+#endif
+#endif

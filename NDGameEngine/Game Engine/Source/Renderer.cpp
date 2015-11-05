@@ -11,7 +11,12 @@ D3D11_VIEWPORT			Renderer::m_tViewPort;
 
 Renderer::Renderer(void)
 {
-
+	m_hWnd = NULL;
+	m_nScreenWidth = 0;
+	m_nScreenHeight = 0;
+	m_bFullscreen = false;
+	m_vClearColor = Vector4(0.0f);
+	m_pDebug = nullptr;
 }
 
 Renderer::~Renderer(void)
@@ -51,6 +56,16 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 		NULL,
 		&m_pImmediateContext);
 
+#ifdef _DEBUG
+	HMODULE hModule = LoadLibraryEx(L"Dxgidebug.dll", 0, DONT_RESOLVE_DLL_REFERENCES);
+	if (hModule != nullptr)
+	{
+		typedef HRESULT(__stdcall *pFunc)(const IID&, void**);
+		pFunc DXGIGetDebugInterface = (pFunc)GetProcAddress(hModule, "DXGIGetDebugInterface");
+		DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_pDebug);
+	}
+#endif
+
 	ID3D11Texture2D* pBackBuffer;
 	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pBackBuffer);
@@ -61,6 +76,11 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_tViewPort.TopLeftY = 0;
 	m_tViewPort.Width = (float)m_nScreenWidth;
 	m_tViewPort.Height = (float)m_nScreenHeight;
+
+	SetD3DName(m_pDevice, "Device");
+	SetD3DName(m_pSwapChain, "Swap Chain");
+	SetD3DName(m_pImmediateContext, "Immediate Context");
+	SetD3DName(m_pBackBuffer, "Backbuffer");
 }
 
 void Renderer::Terminate(void)
@@ -74,6 +94,10 @@ void Renderer::Terminate(void)
 	SafeRelease(&m_pSwapChain);
 	SafeRelease(&m_pDevice);
 	SafeRelease(&m_pImmediateContext);
+
+#ifdef _DEBUG
+	m_pDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+#endif
 }
 
 void Renderer::Render(void)
