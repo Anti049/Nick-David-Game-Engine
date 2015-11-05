@@ -1,5 +1,7 @@
 #pragma once
 
+#include "EngineUIManager.h"
+
 class Engine
 {
 public:
@@ -19,4 +21,6 @@ private:
 	int m_nScreenWidth;
 	int m_nScreenHeight;
 	bool m_bFullscreen;
+
+	EngineUIManager m_cUIManager;
 };

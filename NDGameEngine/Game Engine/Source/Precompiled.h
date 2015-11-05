@@ -6,6 +6,7 @@ using namespace std;
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <map>
 
 //////////////////////////////////////////////////////////////////////////
 // Windows
@@ -17,6 +18,14 @@ using namespace std;
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
 #include <SimpleMath.h>
+#include <initguid.h>
+#include <dxgidebug.h>
+#pragma comment(lib,"dxguid.lib")
+#include <dxgi.h>
+#pragma comment(lib, "dxgi.lib")
+#include <DDSTextureLoader.h>
+using namespace DirectX;
+using namespace SimpleMath;
 
 //////////////////////////////////////////////////////////////////////////
 // Utility
