@@ -16,6 +16,7 @@ using namespace std;
 // DirectX
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
+#include <SimpleMath.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Utility
