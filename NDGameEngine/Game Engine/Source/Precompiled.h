@@ -8,6 +8,15 @@
 #include <sstream>
 using namespace std;
 
+#include "XTime.h"
+
+//////////////////////////////////////////////////////////////////////////
+// DirectX 11 Headers
+#include <d3d11.h>
+#pragma comment(lib, "d3d11.lib")
+
+//////////////////////////////////////////////////////////////////////////
+// Crash Handler
 static bool g_bShowCrashDialog = true;
 static LONG WINAPI CrashHandler(EXCEPTION_POINTERS* ExceptionInfo)
 {
@@ -18,4 +27,26 @@ static LONG WINAPI CrashHandler(EXCEPTION_POINTERS* ExceptionInfo)
 		file.close();
 	}
 	return g_bShowCrashDialog ? EXCEPTION_CONTINUE_SEARCH : EXCEPTION_EXECUTE_HANDLER;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Macros
+#define SafeDelete(ptr) if (ptr) { delete ptr; ptr = nullptr; }
+template <class T>
+void SafeRelease(T **ppT)
+{
+	if (*ppT)
+	{
+		(*ppT)->Release();
+		*ppT = NULL;
+	}
+}
+template <typename Type>
+static Type CLAMP(Type value, Type min, Type max)
+{
+	if (value > max)
+		value = max;
+	if (value < min)
+		value = min;
+	return value;
 }
