@@ -70,19 +70,27 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_D</TargetName>
     <OutDir>$(SolutionDir)\</OutDir>
+    <IncludePath>$(SolutionDir)\Libraries\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_D</TargetName>
     <OutDir>$(SolutionDir)\</OutDir>
+    <IncludePath>$(SolutionDir)\Libraries\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
+    <IncludePath>$(SolutionDir)\Libraries\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
+    <IncludePath>$(SolutionDir)\Libraries\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
