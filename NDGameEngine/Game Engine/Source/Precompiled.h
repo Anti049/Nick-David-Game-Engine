@@ -1,22 +1,30 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <vld.h>
+//////////////////////////////////////////////////////////////////////////
+// STL
+using namespace std;
 #include <fstream>
 #include <string>
 #include <sstream>
-using namespace std;
-
-#include "XTime.h"
 
 //////////////////////////////////////////////////////////////////////////
-// DirectX 11 Headers
+// Windows
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+//////////////////////////////////////////////////////////////////////////
+// DirectX
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
 
 //////////////////////////////////////////////////////////////////////////
-// Crash Handler
+// Utility
+#include <vld.h>
+#include "XTime.h"
+#include <AntTweakBar.h>
+
+//////////////////////////////////////////////////////////////////////////
+// Exception Handling
 static bool g_bShowCrashDialog = true;
 static LONG WINAPI CrashHandler(EXCEPTION_POINTERS* ExceptionInfo)
 {
@@ -30,8 +38,7 @@ static LONG WINAPI CrashHandler(EXCEPTION_POINTERS* ExceptionInfo)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Macros
-#define SafeDelete(ptr) if (ptr) { delete ptr; ptr = nullptr; }
+// Template Functions
 template <class T>
 void SafeRelease(T **ppT)
 {
@@ -50,3 +57,7 @@ static Type CLAMP(Type value, Type min, Type max)
 		value = min;
 	return value;
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Macros
+#define SafeDelete(ptr) if (ptr) { delete ptr; ptr = nullptr; }
