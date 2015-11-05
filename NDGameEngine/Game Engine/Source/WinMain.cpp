@@ -1,4 +1,5 @@
 #include "Precompiled.h"
+#include "Engine.h"
 
 #define WINDOW_CLASS L"NDGameEngine"
 #define WINDOW_TITLE L"Nick and David\'s Game Engine"
@@ -6,6 +7,8 @@
 #define WINDOW_HEIGHT 768
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+Engine* pEngine = nullptr;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -49,13 +52,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hWnd, nCmdShow);
 
 	// enter the main loop:
+	pEngine = new Engine;
+	pEngine->Initialize(hWnd, WINDOW_WIDTH, WINDOW_HEIGHT, false);
 
 	// this struct holds Windows event messages
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
 	// wait for the next message in the queue, store the result in 'msg'
-	while (msg.message != WM_QUIT)
+	while (msg.message != WM_QUIT && pEngine->Main() != false)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
@@ -63,6 +68,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DispatchMessage(&msg);
 		}
 	}
+
+	pEngine->Terminate();
+	SafeDelete(pEngine);
 
 	// return this part of the WM_QUIT message to Windows
 	return (int)msg.wParam;
