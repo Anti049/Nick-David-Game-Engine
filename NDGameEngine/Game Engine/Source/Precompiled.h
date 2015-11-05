@@ -11,7 +11,7 @@ using namespace std;
 static bool g_bShowCrashDialog = true;
 static LONG WINAPI CrashHandler(EXCEPTION_POINTERS* ExceptionInfo)
 {
-	fstream file("C:\\Users\\nicolas.ploetz\\Desktop\\errorLog.txt", ios_base::out | ios_base::trunc);
+	fstream file("errorLog.txt", ios_base::out | ios_base::trunc);
 	if (file.is_open())
 	{
 		file << "Test";
