@@ -25,7 +25,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_nScreenWidth = nScreenWidth;
 	m_nScreenHeight = nScreenHeight;
 	m_bFullscreen = bFullscreen;
-	m_fClearColor[0] = m_fClearColor[1] = m_fClearColor[2] = 0.01f, m_fClearColor[3] = 1.0f;
+	m_vClearColor = Vector4(0.01f, 0.01f, 0.01f, 1.0f);
 
 	DXGI_SWAP_CHAIN_DESC scd;
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -81,9 +81,12 @@ void Renderer::Render(void)
 	m_pImmediateContext->OMSetRenderTargets(1, &m_pBackBuffer, NULL);
 	m_pImmediateContext->RSSetViewports(1, &m_tViewPort);
 
-	m_pImmediateContext->ClearRenderTargetView(m_pBackBuffer, m_fClearColor);
+	float fColor[4] = {m_vClearColor.x, m_vClearColor.y, m_vClearColor.z, m_vClearColor.w};
+	m_pImmediateContext->ClearRenderTargetView(m_pBackBuffer, fColor);
 
 	// Draw Stuff
 
+
+	TwDraw();
 	m_pSwapChain->Present(0, 0);
 }

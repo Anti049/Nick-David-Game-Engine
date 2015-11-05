@@ -26,16 +26,16 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Accessors
-	int				GetScreenWidth(void)										{ return m_nScreenWidth; }
-	int				GetScreenHeight(void)										{ return m_nScreenHeight; }
-	bool			GetFullscreen(void)											{ return m_bFullscreen; }
-	float*			GetClearColor(void)											{ return m_fClearColor; }
+	int				GetScreenWidth(void)						{ return m_nScreenWidth; }
+	int				GetScreenHeight(void)						{ return m_nScreenHeight; }
+	bool			GetFullscreen(void)							{ return m_bFullscreen; }
+	Vector4			GetClearColor(void)							{ return m_vClearColor; }
 	//////////////////////////////////////////////////////////////////////////
 	// Mutators
-	void			SetScreenWidth(int nScreenWidth)							{ m_nScreenWidth = nScreenWidth; }
-	void			SetScreenHeight(int nScreenHeight)							{ m_nScreenHeight = nScreenHeight; }
-	void			SetFullscreen(bool bFullscreen)								{ m_bFullscreen = bFullscreen; }
-	void			SetClearColor(float r, float g, float b, float a)			{ m_fClearColor[0] = r; m_fClearColor[1] = g; m_fClearColor[2] = b; m_fClearColor[3] = a; }
+	void			SetScreenWidth(int nScreenWidth)			{ m_nScreenWidth = nScreenWidth; }
+	void			SetScreenHeight(int nScreenHeight)			{ m_nScreenHeight = nScreenHeight; }
+	void			SetFullscreen(bool bFullscreen)				{ m_bFullscreen = bFullscreen; }
+	void			SetClearColor(Vector4 vColor)				{ m_vClearColor = vColor; }
 
 private:
 	static Renderer* s_pInstance;
@@ -46,5 +46,5 @@ private:
 	int m_nScreenWidth;
 	int m_nScreenHeight;
 	bool m_bFullscreen;
-	float m_fClearColor[4];
+	Vector4 m_vClearColor;
 };

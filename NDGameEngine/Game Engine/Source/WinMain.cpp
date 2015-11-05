@@ -78,6 +78,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (TwEventWin(hWnd, message, wParam, lParam))
+		return 0;
 	// sort through and find what code to run for the message given
 	switch(message)
 	{
