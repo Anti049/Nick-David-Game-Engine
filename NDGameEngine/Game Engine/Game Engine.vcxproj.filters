@@ -19,6 +19,18 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{f981068c-3550-4e33-9389-b243979a5140}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering System">
+      <UniqueIdentifier>{22b64a97-f8b0-4e54-85d2-71b79753b137}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering System">
+      <UniqueIdentifier>{17b04df9-3a4f-43af-9a44-d0bac9918494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{1d979e97-2444-44d8-a5bb-b5766504498d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{701519bb-f701-4a29-ba8e-86b13d026c6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine.h">
@@ -34,10 +46,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\EngineUI.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\EngineUIManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,11 +68,11 @@
     <ClCompile Include="Source\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EngineUIManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EngineUI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EngineUIManager.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

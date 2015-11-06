@@ -25,8 +25,55 @@ EngineUI::~EngineUI(void)
 	m_pBar = nullptr;
 }
 
-void EngineUI::AddParam(void* pParam, string szParamName, TwType eType, string szEtc)
+void EngineUI::AddParam(void* pParam, string szParamName, TwType eType, int nNumEtc, ...)
 {
+	string szEtc;
+
+	va_list vList;
+	va_start(vList, nNumEtc);
+	for (int i = 0; i < nNumEtc; i++, szEtc += " ")
+	{
+		ostringstream str;
+		// Read in type
+		ParamEtc eEtc = va_arg(vList, ParamEtc);
+		string szParam = szEtcList[eEtc];
+		// Read in value
+		switch (eEtc)
+		{
+		case LABEL:
+		case HELP:
+		case GROUP:
+		case KEY:
+		case TRUE_STR:
+		case FALSE_STR:
+			{
+				str << '\'' << va_arg(vList, const char*) << '\'';
+				break;
+			}
+		case VISIBLE:
+		case READONLY:
+		case HEX:
+			{
+				str << ((va_arg(vList, bool) == true) ? "true" : "false");
+				break;
+			}
+		case MIN_VAL:
+		case MAX_VAL:
+		case STEP:
+			{
+				str << va_arg(vList, float);
+				break;
+			}
+		case PRECISION:
+			{
+				str << va_arg(vList, int);
+				break;
+			}
+		}
+		szEtc += szParam + "=" + str.str();
+	}
+	va_end(vList);
+
 	TwAddVarRW(m_pBar, szParamName.c_str(), eType, pParam, szEtc.c_str());
 }
 
