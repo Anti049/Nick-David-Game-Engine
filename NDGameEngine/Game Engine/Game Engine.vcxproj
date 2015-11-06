@@ -168,14 +168,21 @@
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\EngineUI.h" />
     <ClInclude Include="Source\EngineUIManager.h" />
+    <ClInclude Include="Source\IndexBuffer.h" />
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\Renderer.h" />
+    <ClInclude Include="Source\RenderMesh.h" />
+    <ClInclude Include="Source\ShaderIncludes.h" />
+    <ClInclude Include="Source\VertexBuffer.hpp" />
+    <ClInclude Include="Source\VertexBufferManager.h" />
+    <ClInclude Include="Source\VertexFormats.h" />
     <ClInclude Include="Source\XTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\EngineUI.cpp" />
     <ClCompile Include="Source\EngineUIManager.cpp" />
+    <ClCompile Include="Source\IndexBuffer.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -183,6 +190,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Renderer.cpp" />
+    <ClCompile Include="Source\RenderMesh.cpp" />
+    <ClCompile Include="Source\VertexBufferManager.cpp" />
     <ClCompile Include="Source\WinMain.cpp" />
     <ClCompile Include="Source\XTime.cpp" />
   </ItemGroup>

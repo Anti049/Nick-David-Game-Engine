@@ -9,6 +9,7 @@ using namespace std;
 #include <map>
 #include <ctime>
 #include <cstdarg>
+#include <vector>
 
 //////////////////////////////////////////////////////////////////////////
 // Windows

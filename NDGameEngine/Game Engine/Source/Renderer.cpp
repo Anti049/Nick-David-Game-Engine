@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "Renderer.h"
-
+#include "VertexBufferManager.h"
+#include "IndexBuffer.h"
 
 Renderer*				Renderer::s_pInstance				= nullptr;
 IDXGISwapChain*			Renderer::m_pSwapChain				= nullptr;
@@ -100,6 +101,9 @@ void Renderer::Terminate(void)
 	m_nScreenWidth = 0;
 	m_nScreenHeight = 0;
 	m_bFullscreen = false;
+
+	VertexBufferManager::DeleteInstance();
+	IndexBuffer::DeleteInstance();
 
 	SafeRelease(&m_pBackBuffer);
 	SafeRelease(&m_pSwapChain);

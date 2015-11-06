@@ -27,7 +27,7 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 	vClearColor = Renderer::GetInstance()->GetClearColor();
 	EngineUI* pUI = m_cUIManager.AddUI("RendererBar", "Rendering Options");
 	pUI->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
-	pUI->AddParam(&vClearColor, "Clear Color", TW_TYPE_COLOR4F, 2, ParamEtc::LABEL, "Test Label", ParamEtc::READONLY, true);
+	pUI->AddParam(&vClearColor, "Clear Color", TW_TYPE_COLOR4F);
 }
 
 void Engine::Terminate(void)
