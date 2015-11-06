@@ -9,6 +9,7 @@ using namespace std;
 #include <map>
 #include <ctime>
 #include <cstdarg>
+#include <vector>
 
 //////////////////////////////////////////////////////////////////////////
 // Windows
@@ -34,6 +35,8 @@ using namespace SimpleMath;
 #include <vld.h>
 #include "XTime.h"
 #include <AntTweakBar.h>
+#include <fbxsdk.h>
+#include <fbxsdk/fileio/fbxiosettings.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Exception Handling
