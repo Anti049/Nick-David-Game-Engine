@@ -34,6 +34,18 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{23f45dbf-740e-4959-b1d7-7823b1535e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Rendering System\Managers">
+      <UniqueIdentifier>{a8e4094e-b4f0-40b4-b73f-799b5d83dda0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering System\Managers">
+      <UniqueIdentifier>{67dd2806-f6ab-45ad-b546-296f97a75ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex">
+      <UniqueIdentifier>{c722c8fb-22f8-43d9-b61b-748162bbe87d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Pixel">
+      <UniqueIdentifier>{ee7a0200-14dc-47b9-b0c6-963745c21bf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine.h">
@@ -51,26 +63,56 @@
     <ClInclude Include="Source\EngineUIManager.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Renderer.h">
-      <Filter>Header Files\Rendering System</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ShaderIncludes.h">
       <Filter>Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VertexFormats.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\RenderMesh.h">
+      <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
     <ClInclude Include="Source\VertexBuffer.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VertexFormats.h">
+      <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
     <ClInclude Include="Source\VertexBufferManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\RenderMesh.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering System\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Source\IndexBuffer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ConstantBuffers.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshDatabase.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ConstantBuffer.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderContext.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderNode.hpp">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderSet.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderShape.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ShaderPass.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ShaderTechnique.h">
+      <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,17 +134,52 @@
     <ClCompile Include="Source\EngineUIManager.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Renderer.cpp">
+    <ClCompile Include="Source\RenderMesh.cpp">
       <Filter>Source Files\Rendering System</Filter>
     </ClCompile>
     <ClCompile Include="Source\VertexBufferManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\RenderMesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshDatabase.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderContext.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderSet.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderShape.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShaderPass.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShaderTechnique.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Assets\Shaders\Flat2D_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Flat2D_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Flat3D_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Flat3D_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

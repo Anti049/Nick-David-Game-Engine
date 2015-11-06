@@ -35,6 +35,8 @@ using namespace SimpleMath;
 #include <vld.h>
 #include "XTime.h"
 #include <AntTweakBar.h>
+#include <fbxsdk.h>
+#include <fbxsdk/fileio/fbxiosettings.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Exception Handling

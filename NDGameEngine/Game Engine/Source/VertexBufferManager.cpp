@@ -14,6 +14,16 @@ VertexBufferManager::~VertexBufferManager(void)
 }
 
 template <>
+VertexBuffer<VERTEX_POS2D>& VertexBufferManager::GetVertexBuffer(void)
+{
+	return GetPos2DBuffer();
+}
+template <>
+VertexBuffer<VERTEX_POSCOLOR2D>& VertexBufferManager::GetVertexBuffer(void)
+{
+	return GetPosColor2DBuffer();
+}
+template <>
 VertexBuffer<VERTEX_POSITION>& VertexBufferManager::GetVertexBuffer(void)
 {
 	return GetPositionBuffer();

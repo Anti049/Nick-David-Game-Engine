@@ -53,7 +53,7 @@ private:
 template <typename VertexFormat>
 void RenderMesh::AddVertices(vector<VertexFormat> vVertices, D3D11_PRIMITIVE_TOPOLOGY ePrimitiveType)
 {
-	m_unNumVertices = vVertices.size();
+	m_unNumVertices = (unsigned int)vVertices.size();
 	m_ePrimitiveType = ePrimitiveType;
 	m_unNumPrimitives = m_unNumVertices / 3;
 	if (m_unNumVertices % 3 != 0)
