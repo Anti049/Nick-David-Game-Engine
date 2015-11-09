@@ -21,6 +21,8 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 	m_nScreenHeight = nScreenHeight;
 	m_bFullscreen = bFullscreen;
 
+	Debugger::Initialize(m_hWnd);
+
 	Renderer::GetInstance()->Initialize(hWnd, nScreenWidth, nScreenHeight, bFullscreen);
 
 	m_cUIManager.Initialize();

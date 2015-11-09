@@ -184,10 +184,15 @@
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\ConstantBuffer.h" />
     <ClInclude Include="Source\ConstantBuffers.h" />
+    <ClInclude Include="Source\Debugger.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\EngineUI.h" />
     <ClInclude Include="Source\EngineUIManager.h" />
+    <ClInclude Include="Source\FPS.h" />
     <ClInclude Include="Source\IndexBuffer.h" />
+    <ClInclude Include="Source\Input.h" />
+    <ClInclude Include="Source\IOConsole.h" />
+    <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\MeshDatabase.h" />
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\RenderContext.h" />
@@ -196,9 +201,14 @@
     <ClInclude Include="Source\RenderNode.hpp" />
     <ClInclude Include="Source\RenderSet.h" />
     <ClInclude Include="Source\RenderShape.h" />
+    <ClInclude Include="Source\RenderTarget.h" />
     <ClInclude Include="Source\ShaderIncludes.h" />
     <ClInclude Include="Source\ShaderPass.h" />
     <ClInclude Include="Source\ShaderTechnique.h" />
+    <ClInclude Include="Source\Texture.h" />
+    <ClInclude Include="Source\Texture2D.h" />
+    <ClInclude Include="Source\Texture3D.h" />
+    <ClInclude Include="Source\TextureDatabase.h" />
     <ClInclude Include="Source\VertexBuffer.hpp" />
     <ClInclude Include="Source\VertexBufferManager.h" />
     <ClInclude Include="Source\VertexFormats.h" />
@@ -206,10 +216,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Debugger.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\EngineUI.cpp" />
     <ClCompile Include="Source\EngineUIManager.cpp" />
+    <ClCompile Include="Source\FPS.cpp" />
     <ClCompile Include="Source\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\IOConsole.cpp" />
+    <ClCompile Include="Source\Material.cpp" />
     <ClCompile Include="Source\MeshDatabase.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -222,8 +237,13 @@
     <ClCompile Include="Source\RenderMesh.cpp" />
     <ClCompile Include="Source\RenderSet.cpp" />
     <ClCompile Include="Source\RenderShape.cpp" />
+    <ClCompile Include="Source\RenderTarget.cpp" />
     <ClCompile Include="Source\ShaderPass.cpp" />
     <ClCompile Include="Source\ShaderTechnique.cpp" />
+    <ClCompile Include="Source\Texture.cpp" />
+    <ClCompile Include="Source\Texture2D.cpp" />
+    <ClCompile Include="Source\Texture3D.cpp" />
+    <ClCompile Include="Source\TextureDatabase.cpp" />
     <ClCompile Include="Source\VertexBufferManager.cpp" />
     <ClCompile Include="Source\WinMain.cpp" />
     <ClCompile Include="Source\XTime.cpp" />
@@ -253,6 +273,33 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Texture2D_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Texture2D_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Texture3D_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Texture3D_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Shaders\TexturesAndSamplers.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
