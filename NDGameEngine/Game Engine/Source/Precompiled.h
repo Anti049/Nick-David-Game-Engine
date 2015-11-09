@@ -10,6 +10,8 @@ using namespace std;
 #include <ctime>
 #include <cstdarg>
 #include <vector>
+#include <iostream>
+#include <mutex>
 
 //////////////////////////////////////////////////////////////////////////
 // Windows
@@ -37,6 +39,7 @@ using namespace SimpleMath;
 #include <AntTweakBar.h>
 #include <fbxsdk.h>
 #include <fbxsdk/fileio/fbxiosettings.h>
+#include "Debugger.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Exception Handling

@@ -6,11 +6,13 @@
 #include "ConstantBuffer.h"
 #include "Camera.h"
 
+class RenderTarget;
 class RenderContext;
 class RenderSet;
 class ShaderTechnique;
 class RenderShape;
 class MeshDatabase;
+class TextureDatabase;
 
 typedef int (WINAPI *BeginEventSignature)(DWORD, LPCWSTR);
 typedef int (WINAPI *EndEventSignature)(void);
@@ -35,17 +37,23 @@ public:
 	void										CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* pSet, string szShaderName, RenderNode::RenderFunc pFunc, ShaderType eType);
 	void										AddRenderShape(RenderShape* pShape, string szContext);
 
+	void										InitializeTextureSamplers(void);
+
 	//////////////////////////////////////////////////////////////////////////
 	// Static Members
 	static IDXGISwapChain*						m_pSwapChain;
 	static ID3D11Device*						m_pDevice;
 	static ID3D11DeviceContext*					m_pImmediateContext;
-	static ID3D11RenderTargetView*				m_pBackBuffer;
+	static RenderTarget*						m_pMainRenderTarget;
+	static ID3D11Resource*						m_pBackbuffer;
+	static ID3D11Texture2D*						m_pZBuffer;
+	static ID3D11DepthStencilView*				m_pDepthStencilView;
 	static D3D11_VIEWPORT						m_tViewPort;
 	static HINSTANCE							dx9DLL;
 	static BeginEventSignature					BeginEvent;
 	static EndEventSignature					EndEvent;
 	static MeshDatabase*						m_pMeshDatabase;
+	static TextureDatabase*						m_pTextureDatabase;
 	static Camera								m_cActiveCamera;
 
 	static void									SetPerObjectData(Matrix mMVP, Matrix mWorld);
@@ -70,6 +78,8 @@ private:
 	static Renderer*							s_pInstance;
 	Renderer(void);
 	~Renderer(void);
+
+	ID3D11SamplerState*							m_pSamplerStates[7];
 
 	IDXGIDebug*									m_pDebug;
 

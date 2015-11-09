@@ -144,7 +144,36 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 		load.read( vs_byte_code, vs_byte_code_size );
 		load.close();
 
-		if (eType == eVERTEX_POSITION)
+		if (eType == eVERTEX_POS2D)
+		{
+			const unsigned int unElements = 1;
+			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+		}
+		else if (eType == eVERTEX_POSCOLOR2D)
+		{
+			const unsigned int unElements = 2;
+			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+		}
+		else if (eType == eVERTEX_POSTEX2D)
+		{
+			const unsigned int unElements = 2;
+			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+		}
+		else if (eType == eVERTEX_POSITION)
 		{
 			const unsigned int unElements = 1;
 			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
@@ -160,6 +189,27 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 			{
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+		}
+		else if (eType == eVERTEX_POSTEX)
+		{
+			const unsigned int unElements = 2;
+			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+		}
+		else if (eType == eVERTEX_POSNORMTEX)
+		{
+			const unsigned int unElements = 3;
+			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
 			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
