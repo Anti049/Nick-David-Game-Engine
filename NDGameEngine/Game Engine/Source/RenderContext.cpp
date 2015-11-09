@@ -19,6 +19,36 @@ RenderContext::~RenderContext(void)
 	SafeDelete(m_pRenderSet);
 }
 
+void RenderContext::EffectsSetTextureMap(RenderTextureTypes eTextureType, ID3D11ShaderResourceView* pTexture)
+{
+	if (m_bTexturesEnabled)
+	{
+		Renderer::m_pImmediateContext->PSSetShaderResources(eTextureType, 1, &pTexture);
+		Renderer::m_pImmediateContext->DSSetShaderResources(eTextureType, 1, &pTexture);
+	}
+}
+
+void RenderContext::EffectsSetTextureMapsAll(ID3D11ShaderResourceView** pTexture, unsigned int unStartIndex, unsigned int unCount)
+{
+	if (m_bTexturesEnabled)
+	{
+		Renderer::m_pImmediateContext->PSSetShaderResources(unStartIndex, unCount, &pTexture[0]);
+		Renderer::m_pImmediateContext->DSSetShaderResources(unStartIndex, unCount, &pTexture[0]);
+	}
+}
+
+void RenderContext::EffectsClearTextureMaps(bool bEnabled)
+{
+	ID3D11ShaderResourceView** pTextures = new ID3D11ShaderResourceView*[eCount];
+	for (int i = 0; i < eCount; i++)
+		pTextures[i] = nullptr;
+
+	m_bTexturesEnabled = true;
+	EffectsSetTextureMapsAll(pTextures);
+	m_bTexturesEnabled = bEnabled;
+	SafeDelete(pTextures);
+}
+
 void RenderContext::ContextSharedRenderFunc(RenderNode* pNode)
 {
 	RenderContext* pContext = (RenderContext*)pNode;
@@ -65,6 +95,9 @@ void RenderContext::Context2DFlatRenderFunc(RenderNode* pNode)
 		unsigned int unStride = sizeof(VERTEX_POSCOLOR2D), unOffset = 0;
 		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
 
+		// Clear all Textures and Disable Textures
+		pContext->SetTexturesEnabled(false);
+
 		ContextSharedRenderFunc(pNode);
 	}
 }
@@ -86,6 +119,59 @@ void RenderContext::Context3DFlatRenderFunc(RenderNode* pNode)
 		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSCOLOR>().GetVertexBuffer();
 		unsigned int unStride = sizeof(VERTEX_POSCOLOR), unOffset = 0;
 		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Disable Textures
+		pContext->SetTexturesEnabled(false);
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
+void RenderContext::Context2DTextureRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSTEX2D>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSTEX2D), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
+void RenderContext::Context3DTextureRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSTEX>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSTEX), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
 
 		ContextSharedRenderFunc(pNode);
 	}
