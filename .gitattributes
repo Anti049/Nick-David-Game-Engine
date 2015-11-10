@@ -1,0 +1,2 @@
+*.pptx filter=lfs -crlf
+*.lib filter=lfs -crlf
