@@ -46,6 +46,9 @@
     <Filter Include="Shaders\Pixel">
       <UniqueIdentifier>{ee7a0200-14dc-47b9-b0c6-963745c21bf3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Headers">
+      <UniqueIdentifier>{b9764726-ed30-478c-94de-cb547aebab60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine.h">
@@ -62,9 +65,6 @@
     </ClInclude>
     <ClInclude Include="Source\EngineUIManager.h">
       <Filter>Header Files\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ShaderIncludes.h">
-      <Filter>Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Source\RenderMesh.h">
       <Filter>Header Files\Rendering System</Filter>
@@ -83,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="Source\Renderer.h">
       <Filter>Header Files\Rendering System\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ConstantBuffers.h">
-      <Filter>Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Source\MeshDatabase.h">
       <Filter>Header Files\Rendering System\Managers</Filter>
@@ -114,35 +111,50 @@
     <ClInclude Include="Source\ShaderTechnique.h">
       <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderTarget.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\ConstantBuffers.h">
+      <Filter>Shaders\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Texture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\LightBuffers.h">
+      <Filter>Shaders\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Texture2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Texture3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TextureDatabase.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\ShaderIncludes.h">
+      <Filter>Shaders\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Debugger.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\FPS.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Input.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\IOConsole.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Material.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderTarget.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Texture.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Texture2D.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Texture3D.h">
+      <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TextureDatabase.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LightManager.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GBuffer.h">
+      <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -197,35 +209,41 @@
     <ClCompile Include="Source\ShaderTechnique.cpp">
       <Filter>Source Files\Rendering System</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Texture3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TextureDatabase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Debugger.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Source\FPS.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Source\Input.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Source\IOConsole.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Source\Material.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering System</Filter>
     </ClCompile>
     <ClCompile Include="Source\RenderTarget.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture2D.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture3D.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextureDatabase.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GBuffer.cpp">
+      <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LightManager.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,21 +260,42 @@
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture2D_PS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Assets\Shaders\Texture2D_VS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture3D_PS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Texture2D_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture3D_VS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\FLight_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\FLight_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\GBuffer_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\GBuffer_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\ViewGBuffer_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\ViewGBuffer_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Assets\Shaders\LightingSupport.hlsli">
+      <Filter>Shaders\Headers</Filter>
+    </None>
     <None Include="..\Assets\Shaders\TexturesAndSamplers.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Headers</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 
 BYTE Input::m_bKeys[256] = {0};
 BYTE Input::m_bPrevKeys[256] = {0};
+bool Input::m_bHasFocus = false;
 
 void Input::Init(void)
 {
@@ -26,10 +27,10 @@ void Input::RefreshState(void)
 
 bool Input::IsKeyDown(unsigned int chKey)
 {
-	return ((m_bKeys[chKey] & 0x80) != 0);
+	return m_bHasFocus ? ((m_bKeys[chKey] & 0x80) != 0) : false;
 }
 
 bool Input::IsKeyPressed(unsigned int chKey)
 {
-	return (((m_bKeys[chKey] & 0x80) != 0) && ((m_bPrevKeys[chKey] & 0x80) == 0));
+	return m_bHasFocus ? (((m_bKeys[chKey] & 0x80) != 0) && ((m_bPrevKeys[chKey] & 0x80) == 0)) : false;
 }

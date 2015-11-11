@@ -7,6 +7,7 @@ CONSTANT_BUFFER_BEGIN(cbPerObject, b0)
 {
 	float4x4	mMVP;
 	float4x4	mWorld;
+	int			nHasNormalMap;
 #ifdef __cplusplus
 	const static int REGISTER_SLOT = 0;
 #endif
@@ -25,6 +26,19 @@ CONSTANT_BUFFER_BEGIN(cbCamera, b1)
 	float		fPlaneY;
 #ifdef __cplusplus
 	const static int REGISTER_SLOT = 1;
+#endif
+}
+CONSTANT_BUFFER_END
+
+CONSTANT_BUFFER_BEGIN(cbRenderOptions, b2)
+{
+	int			nViewGBufferDiffuse;
+	int			nViewGBufferSpecular;
+	int			nViewGBufferNormal;
+	int			nViewGBufferDepth;
+	int			nViewLightingOnly;
+#ifdef __cplusplus
+	const static int REGISTER_SLOT = 2;
 #endif
 }
 CONSTANT_BUFFER_END

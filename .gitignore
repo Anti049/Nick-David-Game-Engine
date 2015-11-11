@@ -218,4 +218,9 @@ pip-log.txt
 *.exe
 *.bin
 *.cso
+<<<<<<< HEAD
 Shader/*.cso
+*.suo
+=======
+Shader/*.cso
+>>>>>>> master

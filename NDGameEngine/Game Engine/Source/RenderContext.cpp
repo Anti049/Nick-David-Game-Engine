@@ -6,6 +6,7 @@
 #include "ShaderTechnique.h"
 #include "ShaderPass.h"
 #include "RenderSet.h"
+#include "LightManager.h"
 
 RenderContext::RenderContext(void)
 {
@@ -172,6 +173,60 @@ void RenderContext::Context3DTextureRenderFunc(RenderNode* pNode)
 
 		// Clear all Textures and Enable Textures
 		pContext->SetTexturesEnabled(true);
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
+void RenderContext::Context3DForwardLightingRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSNORMTEX>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSNORMTEX), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		Renderer::m_pLightManager->BindDirLight(0);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
+void RenderContext::ContextGBufferRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSNORMTEX>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSNORMTEX), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		Renderer::SetCameraData();
 
 		ContextSharedRenderFunc(pNode);
 	}

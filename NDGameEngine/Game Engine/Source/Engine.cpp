@@ -1,7 +1,9 @@
 #include "Precompiled.h"
 #include "Engine.h"
 #include "Renderer.h"
-#include "EngineUIManager.h"
+#include "RenderTarget.h"
+
+EngineUIManager Engine::m_cUIManager;
 
 Vector4 vClearColor;
 Engine::Engine(void)
@@ -26,10 +28,12 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 	Renderer::GetInstance()->Initialize(hWnd, nScreenWidth, nScreenHeight, bFullscreen);
 
 	m_cUIManager.Initialize();
-	vClearColor = Renderer::GetInstance()->GetClearColor();
+	vClearColor = Renderer::m_pMainRenderTarget->GetClearColor();
 	EngineUI* pUI = m_cUIManager.AddUI("RendererBar", "Rendering Options");
 	pUI->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
 	pUI->AddParam(&vClearColor, "Clear Color", TW_TYPE_COLOR4F);
+
+	Renderer::GetInstance()->SetUpUI();
 }
 
 void Engine::Terminate(void)
@@ -55,7 +59,7 @@ bool Engine::Main(void)
 
 bool Engine::Input(void)
 {
-	if (GetAsyncKeyState(VK_ESCAPE) & 1)
+	if (Input::IsKeyPressed(VK_ESCAPE))
 		return false;
 
 	return true;
@@ -63,34 +67,34 @@ bool Engine::Input(void)
 
 void Engine::Render(void)
 {
-	Renderer::GetInstance()->SetClearColor(vClearColor);
+	Renderer::m_pMainRenderTarget->SetClearColor(vClearColor);
 	Renderer::GetInstance()->Render();
 }
 
 void Engine::Update(float fDelta)
 {
-	float fSpeed = 2.5f * fDelta * (GetAsyncKeyState(VK_SHIFT) ? 2.5f : 1.0f);
+	float fSpeed = 2.5f * fDelta * (Input::IsKeyDown(VK_SHIFT) ? 2.5f : 1.0f);
 	float fRotate = 90.0f * fDelta;
 
-	if (GetAsyncKeyState('W'))
+	if (Input::IsKeyDown('W'))
 		Renderer::m_cActiveCamera.MoveForward(fSpeed);
-	else if (GetAsyncKeyState('S'))
+	else if (Input::IsKeyDown('S'))
 		Renderer::m_cActiveCamera.MoveForward(-fSpeed);
-	if (GetAsyncKeyState('D'))
+	if (Input::IsKeyDown('D'))
 		Renderer::m_cActiveCamera.MoveRight(fSpeed);
-	else if (GetAsyncKeyState('A'))
+	else if (Input::IsKeyDown('A'))
 		Renderer::m_cActiveCamera.MoveRight(-fSpeed);
-	if (GetAsyncKeyState(VK_SPACE))
+	if (Input::IsKeyDown(VK_SPACE))
 		Renderer::m_cActiveCamera.MoveUp(fSpeed, true);
-	else if (GetAsyncKeyState(VK_CONTROL))
+	else if (Input::IsKeyDown(VK_CONTROL))
 		Renderer::m_cActiveCamera.MoveUp(-fSpeed, true);
 
-	if (GetAsyncKeyState(VK_LEFT))
+	if (Input::IsKeyDown(VK_LEFT))
 		Renderer::m_cActiveCamera.RotateY(-fRotate);
-	else if (GetAsyncKeyState(VK_RIGHT))
+	else if (Input::IsKeyDown(VK_RIGHT))
 		Renderer::m_cActiveCamera.RotateY(fRotate);
-	if (GetAsyncKeyState(VK_UP))
+	if (Input::IsKeyDown(VK_UP))
 		Renderer::m_cActiveCamera.RotateX(-fRotate);
-	else if (GetAsyncKeyState(VK_DOWN))
+	else if (Input::IsKeyDown(VK_DOWN))
 		Renderer::m_cActiveCamera.RotateX(fRotate);
 }

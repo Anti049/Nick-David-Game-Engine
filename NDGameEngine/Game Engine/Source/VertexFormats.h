@@ -88,5 +88,29 @@ struct PIXEL_POSNORMTEX
 	float3		m_vNormal		SEMANTIC(NORMAL0);
 	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
 };
+struct PIXEL_POSNORMTEXPOS
+{
+	float4		m_vPosition		SEMANTIC(SV_POSITION);
+	float3		m_vNormal		SEMANTIC(NORMAL0);
+	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
+	float4		m_vWorldPos		SEMANTIC(POSITION);
+};
+
+//////////////////////////////////////////////////////////////////////////
+// Deferred Rendering
+struct GBufferVertexOut
+{
+	float4		m_vPosition		SEMANTIC(SV_POSITION);
+	float3		m_vNormal		SEMANTIC(NORMAL0);
+	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
+	float2		m_vDepthDiv		SEMANTIC(TEX_COORD1);
+};
+struct GBufferPixelOut
+{
+	float4		m_vDiffuse		SEMANTIC(SV_TARGET0);
+	float4		m_vSpecular		SEMANTIC(SV_TARGET1);
+	float4		m_vNormal		SEMANTIC(SV_TARGET2);
+	float4		m_vDepth		SEMANTIC(SV_TARGET3);
+};
 
 #endif

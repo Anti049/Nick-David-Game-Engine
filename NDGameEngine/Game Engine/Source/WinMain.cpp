@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetUnhandledExceptionFilter(ErrorFunction);
 
 	HWND hWnd;
-	
+
 	WNDCLASSEX wndClass;
 	ZeroMemory(&wndClass, sizeof(wndClass));
 	wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -75,67 +75,72 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static bool bHasFocus = false;
 	if (TwEventWin(hWnd, message, wParam, lParam))
 		return 0;
 	switch (message)
 	{
 	case WM_SETCURSOR:
-	{
-		return DefWindowProc(hWnd, message, wParam, lParam);
-		/*WORD ht = LOWORD(lParam);
-		static bool hiddencursor = false;
-		if (HTCLIENT == ht && !hiddencursor)
 		{
-		hiddencursor = true;
-		ShowCursor(false);
+			return DefWindowProc(hWnd, message, wParam, lParam);
+			/*WORD ht = LOWORD(lParam);
+			static bool hiddencursor = false;
+			if (HTCLIENT == ht && !hiddencursor)
+			{
+			hiddencursor = true;
+			ShowCursor(false);
+			}
+			else if (HTCLIENT != ht && hiddencursor)
+			{
+			hiddencursor = false;
+			ShowCursor(true);
+			}*/
 		}
-		else if (HTCLIENT != ht && hiddencursor)
-		{
-		hiddencursor = false;
-		ShowCursor(true);
-		}*/
-	}
 		break;
 
 	case WM_CREATE:
-	{
-	}
+		{
+			bHasFocus = true;
+		}
 		break;
 
 	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-	}
+		{
+			PostQuitMessage(0);
+		}
 		break;
 
 	case WM_CLOSE:
-	{
-		DestroyWindow(hWnd);
-	}
+		{
+			DestroyWindow(hWnd);
+		}
 		break;
 
 	case WM_ACTIVATE:
-	{
-		if (LOWORD(wParam) != WA_INACTIVE)
 		{
-			// Unpause game here
+			if (LOWORD(wParam) != WA_INACTIVE)
+			{
+				// Unpause game here
+				bHasFocus = true;
+			}
+			else
+			{
+				// Pause game here
+				bHasFocus = false;
+			}
+			Input::SetKeyboardState(bHasFocus);
 		}
-		else
-		{
-			// Pause game here
-		}
-	}
 		break;
 
 	case WM_PAINT:
-	{
-		PAINTSTRUCT	ps;
-		HDC			hdc;
+		{
+			PAINTSTRUCT	ps;
+			HDC			hdc;
 
-		hdc = BeginPaint(hWnd, &ps);
+			hdc = BeginPaint(hWnd, &ps);
 
-		EndPaint(hWnd, &ps);
-	}
+			EndPaint(hWnd, &ps);
+		}
 		break;
 
 	case WM_SYSKEYDOWN:
@@ -147,10 +152,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
-	{
-		//Input::SetKeyboardState();
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
+		{
+			Input::SetKeyboardState(bHasFocus);
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
 		break;
 
 	default:

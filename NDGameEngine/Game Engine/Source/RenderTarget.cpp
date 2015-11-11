@@ -53,7 +53,9 @@ void RenderSurface::Create(unsigned int unWidth, unsigned int unHeight, DXGI_FOR
 	ppSRVDesc.Texture2D.MipLevels = 1;
 	Renderer::m_pDevice->CreateShaderResourceView(m_pTexture2D, &ppSRVDesc, &m_pShaderResourceView);
 
-	SetD3DName(m_pTexture2D, szName.c_str());
+	SetD3DName(m_pTexture2D, (szName + " Texture").c_str());
+	SetD3DName(m_pTarget, (szName + " Target").c_str());
+	SetD3DName(m_pShaderResourceView, (szName + " SRV").c_str());
 }
 
 DepthSurface::DepthSurface(void)

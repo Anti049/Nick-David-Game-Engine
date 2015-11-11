@@ -29,18 +29,14 @@ void RenderShape::IndexedPrimitiveRenderFunc(RenderNode* pNode)
 	RenderContext* pContext = pShape->GetContext();
 	if (pMesh)
 	{
-		// Set Per Object Data
-		DirectX::SimpleMath::Matrix mWorld = pShape->GetWorldMatrix();
-		DirectX::SimpleMath::Matrix mViewProjection = Renderer::m_cActiveCamera.GetViewMatrix() * Renderer::m_cActiveCamera.GetProjectionMatrix();
-		DirectX::SimpleMath::Matrix mMVP = mWorld * mViewProjection;
-		Renderer::SetPerObjectData(mMVP, mWorld);
+		bool bHasNormal = false;
 		// Set Textures
 		if (pContext)
 		{
-			pContext->EffectsClearTextureMaps(true);
 			Material* pMaterial = pShape->GetMaterial();
 			if (pMaterial)
 			{
+				pContext->EffectsClearTextureMaps(true);
 				if (pMaterial->GetAmbient())
 					pContext->EffectsSetTextureMap(eAmbient, pMaterial->GetAmbient()->GetSRV());
 				if (pMaterial->GetDiffuse())
@@ -48,9 +44,17 @@ void RenderShape::IndexedPrimitiveRenderFunc(RenderNode* pNode)
 				if (pMaterial->GetSpecular())
 					pContext->EffectsSetTextureMap(eSpecular, pMaterial->GetSpecular()->GetSRV());
 				if (pMaterial->GetNormal())
+				{
 					pContext->EffectsSetTextureMap(eNormal, pMaterial->GetNormal()->GetSRV());
+					bHasNormal = true;
+				}
 			}
 		}
+		// Set Per Object Data
+		DirectX::SimpleMath::Matrix mWorld = pShape->GetWorldMatrix();
+		DirectX::SimpleMath::Matrix mViewProjection = Renderer::m_cActiveCamera.GetViewMatrix() * Renderer::m_cActiveCamera.GetProjectionMatrix();
+		DirectX::SimpleMath::Matrix mMVP = mWorld * mViewProjection;
+		Renderer::SetPerObjectData(mMVP, mWorld, bHasNormal);
 		// Draw Indexed
 		Renderer::m_pImmediateContext->DrawIndexed(pMesh->GetNumIndices(), pMesh->GetStartIndex(), pMesh->GetStartVertex());
 	}
