@@ -18,10 +18,6 @@ Texture2D				tDiffuseGBuffer					: register(t9);
 Texture2D				tSpecularGBuffer				: register(t10);
 Texture2D				tNormalGBuffer					: register(t11);
 Texture2D				tDepthGBuffer					: register(t12);
-// Shadows
-Texture2D				tDirectionalShadowMap			: register(t13);
-Texture2D				tSpotShadowMap					: register(t14);
-TextureCube				tPointShadowMap					: register(t15);
 
 ///////////////////////////////////////////////////////////////////////////
 // Samplers

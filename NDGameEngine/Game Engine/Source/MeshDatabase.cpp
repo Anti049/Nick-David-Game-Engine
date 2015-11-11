@@ -779,3 +779,36 @@ RenderMesh* MeshDatabase::CreateScreenQuad(std::string& szMeshName, float fLeft,
 	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices);
 	return m_pMeshMap[szMeshName];
 }
+RenderMesh* MeshDatabase::CreateScreenQuadTex(std::string& szMeshName, float fLeft, float fTop, float fRight, float fBottom, float4 vColor)
+{
+	RenderMesh* pMesh = FindRenderMesh(szMeshName);
+	if (pMesh)
+		return pMesh;
+
+	std::vector<VERTEX_POSTEX2D> vVertices;
+	std::vector<unsigned int> vIndices;
+	VERTEX_POSTEX2D vVertex;
+
+	vVertex.m_vPosition = float2(fLeft, fTop);
+	vVertex.m_vTexCoord = float2(0.0f, 0.0f);
+	vVertices.push_back(vVertex);
+	vVertex.m_vPosition = float2(fRight, fTop);
+	vVertex.m_vTexCoord = float2(1.0f, 0.0f);
+	vVertices.push_back(vVertex);
+	vVertex.m_vPosition = float2(fLeft, fBottom);
+	vVertex.m_vTexCoord = float2(0.0f, 1.0f);
+	vVertices.push_back(vVertex);
+	vVertex.m_vPosition = float2(fRight, fBottom);
+	vVertex.m_vTexCoord = float2(1.0f, 1.0f);
+	vVertices.push_back(vVertex);
+
+	vIndices.push_back(0);
+	vIndices.push_back(1);
+	vIndices.push_back(2);
+	vIndices.push_back(2);
+	vIndices.push_back(1);
+	vIndices.push_back(3);
+
+	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices);
+	return m_pMeshMap[szMeshName];
+}

@@ -37,10 +37,10 @@ void RenderShape::IndexedPrimitiveRenderFunc(RenderNode* pNode)
 		// Set Textures
 		if (pContext)
 		{
-			pContext->EffectsClearTextureMaps(true);
 			Material* pMaterial = pShape->GetMaterial();
 			if (pMaterial)
 			{
+				pContext->EffectsClearTextureMaps(true);
 				if (pMaterial->GetAmbient())
 					pContext->EffectsSetTextureMap(eAmbient, pMaterial->GetAmbient()->GetSRV());
 				if (pMaterial->GetDiffuse())

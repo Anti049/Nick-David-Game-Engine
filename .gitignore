@@ -219,3 +219,4 @@ pip-log.txt
 *.bin
 *.cso
 Shader/*.cso
+*.suo

@@ -29,4 +29,27 @@ CONSTANT_BUFFER_BEGIN(cbCamera, b1)
 }
 CONSTANT_BUFFER_END
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+CONSTANT_BUFFER_BEGIN(cbRenderOptions, b3)
+=======
+CONSTANT_BUFFER_BEGIN(cbRenderOptions, b2)
+>>>>>>> parent of a2108a2... Oops
+{
+	int			nViewGBufferDiffuse;
+	int			nViewGBufferSpecular;
+	int			nViewGBufferNormal;
+	int			nViewGBufferDepth;
+	int			nViewLightingOnly;
+#ifdef __cplusplus
+	const static int REGISTER_SLOT = 2;
+#endif
+}
+CONSTANT_BUFFER_END
+
+<<<<<<< HEAD
+>>>>>>> parent of 29745b0... Fixed GBuffers!
+=======
+>>>>>>> parent of a2108a2... Oops
 #endif

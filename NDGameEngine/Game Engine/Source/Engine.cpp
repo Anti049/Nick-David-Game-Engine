@@ -1,7 +1,9 @@
 #include "Precompiled.h"
 #include "Engine.h"
 #include "Renderer.h"
-#include "EngineUIManager.h"
+#include "RenderTarget.h"
+
+EngineUIManager Engine::m_cUIManager;
 
 Vector4 vClearColor;
 Engine::Engine(void)
@@ -26,10 +28,12 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 	Renderer::GetInstance()->Initialize(hWnd, nScreenWidth, nScreenHeight, bFullscreen);
 
 	m_cUIManager.Initialize();
-	vClearColor = Renderer::GetInstance()->GetClearColor();
+	vClearColor = Renderer::m_pMainRenderTarget->GetClearColor();
 	EngineUI* pUI = m_cUIManager.AddUI("RendererBar", "Rendering Options");
 	pUI->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
 	pUI->AddParam(&vClearColor, "Clear Color", TW_TYPE_COLOR4F);
+
+	Renderer::GetInstance()->SetUpUI();
 }
 
 void Engine::Terminate(void)
@@ -63,7 +67,7 @@ bool Engine::Input(void)
 
 void Engine::Render(void)
 {
-	Renderer::GetInstance()->SetClearColor(vClearColor);
+	Renderer::m_pMainRenderTarget->SetClearColor(vClearColor);
 	Renderer::GetInstance()->Render();
 }
 

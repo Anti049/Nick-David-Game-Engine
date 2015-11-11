@@ -5,6 +5,7 @@
 #include "ConstantBuffers.h"
 #include "ConstantBuffer.h"
 #include "Camera.h"
+#include "LightBuffers.h"
 
 class RenderTarget;
 class RenderContext;
@@ -13,6 +14,8 @@ class ShaderTechnique;
 class RenderShape;
 class MeshDatabase;
 class TextureDatabase;
+class LightManager;
+class GBuffer;
 
 typedef int (WINAPI *BeginEventSignature)(DWORD, LPCWSTR);
 typedef int (WINAPI *EndEventSignature)(void);
@@ -39,6 +42,17 @@ public:
 
 	void										InitializeTextureSamplers(void);
 
+	void										SetUpUI(void);
+
+	//////////////////////////////////////////////////////////////////////////
+	// UI Functions
+	friend void TW_CALL							ToggleViewGBuffer(void* pClientData);
+	friend void TW_CALL							ShowDiffuseGBuffer(void* pClientData);
+	friend void TW_CALL							ShowSpecularGBuffer(void* pClientData);
+	friend void TW_CALL							ShowNormalGBuffer(void* pClientData);
+	friend void TW_CALL							ShowDepthGBuffer(void* pClientData);
+	friend void TW_CALL							ShowLightingOnly(void* pClientData);
+
 	//////////////////////////////////////////////////////////////////////////
 	// Static Members
 	static IDXGISwapChain*						m_pSwapChain;
@@ -55,11 +69,22 @@ public:
 	static MeshDatabase*						m_pMeshDatabase;
 	static TextureDatabase*						m_pTextureDatabase;
 	static Camera								m_cActiveCamera;
+	static LightManager*						m_pLightManager;
+	static GBuffer*								m_pGBuffer;
 
 	static void									SetPerObjectData(Matrix mMVP, Matrix mWorld);
 	static ConstantBuffer<cbPerObject>*			m_pPerObjectCBuffer;
 	static void									SetCameraData(void);
 	static ConstantBuffer<cbCamera>*			m_pCameraCBuffer;
+	static void									SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpecular, int bViewGBufferNormal, int bViewGBufferDepth, int bViewLightingOnly);
+	static ConstantBuffer<cbRenderOptions>*		m_pRenderOptionsCBuffer;
+
+	static void									SetDirLightData(DirLightStruct* pDirLight);
+	static ConstantBuffer<cbDirectionalLight>*	m_pDirLightCBuffer;
+	static void									SetPointLightData(PointLightStruct* pPointLight);
+	static ConstantBuffer<cbPointLight>*		m_pPointLightCBuffer;
+	static void									SetSpotLightData(SpotLightStruct* pSpotLight);
+	static ConstantBuffer<cbSpotLight>*			m_pSpotLightCBuffer;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Accessors
@@ -90,4 +115,5 @@ private:
 	Vector4										m_vClearColor;
 	RenderSet*									m_pGeometryContextList;
 	map<std::string, RenderContext*>			m_pGeometryContextMap;
+	bool										m_bViewGBuffer;
 };

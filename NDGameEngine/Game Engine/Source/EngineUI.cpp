@@ -61,7 +61,7 @@ void EngineUI::AddParam(void* pParam, string szParamName, TwType eType, int nNum
 		case MAX_VAL:
 		case STEP:
 			{
-				str << va_arg(vList, float);
+				str << va_arg(vList, double);
 				break;
 			}
 		case PRECISION:
