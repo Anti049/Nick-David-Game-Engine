@@ -72,7 +72,7 @@ public:
 	static LightManager*						m_pLightManager;
 	static GBuffer*								m_pGBuffer;
 
-	static void									SetPerObjectData(Matrix mMVP, Matrix mWorld);
+	static void									SetPerObjectData(Matrix mMVP, Matrix mWorld, bool bHasNormal);
 	static ConstantBuffer<cbPerObject>*			m_pPerObjectCBuffer;
 	static void									SetCameraData(void);
 	static ConstantBuffer<cbCamera>*			m_pCameraCBuffer;

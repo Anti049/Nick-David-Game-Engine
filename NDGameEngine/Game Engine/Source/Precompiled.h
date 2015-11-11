@@ -40,6 +40,7 @@ using namespace SimpleMath;
 #include <fbxsdk.h>
 #include <fbxsdk/fileio/fbxiosettings.h>
 #include "Debugger.h"
+#include "Input.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Exception Handling

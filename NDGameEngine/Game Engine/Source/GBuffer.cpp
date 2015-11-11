@@ -46,11 +46,7 @@ void GBuffer::Initialize(unsigned int unWidth, unsigned int unHeight)
 {
 	m_pRenderTarget = new RenderTarget;
 	m_pRenderTarget->Initialize(std::string("GBuffer"), unWidth, unHeight, Renderer::m_pMainRenderTarget->GetDepthTexture(), Renderer::m_pMainRenderTarget->GetDSV());
-<<<<<<< HEAD
-	m_pRenderTarget->SetClearColor(DirectX::SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f));
-=======
 	m_pRenderTarget->SetClearColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 1.0f));
->>>>>>> parent of a2108a2... Oops
 
 	for (int i = 0; i < BUFFER_COUNT; i++)
 		m_pGBufferTargets[i] = new RenderSurface;
@@ -73,11 +69,7 @@ void GBuffer::Initialize(unsigned int unWidth, unsigned int unHeight)
 	m_pViewGBuffer->SetShaderTechnique(pGBufferTechnique);
 
 	pView = new RenderShape;
-<<<<<<< HEAD
-	pView->SetMesh(Renderer::m_pMeshDatabase->CreateScreenQuadTex(std::string("GBuffer View Quad"), 0.0f, 0.0f, 1.0f, -1.0f));
-=======
 	pView->SetMesh(Renderer::m_pMeshDatabase->CreateScreenQuadTex(std::string("GBuffer View Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
->>>>>>> parent of a2108a2... Oops
 	pView->SetContext(m_pViewGBuffer);
 	m_pViewGBuffer->GetRenderSet()->AddNode(pView);
 }
@@ -109,17 +101,7 @@ void GBuffer::SetViewGBuffer(GBufferTarget eTarget)
 		cbRenderOptions* tRenderOptions = Renderer::m_pRenderOptionsCBuffer->MapDiscard(Renderer::m_pImmediateContext);
 		Renderer::m_pRenderOptionsCBuffer->Unmap(Renderer::m_pImmediateContext);
 		if (eTarget == DIFFUSE)
-<<<<<<< HEAD
-		{
 			Renderer::SetRenderOptionsData(1, 0, 0, 0, tRenderOptions->nViewLightingOnly);
-			/*Texture2D* pTex = new Texture2D;
-			pTex->SetTexture(m_pGBufferTargets[DIFFUSE]->GetTexture2D());
-			pTex->SetSRV(m_pGBufferTargets[DIFFUSE]->GetSRV());
-			pView->GetMaterial()->SetDiffuse(pTex);*/
-		}
-=======
-			Renderer::SetRenderOptionsData(1, 0, 0, 0, tRenderOptions->nViewLightingOnly);
->>>>>>> parent of a2108a2... Oops
 		if (eTarget == SPECULAR)
 			Renderer::SetRenderOptionsData(0, 1, 0, 0, tRenderOptions->nViewLightingOnly);
 		if (eTarget == NORMAL)

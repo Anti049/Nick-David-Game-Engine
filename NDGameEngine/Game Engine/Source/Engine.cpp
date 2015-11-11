@@ -59,7 +59,7 @@ bool Engine::Main(void)
 
 bool Engine::Input(void)
 {
-	if (GetAsyncKeyState(VK_ESCAPE) & 1)
+	if (Input::IsKeyPressed(VK_ESCAPE))
 		return false;
 
 	return true;
@@ -73,28 +73,28 @@ void Engine::Render(void)
 
 void Engine::Update(float fDelta)
 {
-	float fSpeed = 2.5f * fDelta * (GetAsyncKeyState(VK_SHIFT) ? 2.5f : 1.0f);
+	float fSpeed = 2.5f * fDelta * (Input::IsKeyDown(VK_SHIFT) ? 2.5f : 1.0f);
 	float fRotate = 90.0f * fDelta;
 
-	if (GetAsyncKeyState('W'))
+	if (Input::IsKeyDown('W'))
 		Renderer::m_cActiveCamera.MoveForward(fSpeed);
-	else if (GetAsyncKeyState('S'))
+	else if (Input::IsKeyDown('S'))
 		Renderer::m_cActiveCamera.MoveForward(-fSpeed);
-	if (GetAsyncKeyState('D'))
+	if (Input::IsKeyDown('D'))
 		Renderer::m_cActiveCamera.MoveRight(fSpeed);
-	else if (GetAsyncKeyState('A'))
+	else if (Input::IsKeyDown('A'))
 		Renderer::m_cActiveCamera.MoveRight(-fSpeed);
-	if (GetAsyncKeyState(VK_SPACE))
+	if (Input::IsKeyDown(VK_SPACE))
 		Renderer::m_cActiveCamera.MoveUp(fSpeed, true);
-	else if (GetAsyncKeyState(VK_CONTROL))
+	else if (Input::IsKeyDown(VK_CONTROL))
 		Renderer::m_cActiveCamera.MoveUp(-fSpeed, true);
 
-	if (GetAsyncKeyState(VK_LEFT))
+	if (Input::IsKeyDown(VK_LEFT))
 		Renderer::m_cActiveCamera.RotateY(-fRotate);
-	else if (GetAsyncKeyState(VK_RIGHT))
+	else if (Input::IsKeyDown(VK_RIGHT))
 		Renderer::m_cActiveCamera.RotateY(fRotate);
-	if (GetAsyncKeyState(VK_UP))
+	if (Input::IsKeyDown(VK_UP))
 		Renderer::m_cActiveCamera.RotateX(-fRotate);
-	else if (GetAsyncKeyState(VK_DOWN))
+	else if (Input::IsKeyDown(VK_DOWN))
 		Renderer::m_cActiveCamera.RotateX(fRotate);
 }

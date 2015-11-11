@@ -33,11 +33,6 @@ TextureDatabase*					Renderer::m_pTextureDatabase		= nullptr;
 ConstantBuffer<cbPerObject>*		Renderer::m_pPerObjectCBuffer		= nullptr;
 ConstantBuffer<cbCamera>*			Renderer::m_pCameraCBuffer			= nullptr;
 Camera								Renderer::m_cActiveCamera;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of a2108a2... Oops
 LightManager*						Renderer::m_pLightManager			= nullptr;
 GBuffer*							Renderer::m_pGBuffer				= nullptr;
 ConstantBuffer<cbDirectionalLight>*	Renderer::m_pDirLightCBuffer		= nullptr;
@@ -69,22 +64,12 @@ void TW_CALL ShowLightingOnly(void* pClientData)
 { 
 	cbRenderOptions* tRenderOptions = ((Renderer*)pClientData)->m_pRenderOptionsCBuffer->MapDiscard(Renderer::m_pImmediateContext);
 
-<<<<<<< HEAD
-	static bool bViewLightingOnly = tRenderOptions->nViewLightingOnly == 1;
-	tRenderOptions->nViewLightingOnly = bViewLightingOnly ? 0 : 1;
-	bViewLightingOnly = !bViewLightingOnly;
-=======
 	tRenderOptions->nViewLightingOnly = !tRenderOptions->nViewLightingOnly;
->>>>>>> parent of a2108a2... Oops
 
 	((Renderer*)pClientData)->m_pRenderOptionsCBuffer->Unmap(Renderer::m_pImmediateContext);
 }
 
 cbDirectionalLight* pTestDirLight = nullptr;
-<<<<<<< HEAD
->>>>>>> parent of 29745b0... Fixed GBuffers!
-=======
->>>>>>> parent of a2108a2... Oops
 
 Renderer::Renderer(void)
 {
@@ -268,11 +253,6 @@ void Renderer::Terminate(void)
 #endif
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of a2108a2... Oops
 void Renderer::SetUpUI(void)
 {
 	Engine::m_cUIManager.GetUI("RendererBar")->AddSeparator(" group='GBuffer Options'");
@@ -281,11 +261,7 @@ void Renderer::SetUpUI(void)
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Specular GBuffer", ShowSpecularGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Normal GBuffer", ShowNormalGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Depth GBuffer", ShowDepthGBuffer, this);
-<<<<<<< HEAD
-	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Lighting Only", ShowLightingOnly, this);
-=======
 	//Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Lighting Only", ShowLightingOnly, this);
->>>>>>> parent of a2108a2... Oops
 
 	Engine::m_cUIManager.GetUI("RendererBar")->AddSeparator(" group='Directional Light'");
 	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.nEnabled, "Enabled", TW_TYPE_BOOL32);
@@ -294,10 +270,6 @@ void Renderer::SetUpUI(void)
 	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.vColor, "Color", TW_TYPE_COLOR3F);
 }
 
-<<<<<<< HEAD
->>>>>>> parent of 29745b0... Fixed GBuffers!
-=======
->>>>>>> parent of a2108a2... Oops
 void Renderer::InitializeTextureSamplers(void)
 {
 	D3D11_SAMPLER_DESC desc;
@@ -365,22 +337,7 @@ void Renderer::InitializeTextureSamplers(void)
 
 void Renderer::Render(void)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	m_pMainRenderTarget->ActivateTarget(true);
-=======
-	pTestDirLight->DirLight.vDirection.Normalize();
-	DirLightStruct* pDirLight = m_pLightManager->GetDirLight(0);
-	if (pDirLight)
-	{
-		memcpy(pDirLight, &pTestDirLight->DirLight, sizeof(DirLightStruct));
-	}
-
 	m_pGBuffer->Bind();
->>>>>>> parent of 29745b0... Fixed GBuffers!
-=======
-	m_pGBuffer->Bind();
->>>>>>> parent of a2108a2... Oops
 	{
 		// Draw Stuff
 		BeginEvent(0, L"Render Geometry");
@@ -388,23 +345,13 @@ void Renderer::Render(void)
 			m_pGeometryContextList->Render();
 		}
 		EndEvent();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of a2108a2... Oops
 	}
 	m_pGBuffer->Unbind();
 
 	m_pMainRenderTarget->ActivateTarget(true);
 	{
-<<<<<<< HEAD
-		m_pGBuffer->RenderGBuffers();
->>>>>>> parent of 29745b0... Fixed GBuffers!
-=======
 		if (m_bViewGBuffer)
 			m_pGBuffer->RenderGBuffers();
->>>>>>> parent of a2108a2... Oops
 
 		BeginEvent(0, L"Draw AntTweakBar");
 		{
@@ -459,12 +406,13 @@ void Renderer::AddRenderShape(RenderShape* pShape, string szContext)
 	}
 }
 
-void Renderer::SetPerObjectData(Matrix mMVP, Matrix mWorld)
+void Renderer::SetPerObjectData(Matrix mMVP, Matrix mWorld, bool bHasNormal)
 {
 	cbPerObject* tPerObjectData = m_pPerObjectCBuffer->MapDiscard(m_pImmediateContext);
 
 	tPerObjectData->mMVP = mMVP;
 	tPerObjectData->mWorld = mWorld;
+	tPerObjectData->nHasNormalMap = bHasNormal;
 
 	m_pPerObjectCBuffer->Unmap(m_pImmediateContext);
 	m_pPerObjectCBuffer->Bind(m_pImmediateContext);

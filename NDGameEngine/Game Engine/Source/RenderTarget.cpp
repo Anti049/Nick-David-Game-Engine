@@ -53,19 +53,9 @@ void RenderSurface::Create(unsigned int unWidth, unsigned int unHeight, DXGI_FOR
 	ppSRVDesc.Texture2D.MipLevels = 1;
 	Renderer::m_pDevice->CreateShaderResourceView(m_pTexture2D, &ppSRVDesc, &m_pShaderResourceView);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	SetD3DName(m_pTexture2D, szName.c_str());
-=======
-	SetD3DName(m_pTexture2D, (szName + " Texture").c_str());
-	SetD3DName(m_pTexture2D, (szName + " Target").c_str());
-	SetD3DName(m_pTexture2D, (szName + " SRV").c_str());
->>>>>>> parent of 29745b0... Fixed GBuffers!
-=======
 	SetD3DName(m_pTexture2D, (szName + " Texture").c_str());
 	SetD3DName(m_pTarget, (szName + " Target").c_str());
 	SetD3DName(m_pShaderResourceView, (szName + " SRV").c_str());
->>>>>>> parent of a2108a2... Oops
 }
 
 DepthSurface::DepthSurface(void)
