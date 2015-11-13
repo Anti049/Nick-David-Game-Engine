@@ -181,10 +181,12 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\BlendStateManager.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\ConstantBuffer.h" />
     <ClInclude Include="Source\ConstantBuffers.h" />
     <ClInclude Include="Source\Debugger.h" />
+    <ClInclude Include="Source\DepthStencilStateManager.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\EngineUI.h" />
     <ClInclude Include="Source\EngineUIManager.h" />
@@ -198,6 +200,7 @@
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\MeshDatabase.h" />
     <ClInclude Include="Source\Precompiled.h" />
+    <ClInclude Include="Source\RasterizerStateManager.h" />
     <ClInclude Include="Source\RenderContext.h" />
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\RenderMesh.h" />
@@ -218,8 +221,10 @@
     <ClInclude Include="Source\XTime.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\BlendStateManager.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Debugger.cpp" />
+    <ClCompile Include="Source\DepthStencilStateManager.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\EngineUI.cpp" />
     <ClCompile Include="Source\EngineUIManager.cpp" />
@@ -237,6 +242,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\RasterizerStateManager.cpp" />
     <ClCompile Include="Source\RenderContext.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\RenderMesh.cpp" />

@@ -71,6 +71,7 @@ void GBuffer::Initialize(unsigned int unWidth, unsigned int unHeight)
 	pView = new RenderShape;
 	pView->SetMesh(Renderer::m_pMeshDatabase->CreateScreenQuadTex(std::string("GBuffer View Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
 	pView->SetContext(m_pViewGBuffer);
+	pView->SetMaterial(new Material);
 	m_pViewGBuffer->GetRenderSet()->AddNode(pView);
 }
 

@@ -49,6 +49,9 @@
     <Filter Include="Shaders\Headers">
       <UniqueIdentifier>{b9764726-ed30-478c-94de-cb547aebab60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering System\Templates">
+      <UniqueIdentifier>{5fc17d5b-5b06-4042-b96b-f051cceefef3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine.h">
@@ -88,9 +91,6 @@
       <Filter>Header Files\Rendering System\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera.h">
-      <Filter>Header Files\Rendering System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ConstantBuffer.h">
       <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
     <ClInclude Include="Source\RenderContext.h">
@@ -155,6 +155,18 @@
     </ClInclude>
     <ClInclude Include="Source\GBuffer.h">
       <Filter>Header Files\Rendering System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BlendStateManager.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DepthStencilStateManager.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RasterizerStateManager.h">
+      <Filter>Header Files\Rendering System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ConstantBuffer.h">
+      <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +255,15 @@
       <Filter>Source Files\Rendering System</Filter>
     </ClCompile>
     <ClCompile Include="Source\LightManager.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BlendStateManager.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DepthStencilStateManager.cpp">
+      <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RasterizerStateManager.cpp">
       <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
   </ItemGroup>

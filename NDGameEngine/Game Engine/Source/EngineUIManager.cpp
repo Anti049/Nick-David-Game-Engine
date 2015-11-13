@@ -38,7 +38,7 @@ void EngineUIManager::Terminate(void)
 EngineUI* EngineUIManager::AddUI(string szName, string szLabel, Vector2 vSize)
 {
 	// Find greatest X
-	float fPosX = m_nScreenWidth;
+	float fPosX = (float)m_nScreenWidth;
 	for (auto iter = m_pEngineUIMap.begin(); iter != m_pEngineUIMap.end(); iter++)
 	{
 		if ((*iter).second->GetPosition().x < fPosX)

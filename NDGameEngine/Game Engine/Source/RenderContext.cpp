@@ -7,6 +7,9 @@
 #include "ShaderPass.h"
 #include "RenderSet.h"
 #include "LightManager.h"
+#include "BlendStateManager.h"
+#include "DepthStencilStateManager.h"
+#include "GBuffer.h"
 
 RenderContext::RenderContext(void)
 {
@@ -227,6 +230,48 @@ void RenderContext::ContextGBufferRenderFunc(RenderNode* pNode)
 		pContext->SetTexturesEnabled(true);
 
 		Renderer::SetCameraData();
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
+void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSTEX2D>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSTEX2D), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		Renderer::SetCameraData();
+
+		ID3D11ShaderResourceView* pGBufferTextures[] = 
+		{
+			Renderer::m_pGBuffer->m_pGBufferTargets[DIFFUSE]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[SPECULAR]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[NORMAL]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[DEPTH]->GetSRV(),
+		};
+		Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
+
+		// Set Depth Stencil State and Blend State
+		// TOOK OUT BLEND STATE TO FIX BLENDING WITH SKYBOX
+		Renderer::m_pDepthStencilStateManager->ApplyState(DSS_NO_DEPTH);
+		if (Renderer::m_pLightManager->GetActiveIndex())
+			Renderer::m_pBlendStateManager->ApplyState(BS_ADDITIVE);
 
 		ContextSharedRenderFunc(pNode);
 	}

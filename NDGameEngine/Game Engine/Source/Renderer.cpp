@@ -12,37 +12,53 @@
 #include "ShaderPass.h"
 #include "MeshDatabase.h"
 #include "TextureDatabase.h"
+#include "BlendStateManager.h"
+#include "DepthStencilStateManager.h"
+#include "RasterizerStateManager.h"
 #include "Material.h"
 #include "LightManager.h"
 #include "GBuffer.h"
 
-Renderer*							Renderer::s_pInstance				= nullptr;
-IDXGISwapChain*						Renderer::m_pSwapChain				= nullptr;
-ID3D11Device*						Renderer::m_pDevice					= nullptr;
-ID3D11DeviceContext*				Renderer::m_pImmediateContext		= nullptr;
-RenderTarget*						Renderer::m_pMainRenderTarget		= nullptr;
-ID3D11Resource*						Renderer::m_pBackbuffer				= nullptr;
-ID3D11Texture2D*					Renderer::m_pZBuffer				= nullptr;
-ID3D11DepthStencilView*				Renderer::m_pDepthStencilView		= nullptr;
+#pragma region Static Initialization
+Renderer*							Renderer::s_pInstance						= nullptr;
+IDXGISwapChain*						Renderer::m_pSwapChain						= nullptr;
+ID3D11Device*						Renderer::m_pDevice							= nullptr;
+ID3D11DeviceContext*				Renderer::m_pImmediateContext				= nullptr;
+RenderTarget*						Renderer::m_pMainRenderTarget				= nullptr;
+ID3D11Resource*						Renderer::m_pBackbuffer						= nullptr;
+ID3D11Texture2D*					Renderer::m_pZBuffer						= nullptr;
+ID3D11DepthStencilView*				Renderer::m_pDepthStencilView				= nullptr;
 D3D11_VIEWPORT						Renderer::m_tViewPort;
-HINSTANCE							Renderer::dx9DLL					= nullptr;
-BeginEventSignature					Renderer::BeginEvent				= nullptr;
-EndEventSignature					Renderer::EndEvent					= nullptr;
-MeshDatabase*						Renderer::m_pMeshDatabase			= nullptr;
-TextureDatabase*					Renderer::m_pTextureDatabase		= nullptr;
-ConstantBuffer<cbPerObject>*		Renderer::m_pPerObjectCBuffer		= nullptr;
-ConstantBuffer<cbCamera>*			Renderer::m_pCameraCBuffer			= nullptr;
+HINSTANCE							Renderer::dx9DLL							= nullptr;
+BeginEventSignature					Renderer::BeginEvent						= nullptr;
+EndEventSignature					Renderer::EndEvent							= nullptr;
+MeshDatabase*						Renderer::m_pMeshDatabase					= nullptr;
+TextureDatabase*					Renderer::m_pTextureDatabase				= nullptr;
+BlendStateManager*					Renderer::m_pBlendStateManager				= nullptr;
+DepthStencilStateManager*			Renderer::m_pDepthStencilStateManager		= nullptr;
+RasterizerStateManager*				Renderer::m_pRasterizerStateManager			= nullptr;
+ConstantBuffer<cbPerObject>*		Renderer::m_pPerObjectCBuffer				= nullptr;
+ConstantBuffer<cbCamera>*			Renderer::m_pCameraCBuffer					= nullptr;
 Camera								Renderer::m_cActiveCamera;
-LightManager*						Renderer::m_pLightManager			= nullptr;
-GBuffer*							Renderer::m_pGBuffer				= nullptr;
-ConstantBuffer<cbDirectionalLight>*	Renderer::m_pDirLightCBuffer		= nullptr;
-ConstantBuffer<cbPointLight>*		Renderer::m_pPointLightCBuffer		= nullptr;
-ConstantBuffer<cbSpotLight>*		Renderer::m_pSpotLightCBuffer		= nullptr;
-ConstantBuffer<cbRenderOptions>*	Renderer::m_pRenderOptionsCBuffer	= nullptr;
+LightManager*						Renderer::m_pLightManager					= nullptr;
+GBuffer*							Renderer::m_pGBuffer						= nullptr;
+ConstantBuffer<cbDirectionalLight>*	Renderer::m_pDirLightCBuffer				= nullptr;
+ConstantBuffer<cbPointLight>*		Renderer::m_pPointLightCBuffer				= nullptr;
+ConstantBuffer<cbSpotLight>*		Renderer::m_pSpotLightCBuffer				= nullptr;
+ConstantBuffer<cbRenderOptions>*	Renderer::m_pRenderOptionsCBuffer			= nullptr;
+#pragma endregion Static Initialization
 
 void TW_CALL ToggleViewGBuffer(void* pClientData)		
 { 
-	((Renderer*)pClientData)->m_bViewGBuffer = !((Renderer*)pClientData)->m_bViewGBuffer; 
+	((Renderer*)pClientData)->m_bViewGBuffer = !((Renderer*)pClientData)->m_bViewGBuffer;
+	string value = ((Renderer*)pClientData)->m_bViewGBuffer ? "true" : "false";
+	string szParam;
+	string buttons[] = { "Diffuse", "Specular", "Normal", "Depth" };
+	for (int i = 0; i < 4; i++)
+	{
+		szParam = " RendererBar/'Show " + buttons[i] + " GBuffer' visible=" + value;
+		TwDefine(szParam.c_str());
+	}
 }
 void TW_CALL ShowDiffuseGBuffer(void* pClientData)		
 { 
@@ -131,7 +147,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_pSwapChain->GetBuffer(0, __uuidof(m_pBackbuffer), reinterpret_cast<void**>(&m_pBackbuffer));
 	m_pMainRenderTarget = new RenderTarget();
 	m_pMainRenderTarget->InitializeWithBackbuffer(std::string("Main Render Target"), tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height,
-		(ID3D11Texture2D*)m_pBackbuffer, Vector4(1.0f, 0.05f, 0.05f, 1.0f));
+		(ID3D11Texture2D*)m_pBackbuffer, Vector4(0.05f, 0.05f, 0.05f, 1.0f));
 #pragma endregion Initialize the Backbuffer and the Render Target View
 
 	InitializeTextureSamplers();
@@ -166,9 +182,13 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	SetD3DName(m_pImmediateContext, "Immediate Context");
 
 	SetupGeometryContexts();
+	SetupLightingContexts();
 
 	m_pMeshDatabase = new MeshDatabase;
 	m_pTextureDatabase = new TextureDatabase;
+	m_pBlendStateManager = new BlendStateManager;
+	m_pDepthStencilStateManager = new DepthStencilStateManager;
+	m_pRasterizerStateManager = new RasterizerStateManager;
 	m_pPerObjectCBuffer = new ConstantBuffer<cbPerObject>(m_pDevice, "Per-Object Buffer");
 	m_pCameraCBuffer = new ConstantBuffer<cbCamera>(m_pDevice, "Camera Buffer");
 	m_pRenderOptionsCBuffer = new ConstantBuffer<cbRenderOptions>(m_pDevice, "Render Options Buffer");
@@ -205,14 +225,19 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pTestDirLight->DirLight.fSpecularPower = 512.0f;
 	pTestDirLight->DirLight.fSpecularIntensity = 10.0f;
 	pTestDirLight->DirLight.vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
-	pTestDirLight->DirLight.fAmbient = 0.1f;
+	pTestDirLight->DirLight.fAmbient = 0.5f;
 	DirLightStruct* pDirLight = new DirLightStruct;
 	memcpy(pDirLight, &pTestDirLight->DirLight, sizeof(DirLightStruct));
 	m_pLightManager->AddDirLight(pDirLight);
 
 	m_pGBuffer = new GBuffer;
 	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
-	m_bViewGBuffer = true;
+	m_bViewGBuffer = false;
+
+	RenderShape* pDirLightQuad = new RenderShape;
+	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
+	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
+	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
 }
 
 void Renderer::Terminate(void)
@@ -231,8 +256,12 @@ void Renderer::Terminate(void)
 
 	SafeDelete(m_pMainRenderTarget);
 	SafeDelete(m_pGeometryContextList);
+	SafeDelete(m_pLightingContextList);
 	SafeDelete(m_pMeshDatabase);
 	SafeDelete(m_pTextureDatabase);
+	SafeDelete(m_pBlendStateManager);
+	SafeDelete(m_pDepthStencilStateManager);
+	SafeDelete(m_pRasterizerStateManager);
 	SafeDelete(m_pPerObjectCBuffer);
 	SafeDelete(m_pCameraCBuffer);
 	SafeDelete(m_pLightManager);
@@ -270,7 +299,7 @@ void Renderer::SetUpUI(void)
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Specular GBuffer", ShowSpecularGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Normal GBuffer", ShowNormalGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Depth GBuffer", ShowDepthGBuffer, this);
-	//Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Lighting Only", ShowLightingOnly, this);
+	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Lighting Only", ShowLightingOnly, this);
 
 	Engine::m_cUIManager.GetUI("RendererBar")->AddSeparator(" group='Directional Light'");
 	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.nEnabled, "Enabled", TW_TYPE_BOOL32);
@@ -364,6 +393,15 @@ void Renderer::Render(void)
 	{
 		if (m_bViewGBuffer)
 			m_pGBuffer->RenderGBuffers();
+		else
+		{
+			BeginEvent(0, L"Compute Lighting");
+			{
+				ComputeLighting();
+			}
+			EndEvent();
+
+		}
 
 		BeginEvent(0, L"Draw AntTweakBar");
 		{
@@ -374,6 +412,22 @@ void Renderer::Render(void)
 	m_pMainRenderTarget->DeactivateTarget();
 
 	m_pSwapChain->Present(0, 0);
+}
+
+void Renderer::ComputeLighting(void)
+{
+	// Directional Light
+	m_pRenderOptionsCBuffer->Bind(m_pImmediateContext);
+	pTestDirLight->DirLight.vDirection.Normalize();
+	DirLightStruct* pLight = m_pLightManager->GetDirLight(0);
+	if (pLight)
+		pLight = &pTestDirLight->DirLight;
+
+	SetDirLightData(pLight);
+	m_pLightingContextList->Render();
+
+	m_pBlendStateManager->ApplyState(BS_DEFAULT);
+	m_pDepthStencilStateManager->ApplyState(DSS_DEFAULT);
 }
 
 void Renderer::SetupGeometryContexts(void)
@@ -391,6 +445,12 @@ void Renderer::SetupGeometryContexts(void)
 	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "FLight", RenderContext::Context3DForwardLightingRenderFunc, eVERTEX_POSNORMTEX);
 	// GBuffer
 	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "GBuffer", RenderContext::ContextGBufferRenderFunc, eVERTEX_POSNORMTEX);
+}
+void Renderer::SetupLightingContexts(void)
+{
+	m_pLightingContextList = new RenderSet;
+	// DeferredDirLight
+	CreateContext(m_pLightingContextMap, m_pLightingContextList, "DeferredDirLight", RenderContext::ContextDRDirLightRenderFunc, eVERTEX_POSTEX2D);
 }
 
 void Renderer::CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* pSet, string szShaderName, RenderNode::RenderFunc pFunc, ShaderType eType)

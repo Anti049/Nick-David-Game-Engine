@@ -14,6 +14,9 @@ class ShaderTechnique;
 class RenderShape;
 class MeshDatabase;
 class TextureDatabase;
+class BlendStateManager;
+class DepthStencilStateManager;
+class RasterizerStateManager;
 class LightManager;
 class GBuffer;
 
@@ -35,8 +38,11 @@ public:
 	void										Terminate(void);
 
 	void										Render(void);
+	void										ComputeLighting(void);
 
 	void										SetupGeometryContexts(void);
+	void										SetupLightingContexts(void);
+
 	void										CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* pSet, string szShaderName, RenderNode::RenderFunc pFunc, ShaderType eType);
 	void										AddRenderShape(RenderShape* pShape, string szContext);
 
@@ -68,6 +74,9 @@ public:
 	static EndEventSignature					EndEvent;
 	static MeshDatabase*						m_pMeshDatabase;
 	static TextureDatabase*						m_pTextureDatabase;
+	static BlendStateManager*					m_pBlendStateManager;
+	static DepthStencilStateManager*			m_pDepthStencilStateManager;
+	static RasterizerStateManager*				m_pRasterizerStateManager;
 	static Camera								m_cActiveCamera;
 	static LightManager*						m_pLightManager;
 	static GBuffer*								m_pGBuffer;
@@ -116,5 +125,7 @@ private:
 	Vector4										m_vGBufferClearColor;
 	RenderSet*									m_pGeometryContextList;
 	map<std::string, RenderContext*>			m_pGeometryContextMap;
+	RenderSet*									m_pLightingContextList;
+	map<std::string, RenderContext*>			m_pLightingContextMap;
 	bool										m_bViewGBuffer;
 };
