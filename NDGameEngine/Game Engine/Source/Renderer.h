@@ -113,6 +113,7 @@ private:
 	int											m_nScreenHeight;
 	bool										m_bFullscreen;
 	Vector4										m_vClearColor;
+	Vector4										m_vGBufferClearColor;
 	RenderSet*									m_pGeometryContextList;
 	map<std::string, RenderContext*>			m_pGeometryContextMap;
 	bool										m_bViewGBuffer;

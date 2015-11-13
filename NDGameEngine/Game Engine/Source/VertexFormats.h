@@ -95,6 +95,12 @@ struct PIXEL_POSNORMTEXPOS
 	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
 	float4		m_vWorldPos		SEMANTIC(POSITION);
 };
+struct PIXEL_POSTEXPOS
+{
+	float4		m_vPosition		SEMANTIC(SV_POSITION);
+	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
+	float4		m_vPixelPos		SEMANTIC(TEX_COORD1);
+};
 
 //////////////////////////////////////////////////////////////////////////
 // Deferred Rendering

@@ -3,6 +3,8 @@
 #include "Renderer.h"
 
 Vector2 EngineUIManager::m_vDefaultSize;
+map<int, vector<Vector2>> m_mUIMap;
+
 EngineUIManager::EngineUIManager(void)
 {
 
@@ -35,23 +37,37 @@ void EngineUIManager::Terminate(void)
 
 EngineUI* EngineUIManager::AddUI(string szName, string szLabel, Vector2 vSize)
 {
-	int nNumVTiles = m_nScreenHeight / (int)vSize.y;
-	int nNumHTiles = m_nScreenWidth / (int)vSize.x;
-	int nVIndex = 0, nHIndex = 0;
+	// Find greatest X
+	float fPosX = m_nScreenWidth;
+	for (auto iter = m_pEngineUIMap.begin(); iter != m_pEngineUIMap.end(); iter++)
+	{
+		if ((*iter).second->GetPosition().x < fPosX)
+			fPosX = (*iter).second->GetPosition().x;
+	}
+	// Find new position
 	Vector2 vPosition = Vector2((float)m_nScreenWidth, (float)m_nScreenHeight) - vSize;
 	for (auto iter = m_pEngineUIMap.begin(); iter != m_pEngineUIMap.end(); iter++)
 	{
-		nVIndex++;
-		vPosition.y -= vSize.y;
-		if (nVIndex == nNumVTiles)
+		vPosition.y -= (*iter).second->GetSize().y;
+		if (vPosition.y < 0.0f)
 		{
-			nVIndex = 0;
-			nHIndex++;
 			vPosition.y = (float)m_nScreenHeight - vSize.y;
 			vPosition.x -= vSize.x;
+			if (vPosition.x < fPosX)
+				break;
 		}
 	}
-	if (nVIndex < nNumVTiles && nHIndex < nNumHTiles)
+	if (vPosition.x >= 0.0f && vPosition.y >= 0.0f)
+	{
+		EngineUI* pUI = new EngineUI(szName, szLabel, vPosition, vSize);
+		m_pEngineUIMap[szName] = pUI;
+		return pUI;
+	}
+	return nullptr;
+}
+EngineUI* EngineUIManager::AddUI(string szName, string szLabel, Vector2 vSize, Vector2 vPosition)
+{
+	if (vPosition.x >= 0.0f && vPosition.y >= 0.0f)
 	{
 		EngineUI* pUI = new EngineUI(szName, szLabel, vPosition, vSize);
 		m_pEngineUIMap[szName] = pUI;

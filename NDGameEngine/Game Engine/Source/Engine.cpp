@@ -5,7 +5,13 @@
 
 EngineUIManager Engine::m_cUIManager;
 
-Vector4 vClearColor;
+unsigned int unFPS;
+
+void TW_CALL BringConsoleToFront(void* pClientData)		
+{
+	SetForegroundWindow(GetConsoleWindow());
+}
+
 Engine::Engine(void)
 {
 
@@ -28,12 +34,13 @@ void Engine::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool bFu
 	Renderer::GetInstance()->Initialize(hWnd, nScreenWidth, nScreenHeight, bFullscreen);
 
 	m_cUIManager.Initialize();
-	vClearColor = Renderer::m_pMainRenderTarget->GetClearColor();
-	EngineUI* pUI = m_cUIManager.AddUI("RendererBar", "Rendering Options");
-	pUI->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
-	pUI->AddParam(&vClearColor, "Clear Color", TW_TYPE_COLOR4F);
 
 	Renderer::GetInstance()->SetUpUI();
+
+	EngineUI* pDebugUI = m_cUIManager.AddUI("Debug", "Debug Options", Vector2(250.0f, 150.0f), Vector2(0.0f));
+	pDebugUI->SetColor(Vector4(1.0f, 0.5f, 0.0f, 0.5f));
+	pDebugUI->AddParam(&unFPS, "FPS", TW_TYPE_INT32, 1, READONLY, true);
+	pDebugUI->AddButton("Show Console", BringConsoleToFront, nullptr);
 }
 
 void Engine::Terminate(void)
@@ -67,12 +74,13 @@ bool Engine::Input(void)
 
 void Engine::Render(void)
 {
-	Renderer::m_pMainRenderTarget->SetClearColor(vClearColor);
 	Renderer::GetInstance()->Render();
 }
 
 void Engine::Update(float fDelta)
 {
+	unFPS = Debugger::FPS.Get();
+
 	float fSpeed = 2.5f * fDelta * (Input::IsKeyDown(VK_SHIFT) ? 2.5f : 1.0f);
 	float fRotate = 90.0f * fDelta;
 

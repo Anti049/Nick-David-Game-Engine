@@ -1,6 +1,8 @@
 #include "Precompiled.h"
 #include "IOConsole.h"
 #include <conio.h>
+#include "Engine.h"
+#include "EngineUIManager.h"
 
 IOConsole::IOConsole(void)
 {
@@ -51,6 +53,9 @@ bool IOConsole::CreateConsole(HWND hWnd)
 	freopen_s(&pStream, "CON", "w", stderr);
 	freopen_s(&pStream, "CON", "r", stdin);
 	SetConsoleTitle(L"NDGameEngine Debug Console");
+	HWND hwnd = GetConsoleWindow();
+	HMENU hmenu = GetSystemMenu(hwnd, FALSE);
+	EnableMenuItem(hmenu, SC_CLOSE, MF_GRAYED);
 #endif
 	SetForegroundWindow(hWnd);
 	m_hOutput = CreateFile(L"CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);

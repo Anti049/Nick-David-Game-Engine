@@ -183,7 +183,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pTestMat->SetDiffuse(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_D.dds"));
 	pTestMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
 	pTestMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
-	pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
+	//pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
 	pTest->SetMaterial(pTestMat);
 	AddRenderShape(pTest, "GBuffer");
 
@@ -212,6 +212,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 
 	m_pGBuffer = new GBuffer;
 	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
+	m_bViewGBuffer = true;
 }
 
 void Renderer::Terminate(void)
@@ -255,6 +256,14 @@ void Renderer::Terminate(void)
 
 void Renderer::SetUpUI(void)
 {
+	EngineUI* pUI = Engine::m_cUIManager.AddUI("RendererBar", "Rendering Options", Vector2(300.0f, 500.0f));
+	pUI->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
+
+	m_vClearColor = m_pMainRenderTarget->GetClearColor();
+	m_vGBufferClearColor = m_pGBuffer->m_pRenderTarget->GetClearColor();
+	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&m_vClearColor, "Clear Color", TW_TYPE_COLOR3F);
+	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&m_vGBufferClearColor, "GBuffer Clear Color", TW_TYPE_COLOR3F);
+
 	Engine::m_cUIManager.GetUI("RendererBar")->AddSeparator(" group='GBuffer Options'");
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Toggle View GBuffer", ToggleViewGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Diffuse GBuffer", ShowDiffuseGBuffer, this);
@@ -337,6 +346,9 @@ void Renderer::InitializeTextureSamplers(void)
 
 void Renderer::Render(void)
 {
+	m_pMainRenderTarget->SetClearColor(m_vClearColor);
+	m_pGBuffer->m_pRenderTarget->SetClearColor(m_vGBufferClearColor);
+
 	m_pGBuffer->Bind();
 	{
 		// Draw Stuff
