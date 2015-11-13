@@ -183,7 +183,7 @@
   <ItemGroup>
     <ClInclude Include="Source\BlendStateManager.h" />
     <ClInclude Include="Source\Camera.h" />
-    <ClInclude Include="Source\ConstantBuffer.h" />
+    <ClInclude Include="Source\ConstantBufferTemplate.h" />
     <ClInclude Include="Source\ConstantBuffers.h" />
     <ClInclude Include="Source\Debugger.h" />
     <ClInclude Include="Source\DepthStencilStateManager.h" />

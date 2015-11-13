@@ -165,7 +165,7 @@
     <ClInclude Include="Source\RasterizerStateManager.h">
       <Filter>Header Files\Rendering System\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ConstantBuffer.h">
+    <ClInclude Include="Source\ConstantBufferTemplate.h">
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
   </ItemGroup>

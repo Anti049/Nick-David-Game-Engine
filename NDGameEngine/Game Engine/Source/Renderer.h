@@ -3,7 +3,7 @@
 #include "RenderNode.hpp"
 #include "VertexFormats.h"
 #include "ConstantBuffers.h"
-#include "ConstantBuffer.h"
+#include "ConstantBufferTemplate.h"
 #include "Camera.h"
 #include "LightBuffers.h"
 
