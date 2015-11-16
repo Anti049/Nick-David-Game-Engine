@@ -1,5 +1,5 @@
-#ifndef _TEXTURES_AND_SAMPLERS_HLSLI_
-#define _TEXTURES_AND_SAMPLERS_HLSLI_
+#ifndef _SHADER_REGISTERS_HLSLI_
+#define _SHADER_REGISTERS_HLSLI_
 
 ///////////////////////////////////////////////////////////////////////////
 // Object Textures
@@ -29,5 +29,9 @@ SamplerState			sPointClampSampler				: register(s4);
 SamplerState			sLinearWrapSampler				: register(s5);
 SamplerState			sLinearClampSampler				: register(s6);
 SamplerComparisonState	sLinearBorderCompareSampler		: register(s7);
+
+///////////////////////////////////////////////////////////////////////////
+// Structured Buffers
+RWStructuredBuffer<VERTEX_POSITION> BasicParticleBuffer : register(u0);
 
 #endif //_TEXTURES_AND_SAMPLERS_HLSLI_

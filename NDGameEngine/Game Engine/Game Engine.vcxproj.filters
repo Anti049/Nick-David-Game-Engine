@@ -168,6 +168,15 @@
     <ClInclude Include="Source\ConstantBufferTemplate.h">
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ParticleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Emitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinMain.cpp">
@@ -266,6 +275,15 @@
     <ClCompile Include="Source\RasterizerStateManager.cpp">
       <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ParticleSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Emitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Assets\Shaders\Flat2D_VS.hlsl">
@@ -316,12 +334,15 @@
     <FxCompile Include="..\Assets\Shaders\DeferredDirLight_PS.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\BasicParticleSystem_CS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\Shaders\LightingSupport.hlsli">
       <Filter>Shaders\Headers</Filter>
     </None>
-    <None Include="..\Assets\Shaders\TexturesAndSamplers.hlsli">
+    <None Include="..\Assets\Shaders\ShaderRegisters.hlsli">
       <Filter>Shaders\Headers</Filter>
     </None>
   </ItemGroup>

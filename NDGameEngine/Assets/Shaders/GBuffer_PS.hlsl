@@ -1,7 +1,7 @@
 #include "../../Game Engine/Source/ShaderIncludes.h"
 #include "../../Game Engine/Source/ConstantBuffers.h"
 #include "../../Game Engine/Source/VertexFormats.h"
-#include "TexturesAndSamplers.hlsli"
+#include "ShaderRegisters.hlsli"
 
 GBufferPixelOut main(GBufferVertexOut input)
 {

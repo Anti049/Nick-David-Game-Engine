@@ -1,6 +1,8 @@
 #ifndef _SHADER_INCLUDES_H_
 #define _SHADER_INCLUDES_H_
 
+#define NUM_PARTICLES 1000
+
 #ifdef __cplusplus
 
 #include "Precompiled.h"
@@ -21,6 +23,7 @@ typedef Matrix		float4x4;
 #define SEMANTIC(s_name) : s_name
 #define CONSTANT_BUFFER_BEGIN(cb_name, reg) cbuffer cb_name : register(reg)
 #define CONSTANT_BUFFER_END 
+#define STRUCTURED_BUFFER(sb_name, reg, type) RWStructuredBuffer<type> sb_name : register(reg);
 
 #endif
 
