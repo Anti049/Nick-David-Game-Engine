@@ -2,7 +2,7 @@
 
 class RenderContext;
 
-enum RenderTextureTypes { eAmbient, eDiffuse, eSpecular, eEmissive, eNormal, eReflect, eCube, eCount };
+enum RenderTextureTypes { eAmbient, eDiffuse, eSpecular, eEmissive, eNormal, eReflect, eCube, eDSS = 13, eCount = 8 };
 
 class RenderNode
 {

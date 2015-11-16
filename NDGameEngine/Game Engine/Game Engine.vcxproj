@@ -187,6 +187,7 @@
     <ClInclude Include="Source\ConstantBuffers.h" />
     <ClInclude Include="Source\Debugger.h" />
     <ClInclude Include="Source\DepthStencilStateManager.h" />
+    <ClInclude Include="Source\DestinyShaderSystem.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\EngineUI.h" />
     <ClInclude Include="Source\EngineUIManager.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Debugger.cpp" />
     <ClCompile Include="Source\DepthStencilStateManager.cpp" />
+    <ClCompile Include="Source\DestinyShaderSystem.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\EngineUI.cpp" />
     <ClCompile Include="Source\EngineUIManager.cpp" />

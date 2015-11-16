@@ -17,7 +17,8 @@ public:
 	Texture*			GetEmissive(void)						{ return m_pEmissive; }
 	Texture*			GetNormal(void)							{ return m_pNormal; }
 	Texture*			GetReflect(void)						{ return m_pReflect; }
-	Texture*			GetCube(void)						{ return m_pCube; }
+	Texture*			GetCube(void)							{ return m_pCube; }
+	Texture*			GetDSS(void)							{ return m_pDSS; }
 
 	//////////////////////////////////////////////////////////////////////////
 	// Mutators
@@ -28,6 +29,7 @@ public:
 	void				SetNormal(Texture* pTexture)			{ m_pNormal = pTexture; }
 	void				SetReflect(Texture* pTexture)			{ m_pReflect = pTexture; }
 	void				SetCube(Texture* pTexture)				{ m_pCube = pTexture; }
+	void				SetDSS(Texture* pTexture)				{ m_pDSS = pTexture; }
 
 private:
 	Texture*			m_pAmbient;
@@ -37,4 +39,5 @@ private:
 	Texture*			m_pNormal;
 	Texture*			m_pReflect;
 	Texture*			m_pCube;
+	Texture*			m_pDSS;
 };

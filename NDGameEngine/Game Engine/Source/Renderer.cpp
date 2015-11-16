@@ -18,6 +18,7 @@
 #include "Material.h"
 #include "LightManager.h"
 #include "GBuffer.h"
+#include "Texture.h"
 
 #pragma region Static Initialization
 Renderer*							Renderer::s_pInstance						= nullptr;
@@ -93,6 +94,7 @@ void TW_CALL ShowLightingOnly(void* pClientData)
 }
 
 cbDirectionalLight* pTestDirLight = nullptr;
+Texture* pDSS = nullptr;
 
 Renderer::Renderer(void)
 {
@@ -166,6 +168,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pTestMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
 	pTestMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
 	pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
+	pTestMat->SetDSS(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_DSS.dds"));
 	pTest->SetMaterial(pTestMat);
 	AddRenderShape(pTest, "GBuffer");
 
@@ -201,6 +204,8 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
 	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
 	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+
+	pDSS = m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/ShaderTest.dds");
 }
 
 void Renderer::InitializeDirectX(void)
@@ -413,6 +418,9 @@ void Renderer::Render(void)
 {
 	m_pMainRenderTarget->SetClearColor(m_vClearColor);
 	m_pGBuffer->m_pRenderTarget->SetClearColor(m_vGBufferClearColor);
+
+	ID3D11ShaderResourceView* pSRV = pDSS->GetSRV();
+	Renderer::m_pImmediateContext->PSSetShaderResources(14, 1, &pSRV);
 
 	m_pGBuffer->Bind();
 	{

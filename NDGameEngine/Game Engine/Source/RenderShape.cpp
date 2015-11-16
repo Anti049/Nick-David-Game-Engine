@@ -48,6 +48,8 @@ void RenderShape::IndexedPrimitiveRenderFunc(RenderNode* pNode)
 					pContext->EffectsSetTextureMap(eNormal, pMaterial->GetNormal()->GetSRV());
 					bHasNormal = true;
 				}
+				if (pMaterial->GetDSS())
+					pContext->EffectsSetTextureMap(eDSS, pMaterial->GetDSS()->GetSRV());
 			}
 		}
 		// Set Per Object Data

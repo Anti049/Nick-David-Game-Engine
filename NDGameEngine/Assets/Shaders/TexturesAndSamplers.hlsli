@@ -18,6 +18,9 @@ Texture2D				tDiffuseGBuffer					: register(t9);
 Texture2D				tSpecularGBuffer				: register(t10);
 Texture2D				tNormalGBuffer					: register(t11);
 Texture2D				tDepthGBuffer					: register(t12);
+// Destiny Shader System
+Texture2D				tShaderMap						: register(t13);
+Texture2D				tShaderColors					: register(t14);
 
 ///////////////////////////////////////////////////////////////////////////
 // Samplers

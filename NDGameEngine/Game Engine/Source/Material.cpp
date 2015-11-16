@@ -13,6 +13,7 @@ Material::Material(void)
 	m_pNormal = nullptr;
 	m_pReflect = nullptr;
 	m_pCube = nullptr;
+	m_pDSS = nullptr;
 }
 
 Material::Material(Texture* pAmbient, Texture* pDiffuse, Texture* pSpecular, Texture* pEmissive, Texture* pNormal, Texture* pReflect, Texture* pCube)

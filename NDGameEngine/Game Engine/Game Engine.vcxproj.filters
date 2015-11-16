@@ -168,6 +168,9 @@
     <ClInclude Include="Source\ConstantBufferTemplate.h">
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DestinyShaderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinMain.cpp">
@@ -265,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="Source\RasterizerStateManager.cpp">
       <Filter>Source Files\Rendering System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DestinyShaderSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
