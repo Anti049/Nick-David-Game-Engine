@@ -35,7 +35,7 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 		fSpecMod = DirLight.fSpecularIntensity * pow(saturate(dot(vReflectionVector, vDirectionToCamera)), DirLight.fSpecularPower);
 		vFinalSpecular = vDiffuse.w * vSpecular * fSpecMod * (fNDotL > 0.0f) * float4(DirLight.vColor, 1.0f);
 
-		if (nViewLightingOnly == 0 || (vDiffuse.r == 0.0f && vDiffuse.g == 0.25f && vDiffuse.b == 0.0f))
+		if (nViewLightingOnly != 1)
 		{
 			vFinalDiffuse *= vDiffuse;
 			vFinalAmbient *= vDiffuse;

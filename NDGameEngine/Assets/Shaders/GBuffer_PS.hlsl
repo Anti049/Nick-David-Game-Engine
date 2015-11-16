@@ -12,13 +12,8 @@ GBufferPixelOut main(GBufferVertexOut input)
 
 	output.m_vSpecular = tSpecularMap.Sample(sLinearWrapSampler, input.m_vTexCoord);
 	
-	if (nHasNormalMap)
-		output.m_vNormal.xyz = tNormalMap.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
-	else
-	{
-		output.m_vNormal = float4(input.m_vNormal, 0.0f);
-		output.m_vNormal = float4((output.m_vNormal.xyz + 1.0f) / 2.0f, 0.0f);
-	}
+	output.m_vNormal = float4(input.m_vNormal, 0.0f);
+	output.m_vNormal = float4((output.m_vNormal.xyz + 1.0f) / 2.0f, 0.0f);
 
 	output.m_vDepth = input.m_vDepthDiv.x / input.m_vDepthDiv.y;
 	output.m_vDepth.a = output.m_vDepth.r == 0.0f ? 1.0f : 0.0f;

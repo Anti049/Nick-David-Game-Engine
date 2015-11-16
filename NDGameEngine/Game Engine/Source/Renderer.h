@@ -50,6 +50,9 @@ public:
 
 	void										SetUpUI(void);
 
+	void										InitializeDirectX(void);
+	void										InitializeConstantBuffers(void);
+
 	//////////////////////////////////////////////////////////////////////////
 	// UI Functions
 	friend void TW_CALL							ToggleViewGBuffer(void* pClientData);

@@ -39,6 +39,14 @@ CONSTANT_BUFFER_BEGIN(cbRenderOptions, b2)
 	int			nViewLightingOnly;
 #ifdef __cplusplus
 	const static int REGISTER_SLOT = 2;
+	cbRenderOptions(void)
+	{
+		nViewGBufferDiffuse = 1;
+		nViewGBufferSpecular = 0;
+		nViewGBufferNormal = 0;
+		nViewGBufferDepth = 0;
+		nViewLightingOnly = 0;
+	}
 #endif
 }
 CONSTANT_BUFFER_END

@@ -59,6 +59,11 @@ void TW_CALL ToggleViewGBuffer(void* pClientData)
 		szParam = " RendererBar/'Show " + buttons[i] + " GBuffer' visible=" + value;
 		TwDefine(szParam.c_str());
 	}
+	string visible = ((Renderer*)pClientData)->m_bViewGBuffer ? "false" : "true";
+	szParam = " RendererBar/'Show Lighting Only' visible=" + visible;
+	TwDefine(szParam.c_str());
+	if (((Renderer*)pClientData)->m_bViewGBuffer)
+		ShowDiffuseGBuffer(pClientData);
 }
 void TW_CALL ShowDiffuseGBuffer(void* pClientData)		
 { 
@@ -80,7 +85,9 @@ void TW_CALL ShowLightingOnly(void* pClientData)
 { 
 	cbRenderOptions* tRenderOptions = ((Renderer*)pClientData)->m_pRenderOptionsCBuffer->MapDiscard(Renderer::m_pImmediateContext);
 
-	tRenderOptions->nViewLightingOnly = !tRenderOptions->nViewLightingOnly;
+	static bool bViewLightingOnly = tRenderOptions->nViewLightingOnly == 1;
+	tRenderOptions->nViewLightingOnly = bViewLightingOnly ? 0 : 1;
+	bViewLightingOnly = !bViewLightingOnly;
 
 	((Renderer*)pClientData)->m_pRenderOptionsCBuffer->Unmap(Renderer::m_pImmediateContext);
 }
@@ -112,6 +119,92 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_bFullscreen = bFullscreen;
 	m_vClearColor = Vector4(0.01f, 0.01f, 0.01f, 1.0f);
 
+	InitializeDirectX();
+
+	InitializeTextureSamplers();
+
+
+#ifdef _DEBUG
+	HMODULE hModule = LoadLibraryEx(L"Dxgidebug.dll", 0, DONT_RESOLVE_DLL_REFERENCES);
+	if (hModule != nullptr)
+	{
+		typedef HRESULT(__stdcall *pFunc)(const IID&, void**);
+		pFunc DXGIGetDebugInterface = (pFunc)GetProcAddress(hModule, "DXGIGetDebugInterface");
+		DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_pDebug);
+	}
+#endif
+	dx9DLL = LoadLibrary(L"d3d9.dll");
+	BeginEvent = (BeginEventSignature)GetProcAddress(dx9DLL, "D3DPERF_BeginEvent");
+	EndEvent = (EndEventSignature)GetProcAddress(dx9DLL, "D3DPERF_EndEvent");
+
+	ZeroMemory(&m_tViewPort, sizeof(D3D11_VIEWPORT));
+	m_tViewPort.TopLeftX = 0;
+	m_tViewPort.TopLeftY = 0;
+	m_tViewPort.Width = (float)m_nScreenWidth;
+	m_tViewPort.Height = (float)m_nScreenHeight;
+
+	SetD3DName(m_pDevice, "Device");
+	SetD3DName(m_pSwapChain, "Swap Chain");
+	SetD3DName(m_pImmediateContext, "Immediate Context");
+
+	SetupGeometryContexts();
+	SetupLightingContexts();
+
+	m_pMeshDatabase = new MeshDatabase;
+	m_pTextureDatabase = new TextureDatabase;
+	m_pBlendStateManager = new BlendStateManager;
+	m_pDepthStencilStateManager = new DepthStencilStateManager;
+	m_pRasterizerStateManager = new RasterizerStateManager;
+
+	InitializeConstantBuffers();
+
+	RenderShape* pTest = new RenderShape;
+	pTest->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSNORMTEX>(std::string("../Assets/Art/3D/testKnife.fbx")));
+	pTest->SetWorldMatrix(Matrix::CreateScale(5.0f) * Matrix::CreateRotationX(XMConvertToRadians(-90.0f)) * Matrix::CreateRotationZ(XMConvertToRadians(-30.0f)) * Matrix::CreateTranslation(0.0f, 2.5f, 0.0f));
+	Material* pTestMat = new Material;
+	pTestMat->SetDiffuse(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_D.dds"));
+	pTestMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
+	pTestMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
+	pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
+	pTest->SetMaterial(pTestMat);
+	AddRenderShape(pTest, "GBuffer");
+
+	RenderShape* pFloor = new RenderShape;
+	pFloor->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSNORMTEX>(std::string("../Assets/Art/3D/plane.fbx")));
+	pFloor->SetWorldMatrix(Matrix::CreateScale(5.0f));
+	Material* pFloorMat = new Material;
+	pFloorMat->SetDiffuse(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
+	pFloorMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Floor_D.dds"));
+	pFloorMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Floor_D.dds"));
+	pFloor->SetMaterial(pFloorMat);
+	AddRenderShape(pFloor, "GBuffer");
+
+	m_pLightManager = new LightManager;
+	pTestDirLight = new cbDirectionalLight;
+	pTestDirLight->DirLight.vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
+	pTestDirLight->DirLight.nEnabled = true;
+	pTestDirLight->DirLight.nCastsShadow = false;
+	pTestDirLight->DirLight.fSpecularPower = 512.0f;
+	pTestDirLight->DirLight.fSpecularIntensity = 10.0f;
+	pTestDirLight->DirLight.vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
+	pTestDirLight->DirLight.fAmbient = 0.5f;
+	DirLightStruct* pDirLight = new DirLightStruct;
+	memcpy(pDirLight, &pTestDirLight->DirLight, sizeof(DirLightStruct));
+	m_pLightManager->AddDirLight(pDirLight);
+
+	DXGI_SWAP_CHAIN_DESC tempDesc;
+	Renderer::m_pSwapChain->GetDesc(&tempDesc);
+	m_pGBuffer = new GBuffer;
+	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
+
+	RenderShape* pDirLightQuad = new RenderShape;
+	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
+	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
+	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+}
+
+void Renderer::InitializeDirectX(void)
+{
 	DXGI_SWAP_CHAIN_DESC scDesc;
 	ZeroMemory(&scDesc, sizeof(scDesc));
 	scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -149,95 +242,36 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_pMainRenderTarget->InitializeWithBackbuffer(std::string("Main Render Target"), tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height,
 		(ID3D11Texture2D*)m_pBackbuffer, Vector4(0.05f, 0.05f, 0.05f, 1.0f));
 #pragma endregion Initialize the Backbuffer and the Render Target View
+}
 
-	InitializeTextureSamplers();
-
+void Renderer::InitializeConstantBuffers(void)
+{
+	//////////////////////////////////////////////////////////////////////////
+	// Per-Object
+	m_pPerObjectCBuffer = new ConstantBuffer<cbPerObject>(m_pDevice, "Per-Object Buffer");
+	SetPerObjectData(Matrix::Identity, Matrix::Identity, false);
+	//////////////////////////////////////////////////////////////////////////
+	// Camera
+	m_pCameraCBuffer = new ConstantBuffer<cbCamera>(m_pDevice, "Camera Buffer");
 	float fViewAngle = 65.0f, fNearDistance = 0.1f, fFarDistance = 1000.0f, fAspectRatio = (float)m_nScreenWidth / (float)m_nScreenHeight;
 	m_cActiveCamera.SetViewMatrix(Matrix::Identity);
 	m_cActiveCamera.SetViewMatrix(Matrix::CreateTranslation(0.0f, 2.5f, -5.0f));
 	m_cActiveCamera.LookAt(Vector3(0.0f));
 	m_cActiveCamera.SetProjectionMatrix(DirectX::XMMatrixPerspectiveFovLH(XMConvertToRadians(fViewAngle), fAspectRatio, fNearDistance, fFarDistance));
-
-#ifdef _DEBUG
-	HMODULE hModule = LoadLibraryEx(L"Dxgidebug.dll", 0, DONT_RESOLVE_DLL_REFERENCES);
-	if (hModule != nullptr)
-	{
-		typedef HRESULT(__stdcall *pFunc)(const IID&, void**);
-		pFunc DXGIGetDebugInterface = (pFunc)GetProcAddress(hModule, "DXGIGetDebugInterface");
-		DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_pDebug);
-	}
-#endif
-	dx9DLL = LoadLibrary(L"d3d9.dll");
-	BeginEvent = (BeginEventSignature)GetProcAddress(dx9DLL, "D3DPERF_BeginEvent");
-	EndEvent = (EndEventSignature)GetProcAddress(dx9DLL, "D3DPERF_EndEvent");
-
-	ZeroMemory(&m_tViewPort, sizeof(D3D11_VIEWPORT));
-	m_tViewPort.TopLeftX = 0;
-	m_tViewPort.TopLeftY = 0;
-	m_tViewPort.Width = (float)m_nScreenWidth;
-	m_tViewPort.Height = (float)m_nScreenHeight;
-
-	SetD3DName(m_pDevice, "Device");
-	SetD3DName(m_pSwapChain, "Swap Chain");
-	SetD3DName(m_pImmediateContext, "Immediate Context");
-
-	SetupGeometryContexts();
-	SetupLightingContexts();
-
-	m_pMeshDatabase = new MeshDatabase;
-	m_pTextureDatabase = new TextureDatabase;
-	m_pBlendStateManager = new BlendStateManager;
-	m_pDepthStencilStateManager = new DepthStencilStateManager;
-	m_pRasterizerStateManager = new RasterizerStateManager;
-	m_pPerObjectCBuffer = new ConstantBuffer<cbPerObject>(m_pDevice, "Per-Object Buffer");
-	m_pCameraCBuffer = new ConstantBuffer<cbCamera>(m_pDevice, "Camera Buffer");
+	SetCameraData();
+	//////////////////////////////////////////////////////////////////////////
+	// Render Options
 	m_pRenderOptionsCBuffer = new ConstantBuffer<cbRenderOptions>(m_pDevice, "Render Options Buffer");
+	SetRenderOptionsData(1, 0, 0, 0, 0);
+	//////////////////////////////////////////////////////////////////////////
+	// Directional Light
 	m_pDirLightCBuffer = new ConstantBuffer<cbDirectionalLight>(m_pDevice, "Directional Light Buffer");
+	//////////////////////////////////////////////////////////////////////////
+	// Point Light
 	m_pPointLightCBuffer = new ConstantBuffer<cbPointLight>(m_pDevice, "Point Light Buffer");
+	//////////////////////////////////////////////////////////////////////////
+	// Spot Light
 	m_pSpotLightCBuffer = new ConstantBuffer<cbSpotLight>(m_pDevice, "Spot Light Buffer");
-
-	RenderShape* pTest = new RenderShape;
-	pTest->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSNORMTEX>(std::string("../Assets/Art/3D/testKnife.fbx")));
-	pTest->SetWorldMatrix(Matrix::CreateScale(5.0f) * Matrix::CreateRotationX(XMConvertToRadians(-90.0f)) * Matrix::CreateRotationZ(XMConvertToRadians(-30.0f)) * Matrix::CreateTranslation(0.0f, 2.5f, 0.0f));
-	Material* pTestMat = new Material;
-	pTestMat->SetDiffuse(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_D.dds"));
-	pTestMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
-	pTestMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
-	//pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
-	pTest->SetMaterial(pTestMat);
-	AddRenderShape(pTest, "GBuffer");
-
-	RenderShape* pFloor = new RenderShape;
-	pFloor->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSNORMTEX>(std::string("../Assets/Art/3D/plane.fbx")));
-	pFloor->SetWorldMatrix(Matrix::CreateScale(5.0f));
-	Material* pFloorMat = new Material;
-	pFloorMat->SetDiffuse(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
-	pFloorMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Floor_D.dds"));
-	pFloorMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Floor_D.dds"));
-	pFloor->SetMaterial(pFloorMat);
-	AddRenderShape(pFloor, "GBuffer");
-
-	m_pLightManager = new LightManager;
-	pTestDirLight = new cbDirectionalLight;
-	pTestDirLight->DirLight.vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
-	pTestDirLight->DirLight.nEnabled = true;
-	pTestDirLight->DirLight.nCastsShadow = false;
-	pTestDirLight->DirLight.fSpecularPower = 512.0f;
-	pTestDirLight->DirLight.fSpecularIntensity = 10.0f;
-	pTestDirLight->DirLight.vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
-	pTestDirLight->DirLight.fAmbient = 0.5f;
-	DirLightStruct* pDirLight = new DirLightStruct;
-	memcpy(pDirLight, &pTestDirLight->DirLight, sizeof(DirLightStruct));
-	m_pLightManager->AddDirLight(pDirLight);
-
-	m_pGBuffer = new GBuffer;
-	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
-	m_bViewGBuffer = false;
-
-	RenderShape* pDirLightQuad = new RenderShape;
-	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
-	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
-	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
 }
 
 void Renderer::Terminate(void)
@@ -300,6 +334,8 @@ void Renderer::SetUpUI(void)
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Normal GBuffer", ShowNormalGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Depth GBuffer", ShowDepthGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Lighting Only", ShowLightingOnly, this);
+	m_bViewGBuffer = true;
+	ToggleViewGBuffer(this);
 
 	Engine::m_cUIManager.GetUI("RendererBar")->AddSeparator(" group='Directional Light'");
 	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.nEnabled, "Enabled", TW_TYPE_BOOL32);

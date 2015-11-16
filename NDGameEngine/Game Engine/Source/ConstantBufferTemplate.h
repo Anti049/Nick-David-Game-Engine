@@ -45,9 +45,7 @@ ConstantBuffer<Type>::ConstantBuffer(ID3D11Device* pDevice, string szName, unsig
 	bdPerObject.BindFlags = unBindFlags;
 	bdPerObject.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	pDevice->CreateBuffer(&bdPerObject, nullptr, &m_pBuffer);
-#ifdef _DEBUG
 	SetD3DName(m_pBuffer, szName.c_str());
-#endif
 }
 
 template <typename Type>
