@@ -13,6 +13,7 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 	float2 vTexCoord;
 	float fDepth, fLightMapDepth, fShadow, fOffset, fNDotL, fSpecMod;
 
+
 	// Initialization
 	vDiffuse = tDiffuseGBuffer.Sample(sLinearClampSampler, input.m_vTexCoord);
 	vSpecular = tSpecularGBuffer.Sample(sLinearClampSampler, input.m_vTexCoord);
@@ -22,6 +23,7 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 		discard;
 	vPosWorld = CalculateWorldSpacePosition(input.m_vPixelPos.xy, fDepth, mInvViewProj);
 
+	float4 vFinalLight = vDiffuse;
 	if (DirLight.nEnabled == 1)
 	{
 		// Diffuse
@@ -55,7 +57,11 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 		//}
 
 		// Return
-		return vFinalAmbient + vDiffuseSpecular;
+		vFinalLight = vFinalAmbient + vDiffuseSpecular;
 	}
-	return vDiffuse;
+	float3 vEmissive = saturate(tEmissiveGBuffer.Sample(sLinearClampSampler, input.m_vTexCoord).rgb);
+	float fEmissiveAmount = 0.5f;
+	//if (nViewLightingOnly)
+		vEmissive = float3(0.0f, 0.0f, 0.0f);
+	return float4(lerp(vDiffuse.rgb + (saturate(vEmissive) * fEmissiveAmount), vFinalLight.rgb, 1.0f - vEmissive.r), 1.0f);
 }

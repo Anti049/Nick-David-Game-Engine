@@ -117,6 +117,7 @@ struct GBufferPixelOut
 	float4		m_vSpecular		SEMANTIC(SV_TARGET1);
 	float4		m_vNormal		SEMANTIC(SV_TARGET2);
 	float4		m_vDepth		SEMANTIC(SV_TARGET3);
+	float4		m_vEmissive		SEMANTIC(SV_TARGET4);
 };
 
 #endif

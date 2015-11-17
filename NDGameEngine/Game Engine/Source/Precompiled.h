@@ -41,6 +41,7 @@ using namespace SimpleMath;
 #include <fbxsdk/fileio/fbxiosettings.h>
 #include "Debugger.h"
 #include "Input.h"
+#define ArraySize(arr) sizeof(arr) / sizeof(arr[0])
 
 //////////////////////////////////////////////////////////////////////////
 // Exception Handling

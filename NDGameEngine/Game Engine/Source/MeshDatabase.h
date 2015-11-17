@@ -16,6 +16,7 @@ public:
 	RenderMesh*							BuildSkybox(std::string& szMeshName = std::string("Skybox"));
 	RenderMesh*							CreateScreenQuad(std::string& szMeshName, float fLeft, float fTop, float fRight, float fBottom, float4 vColor = float4(1.0f));
 	RenderMesh*							CreateScreenQuadTex(std::string& szMeshName, float fLeft, float fTop, float fRight, float fBottom, float4 vColor = float4(1.0f));
+	RenderMesh*							CreateParticle(void);
 
 	RenderMesh*							FindRenderMesh(std::string& szMeshName);
 	std::string							FindRenderMeshKey(RenderMesh* pMesh);

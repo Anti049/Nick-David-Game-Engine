@@ -15,6 +15,8 @@ float4 main(PIXEL_POSTEX input) SEMANTIC(SV_TARGET)
 		vColor.xyz = tNormalGBuffer.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
 	if (nViewGBufferDepth)
 		vColor.xyz = tDepthGBuffer.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
+	if (nViewGBufferEmissive)
+		vColor.xyz = tEmissiveGBuffer.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
 
 	return vColor;
 }

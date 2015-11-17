@@ -232,8 +232,8 @@ void RenderTarget::ActivateTarget(bool bClear, unsigned int unClearFlag)
 	Renderer::BeginEvent(0, szEvent.c_str());
 	{
 		Renderer::m_pImmediateContext->RSSetViewports(1, &m_sViewPort);
-		ID3D11ShaderResourceView* pNullSRV[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-		Renderer::m_pImmediateContext->PSSetShaderResources(0, 13, pNullSRV);
+		ID3D11ShaderResourceView* pNullSRV[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+		Renderer::m_pImmediateContext->PSSetShaderResources(0, ArraySize(pNullSRV), pNullSRV);
 
 		ID3D11RenderTargetView* pRTVs[8];
 		for (unsigned int i = 0; i < m_unNumRenderTargets; i++)

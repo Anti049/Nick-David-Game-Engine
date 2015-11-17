@@ -1,7 +1,7 @@
 #ifndef _SHADER_INCLUDES_H_
 #define _SHADER_INCLUDES_H_
 
-#define NUM_PARTICLES 1000
+#define NUM_PARTICLES 100
 
 #ifdef __cplusplus
 
@@ -15,6 +15,8 @@ typedef Matrix		float4x4;
 #define regAlign __declspec(align(16))
 #define CONSTANT_BUFFER_BEGIN(cb_name, reg) struct regAlign cb_name 
 #define CONSTANT_BUFFER_END ;
+#include "StructuredBufferTemplate.h"
+#define STRUCTURED_BUFFER(sb_name, reg, type) static StructuredBuffer<type> sb_name;
 
 #else
 

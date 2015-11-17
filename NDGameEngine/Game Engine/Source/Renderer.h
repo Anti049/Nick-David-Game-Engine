@@ -19,6 +19,7 @@ class DepthStencilStateManager;
 class RasterizerStateManager;
 class LightManager;
 class GBuffer;
+class ParticleSystem;
 
 typedef int (WINAPI *BeginEventSignature)(DWORD, LPCWSTR);
 typedef int (WINAPI *EndEventSignature)(void);
@@ -60,6 +61,7 @@ public:
 	friend void TW_CALL							ShowSpecularGBuffer(void* pClientData);
 	friend void TW_CALL							ShowNormalGBuffer(void* pClientData);
 	friend void TW_CALL							ShowDepthGBuffer(void* pClientData);
+	friend void TW_CALL							ShowEmissiveGBuffer(void* pClientData);
 	friend void TW_CALL							ShowLightingOnly(void* pClientData);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -88,7 +90,7 @@ public:
 	static ConstantBuffer<cbPerObject>*			m_pPerObjectCBuffer;
 	static void									SetCameraData(void);
 	static ConstantBuffer<cbCamera>*			m_pCameraCBuffer;
-	static void									SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpecular, int bViewGBufferNormal, int bViewGBufferDepth, int bViewLightingOnly);
+	static void									SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpecular, int bViewGBufferNormal, int bViewGBufferDepth, int bViewGBufferEmissive, int bViewLightingOnly);
 	static ConstantBuffer<cbRenderOptions>*		m_pRenderOptionsCBuffer;
 
 	static void									SetDirLightData(DirLightStruct* pDirLight);
@@ -131,4 +133,6 @@ private:
 	RenderSet*									m_pLightingContextList;
 	map<std::string, RenderContext*>			m_pLightingContextMap;
 	bool										m_bViewGBuffer;
+
+	ParticleSystem*								m_pParticleSystem;
 };

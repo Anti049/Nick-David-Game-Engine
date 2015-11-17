@@ -235,6 +235,33 @@ void RenderContext::ContextGBufferRenderFunc(RenderNode* pNode)
 	}
 }
 
+void RenderContext::ContextParticleRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSCOLOR>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSCOLOR), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		Renderer::SetCameraData();
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
 void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 {
 	RenderContext* pContext = (RenderContext*)pNode;
@@ -264,6 +291,7 @@ void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 			Renderer::m_pGBuffer->m_pGBufferTargets[SPECULAR]->GetSRV(),
 			Renderer::m_pGBuffer->m_pGBufferTargets[NORMAL]->GetSRV(),
 			Renderer::m_pGBuffer->m_pGBufferTargets[DEPTH]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[EMISSIVE]->GetSRV(),
 		};
 		Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
 

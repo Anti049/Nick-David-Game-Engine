@@ -2,7 +2,7 @@
 
 #include "RenderTarget.h"
 
-enum GBufferTarget { DIFFUSE, SPECULAR, NORMAL, DEPTH, BUFFER_COUNT };
+enum GBufferTarget { DIFFUSE, SPECULAR, NORMAL, DEPTH, EMISSIVE, BUFFER_COUNT };
 class RenderContext;
 class Texture2D;
 

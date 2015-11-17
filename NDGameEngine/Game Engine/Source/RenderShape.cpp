@@ -48,6 +48,8 @@ void RenderShape::IndexedPrimitiveRenderFunc(RenderNode* pNode)
 					pContext->EffectsSetTextureMap(eNormal, pMaterial->GetNormal()->GetSRV());
 					bHasNormal = true;
 				}
+				if (pMaterial->GetEmissive())
+					pContext->EffectsSetTextureMap(eEmissive, pMaterial->GetEmissive()->GetSRV());
 			}
 		}
 		// Set Per Object Data

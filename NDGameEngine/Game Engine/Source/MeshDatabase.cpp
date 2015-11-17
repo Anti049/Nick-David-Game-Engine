@@ -812,3 +812,19 @@ RenderMesh* MeshDatabase::CreateScreenQuadTex(std::string& szMeshName, float fLe
 	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices);
 	return m_pMeshMap[szMeshName];
 }
+RenderMesh* MeshDatabase::CreateParticle(void)
+{
+	static int particleCount = 0;
+	stringstream str;
+	str << "Particle " << particleCount++;
+	string szMeshName = str.str();
+
+	std::vector<VERTEX_POSITION> vVertices;
+	std::vector<unsigned int> vIndices;
+	VERTEX_POSITION vVertex;
+	vVertices.push_back(vVertex);
+	vIndices.push_back(0);
+
+	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices);
+	return m_pMeshMap[szMeshName];
+}

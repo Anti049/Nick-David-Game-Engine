@@ -52,6 +52,15 @@
     <Filter Include="Header Files\Rendering System\Templates">
       <UniqueIdentifier>{5fc17d5b-5b06-4042-b96b-f051cceefef3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Geometry">
+      <UniqueIdentifier>{bf09850a-7898-468f-9689-b73adbe659b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering System\Effects">
+      <UniqueIdentifier>{601b48a5-88d1-4ba5-972b-4c94a37d2988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering System\Effects">
+      <UniqueIdentifier>{f69b69e3-dc23-4e9c-871d-36cad6ee6d60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine.h">
@@ -168,20 +177,26 @@
     <ClInclude Include="Source\ConstantBufferTemplate.h">
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ParticleSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Emitter.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering System\Effects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Particle.h">
+      <Filter>Header Files\Rendering System\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ParticleSystem.h">
+      <Filter>Header Files\Rendering System\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Flyweight.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StructuredBufferTemplate.h">
+      <Filter>Header Files\Rendering System\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StructuredBuffers.h">
+      <Filter>Shaders\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -275,13 +290,19 @@
     <ClCompile Include="Source\RasterizerStateManager.cpp">
       <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ParticleSystem.cpp">
+    <ClCompile Include="Source\WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Emitter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering System\Effects</Filter>
     </ClCompile>
     <ClCompile Include="Source\Particle.cpp">
+      <Filter>Source Files\Rendering System\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ParticleSystem.cpp">
+      <Filter>Source Files\Rendering System\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Flyweight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -334,7 +355,16 @@
     <FxCompile Include="..\Assets\Shaders\DeferredDirLight_PS.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="..\Assets\Shaders\BasicParticleSystem_CS.hlsl">
+    <FxCompile Include="..\Assets\Shaders\Particle_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Particle_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Particle_GS.hlsl">
+      <Filter>Shaders\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\ParticleSystem_CS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
