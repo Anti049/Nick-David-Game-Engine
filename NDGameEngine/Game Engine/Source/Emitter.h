@@ -12,7 +12,8 @@ public:
 	Emitter(void);
 	~Emitter(void);
 
-	void							Intialize(void);
+	void							Initialize(void);
+	void							CreateParticle(Particle* pParticle);
 	void							Update(float fDelta);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -25,4 +26,6 @@ public:
 private:
 	Flyweight*						m_pFlyweight;
 	ID3D11ComputeShader*			m_pComputeShader;
+	vector<Particle*>				m_vAliveParticles;
+	vector<float>					m_fStartTimes;
 };

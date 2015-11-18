@@ -169,7 +169,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pTestMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
 	pTestMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
 	pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
-	pTestMat->SetEmissive(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
+	//pTestMat->SetEmissive(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
 	pTest->SetMaterial(pTestMat);
 	AddRenderShape(pTest, "GBuffer");
 
@@ -217,6 +217,8 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 
 	m_pParticleSystem = new ParticleSystem;
 	m_pParticleSystem->Initialize();
+	m_pParticleSystem->CreateEmitter("Test");
+	m_pParticleSystem->LoadEmitter("Test");
 }
 
 void Renderer::InitializeDirectX(void)
@@ -423,6 +425,8 @@ void Renderer::InitializeTextureSamplers(void)
 
 void Renderer::Render(void)
 {
+	m_pParticleSystem->Update();
+
 	m_pMainRenderTarget->SetClearColor(m_vClearColor);
 	m_pGBuffer->m_pRenderTarget->SetClearColor(m_vGBufferClearColor);
 
@@ -524,6 +528,15 @@ void Renderer::AddRenderShape(RenderShape* pShape, string szContext)
 	{
 		pShape->SetContext(m_pGeometryContextMap[szContext]);
 		m_pGeometryContextMap[szContext]->GetRenderSet()->AddNode(pShape);
+	}
+}
+
+void Renderer::RemoveRenderShape(RenderShape* pShape, string szContext)
+{
+	if (m_pGeometryContextMap.find(szContext) != m_pGeometryContextMap.end() && pShape)
+	{
+		pShape->SetContext(nullptr);
+		m_pGeometryContextMap[szContext]->GetRenderSet()->RemoveNode((RenderNode*)pShape);
 	}
 }
 

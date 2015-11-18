@@ -46,6 +46,7 @@ public:
 
 	void										CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* pSet, string szShaderName, RenderNode::RenderFunc pFunc, ShaderType eType);
 	void										AddRenderShape(RenderShape* pShape, string szContext);
+	void										RemoveRenderShape(RenderShape* pShape, string szContext);
 
 	void										InitializeTextureSamplers(void);
 

@@ -60,8 +60,8 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 		vFinalLight = vFinalAmbient + vDiffuseSpecular;
 	}
 	float3 vEmissive = saturate(tEmissiveGBuffer.Sample(sLinearClampSampler, input.m_vTexCoord).rgb);
-	float fEmissiveAmount = 0.5f;
+	float fEmissiveAmount = 1.0f;
 	//if (nViewLightingOnly)
-		vEmissive = float3(0.0f, 0.0f, 0.0f);
+		//vEmissive = float3(0.0f, 0.0f, 0.0f);
 	return float4(lerp(vDiffuse.rgb + (saturate(vEmissive) * fEmissiveAmount), vFinalLight.rgb, 1.0f - vEmissive.r), 1.0f);
 }

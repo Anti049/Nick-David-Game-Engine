@@ -32,8 +32,9 @@ void ParticleSystem::Terminate(void)
 {
 	for (auto iter = m_mLoadedEmitters.begin(); iter != m_mLoadedEmitters.end(); iter++)
 	{
-		FreeEmitter((*iter).first);
+		SafeDelete((*iter).second);
 	}
+	m_mLoadedEmitters.clear();
 	SafeRelease(&m_pComputeParticles);
 }
 
@@ -78,6 +79,7 @@ unsigned int ParticleSystem::CreateEmitter(string szEmitter)
 	if (m_mLoadedEmitters.find(szEmitter) == m_mLoadedEmitters.end())
 	{
 		Emitter* pEmitter = new Emitter;
+		pEmitter->Initialize();
 		m_mLoadedEmitters[szEmitter] = pEmitter;
 	}
 	return 0;
@@ -100,8 +102,8 @@ void ParticleSystem::UpdateEmitter(unsigned int unEmitter, float fDelta)
 	{
 		Flyweight* pFlyweight = m_vActiveEmitters[unEmitter]->GetFlyweight();
 		pFlyweight->SetDeltaTime(fDelta);
-		m_pActiveFlyweight.ModifyData(Renderer::m_pImmediateContext, &pFlyweight->GetData());
-		m_pActiveFlyweight.Bind(Renderer::m_pImmediateContext);
+		/*m_pActiveFlyweight.ModifyData(Renderer::m_pImmediateContext, &pFlyweight->GetData());
+		m_pActiveFlyweight.Bind(Renderer::m_pImmediateContext);*/
 		m_vActiveEmitters[unEmitter]->Update(fDelta);
 	}
 }
