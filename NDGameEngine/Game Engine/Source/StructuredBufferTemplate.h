@@ -7,7 +7,7 @@ class StructuredBuffer
 {
 public:
 	StructuredBuffer(void);
-	StructuredBuffer(ID3D11Device* pDevice, int nElements, unsigned int unBindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE, bool bDynamic = false);
+	StructuredBuffer(ID3D11Device* pDevice, int nElements, const Type* pData, unsigned int unBindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE, bool bDynamic = false);
 	~StructuredBuffer(void);
 
 	// Dynamic ONLY
@@ -37,31 +37,29 @@ StructuredBuffer<Type>::StructuredBuffer(void)
 }
 
 template <typename Type>
-StructuredBuffer<Type>::StructuredBuffer(ID3D11Device* pDevice, int nElements, unsigned int unBindFlags, bool bDynamic)
+StructuredBuffer<Type>::StructuredBuffer(ID3D11Device* pDevice, int nElements, const Type* pData, unsigned int unBindFlags, bool bDynamic)
 	: m_nElements(nElements), m_pBuffer(nullptr), m_pSRV(nullptr), m_pUAV(nullptr)
 {
-	CD3D11_BUFFER_DESC desc(sizeof(Type) * nElements, unBindFlags, 
-		bDynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT,
-		bDynamic ? D3D11_CPU_ACCESS_WRITE : 0,
-		D3D11_RESOURCE_MISC_BUFFER_STRUCTURED,
-		sizeof(Type));
+	D3D11_SUBRESOURCE_DATA contents;
+	ZeroMemory(&contents, sizeof(contents));
+	contents.pSysMem = pData;
 
-	if (nElements)
-	{
-		pDevice->CreateBuffer(&desc, NULL, &m_pBuffer);
-		if (unBindFlags & D3D11_BIND_UNORDERED_ACCESS)
-			pDevice->CreateUnorderedAccessView(m_pBuffer, NULL, &m_pUAV);
-		if (unBindFlags & D3D11_BIND_SHADER_RESOURCE)
-			pDevice->CreateShaderResourceView(m_pBuffer, NULL, &m_pSRV);
-	}
+	CD3D11_BUFFER_DESC structDesc(sizeof(Type) * nElements, D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE, D3D11_USAGE_DEFAULT, 0, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, sizeof(Type));
+	Renderer::m_pDevice->CreateBuffer(&structDesc, &contents, &m_pBuffer);
+
+	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(m_pBuffer, DXGI_FORMAT_UNKNOWN, 0, nElements);
+	Renderer::m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV);
+
+	CD3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc(m_pBuffer, DXGI_FORMAT_UNKNOWN, 0, nElements, 0);
+	Renderer::m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV);
 }
 
 template <typename Type>
 StructuredBuffer<Type>::~StructuredBuffer(void)
 {
+	SafeRelease(&m_pBuffer);
 	SafeRelease(&m_pUAV);
 	SafeRelease(&m_pSRV);
-	SafeRelease(&m_pBuffer);
 }
 
 template <typename Type>
@@ -81,6 +79,6 @@ void StructuredBuffer<Type>::Unmap(ID3D11DeviceContext* pContext)
 template <typename Type>
 void StructuredBuffer<Type>::Bind(ID3D11DeviceContext* pContext)
 {
-	unsigned int numParticles = NUM_PARTICLES;
+	unsigned int numParticles = MAX_PARTICLES;
 	pContext->CSSetUnorderedAccessViews(REGISTER_SLOT(Type), 1, &m_pUAV, &numParticles);
 }

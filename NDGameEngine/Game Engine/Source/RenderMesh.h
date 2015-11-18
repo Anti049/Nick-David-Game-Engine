@@ -9,7 +9,7 @@ public:
 	~RenderMesh(void);
 
 	template <typename VertexFormat>
-	void										AddVertices(vector<VertexFormat> vVertices, D3D11_PRIMITIVE_TOPOLOGY ePrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	void										AddVertices(vector<VertexFormat> vVertices, D3D11_PRIMITIVE_TOPOLOGY ePrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, bool bDynamic = false);
 	void										AddIndices(vector<unsigned int> vIndices);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ private:
 };
 
 template <typename VertexFormat>
-void RenderMesh::AddVertices(vector<VertexFormat> vVertices, D3D11_PRIMITIVE_TOPOLOGY ePrimitiveType)
+void RenderMesh::AddVertices(vector<VertexFormat> vVertices, D3D11_PRIMITIVE_TOPOLOGY ePrimitiveType, bool bDynamic)
 {
 	m_unNumVertices = (unsigned int)vVertices.size();
 	m_ePrimitiveType = ePrimitiveType;
@@ -59,5 +59,5 @@ void RenderMesh::AddVertices(vector<VertexFormat> vVertices, D3D11_PRIMITIVE_TOP
 	if (m_unNumVertices % 3 != 0)
 		m_unNumPrimitives++;
 
-	m_unStartVertex = VertexBufferManager::GetInstance()->GetVertexBuffer<VertexFormat>().AddVerts(&vVertices[0], m_unNumVertices);
+	m_unStartVertex = VertexBufferManager::GetInstance()->GetVertexBuffer<VertexFormat>().AddVerts(&vVertices[0], m_unNumVertices, bDynamic);
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "VertexFormats.h"
 
 class RenderShape;
 class Flyweight;
@@ -32,10 +33,14 @@ public:
 	void								SetScale(float fScale)						{ m_fScale = fScale; }
 	void								SetColor(Vector4 vColor)					{ m_vColor = vColor; }
 
+	ParticleVertex						m_vVertex;
 private:
+	// Render
 	RenderShape*						m_pShape;
+	// Lifetime
 	float								m_fTotalLifetime;
 	float								m_fCurrLifetime;
+	// Particle Data
 	Vector3								m_vPosition;
 	Vector3								m_vVelocity;
 	float								m_fScale;

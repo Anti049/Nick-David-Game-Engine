@@ -213,6 +213,21 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 			};
 			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
+		else if (eType == ePARTICLE_VERTEX)
+		{
+			const unsigned int unElements = 7;
+			D3D11_INPUT_ELEMENT_DESC pInput[unElements] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"SCALE", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"LIFETIME", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"EMISSIVE", 0, DXGI_FORMAT_R32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+		}
 
 		delete [] vs_byte_code;
 	}

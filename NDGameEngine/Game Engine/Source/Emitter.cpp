@@ -8,7 +8,7 @@
 
 Emitter::Emitter(void)
 {
-
+	m_unNumParticles = 0;
 }
 
 Emitter::~Emitter(void)
@@ -18,23 +18,38 @@ Emitter::~Emitter(void)
 		SafeDelete(m_vAliveParticles[i]);
 	}
 	SafeDelete(m_pFlyweight);
+	SafeDelete(ParticleBuffer);
 }
 
-void Emitter::Initialize(void)
+void Emitter::Initialize(unsigned int unNumParticles)
 {
 	m_pFlyweight = new Flyweight;
 	m_pFlyweight->SetStartVelocity(Vector3(0.0f, 1.0f, 0.0f));
 	m_pFlyweight->SetStartScale(1.0f);
-	m_pFlyweight->SetStartColor(Vector4(1.0f));
+	m_pFlyweight->SetStartColor(Vector4(0.05f, 0.0f, 0.0f, 1.0f));
 	m_pFlyweight->SetPositionDelta(Vector3(0.0f));
 	m_pFlyweight->SetVelocityDelta(Vector3(0.0f, 0.0f, 0.0f));
 	m_pFlyweight->SetScaleDelta(0.0f);
-	m_pFlyweight->SetColorDelta(Vector4(0.0f));
+	m_pFlyweight->SetColorDelta(Vector4(0.1f, 0.0f, 0.0f, 1.0f));
 
-	for (unsigned int i = 0; i < NUM_PARTICLES; i++)
+	AddParticles(unNumParticles);
+	m_unNumParticles = unNumParticles;
+
+	vector<ParticleVertex> m_pParticles;
+	for (unsigned int i = 0; i < m_unNumParticles; i++)
 	{
-		int lower = 0, upper = 5, precision = 1000;
-		m_fStartTimes.push_back(RandomFloat(lower, upper, precision));
+		m_pParticles.push_back(m_vAliveParticles[i]->m_vVertex);
+	}
+	ParticleBuffer = new StructuredBuffer<ParticleVertex>(Renderer::m_pDevice, MAX_PARTICLES, &m_pParticles[0]);
+}
+
+void Emitter::AddParticles(unsigned int unNumParticles)
+{
+	m_unNumParticles += unNumParticles;
+	for (unsigned int i = 0; i < unNumParticles; i++)
+	{
+		Particle* particle = new Particle;
+		CreateParticle(particle);
 	}
 }
 
@@ -52,9 +67,9 @@ void Emitter::CreateParticle(Particle* pParticle)
 
 void Emitter::Update(float fDelta)
 {
-	/*ParticleBuffer.Bind(Renderer::m_pImmediateContext);
+	ParticleBuffer->Bind(Renderer::m_pImmediateContext);
 	Renderer::m_pImmediateContext->CSSetShader(ParticleSystem::m_pComputeParticles, NULL, 0);
-	Renderer::m_pImmediateContext->Dispatch(NUM_PARTICLES, 1, 1);*/
+	Renderer::m_pImmediateContext->Dispatch(m_unNumParticles, 1, 1);
 
 	m_pFlyweight->SetDeltaTime(fDelta);
 	vector<Particle*> vDeadParticles;
@@ -73,15 +88,4 @@ void Emitter::Update(float fDelta)
 		CreateParticle(vDeadParticles[i]);
 	}
 	vDeadParticles.clear();
-
-	for (unsigned int i = 0; i < m_fStartTimes.size(); i++)
-	{
-		m_fStartTimes[i] -= fDelta;
-		if (m_fStartTimes[i] <= 0.0f)
-		{
-			Particle* particle = new Particle;
-			CreateParticle(particle);
-			m_fStartTimes.erase(m_fStartTimes.begin() + i--);
-		}
-	}
 }

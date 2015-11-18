@@ -9,7 +9,7 @@ public:
 	~MeshDatabase(void);
 
 	template <typename VertexFormat>
-	RenderMesh*							BuildMesh(std::vector<VertexFormat> vVertices, std::vector<unsigned int> vIndices);
+	RenderMesh*							BuildMesh(std::vector<VertexFormat> vVertices, std::vector<unsigned int> vIndices, bool bDynamic = false);
 
 	template <typename VertexFormat>
 	RenderMesh*							LoadFromFile(std::string& szFilePath);
@@ -29,10 +29,10 @@ private:
 };
 
 template <typename VertexFormat>
-RenderMesh* MeshDatabase::BuildMesh(std::vector<VertexFormat> vVertices, std::vector<unsigned int> vIndices)
+RenderMesh* MeshDatabase::BuildMesh(std::vector<VertexFormat> vVertices, std::vector<unsigned int> vIndices, bool bDynamic)
 {
 	RenderMesh* pMesh = new RenderMesh;
-	pMesh->AddVertices(vVertices);
+	pMesh->AddVertices(vVertices, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, bDynamic);
 	pMesh->AddIndices(vIndices);
 	return pMesh;
 }

@@ -217,7 +217,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 
 	m_pParticleSystem = new ParticleSystem;
 	m_pParticleSystem->Initialize();
-	m_pParticleSystem->CreateEmitter("Test");
+	m_pParticleSystem->CreateEmitter("Test", 100);
 	m_pParticleSystem->LoadEmitter("Test");
 }
 
@@ -496,7 +496,7 @@ void Renderer::SetupGeometryContexts(void)
 	// GBuffer
 	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "GBuffer", RenderContext::ContextGBufferRenderFunc, eVERTEX_POSNORMTEX);
 	// Particle
-	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "Particle", RenderContext::ContextParticleRenderFunc, eVERTEX_POSCOLOR);
+	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "Particle", RenderContext::ContextParticleRenderFunc, ePARTICLE_VERTEX);
 }
 void Renderer::SetupLightingContexts(void)
 {

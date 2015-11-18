@@ -57,6 +57,8 @@ CONSTANT_BUFFER_BEGIN(cbParticleFlyweight, b3)
 	float		fScaleDelta;
 	float4		vStartColor;
 	float4		vColorDelta;
+	float4		fPadding1;
+	float4		fPadding2;
 #ifdef __cplusplus
 	const static int REGISTER_SLOT = 3;
 #endif

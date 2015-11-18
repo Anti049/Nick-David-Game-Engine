@@ -249,8 +249,8 @@ void RenderContext::ContextParticleRenderFunc(RenderNode* pNode)
 		// Set Primitive Topology
 		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 		// Set Vertex Buffer
-		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSCOLOR>().GetVertexBuffer();
-		unsigned int unStride = sizeof(VERTEX_POSCOLOR), unOffset = 0;
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<ParticleVertex>().GetVertexBuffer();
+		unsigned int unStride = sizeof(ParticleVertex), unOffset = 0;
 		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
 
 		// Clear all Textures and Enable Textures

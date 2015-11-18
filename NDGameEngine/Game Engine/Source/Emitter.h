@@ -12,8 +12,9 @@ public:
 	Emitter(void);
 	~Emitter(void);
 
-	void							Initialize(void);
+	void							Initialize(unsigned int unNumParticles);
 	void							CreateParticle(Particle* pParticle);
+	void							AddParticles(unsigned int unNumParticles);
 	void							Update(float fDelta);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -28,4 +29,5 @@ private:
 	ID3D11ComputeShader*			m_pComputeShader;
 	vector<Particle*>				m_vAliveParticles;
 	vector<float>					m_fStartTimes;
+	unsigned int					m_unNumParticles;
 };

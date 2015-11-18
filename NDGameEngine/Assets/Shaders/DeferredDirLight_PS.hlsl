@@ -63,5 +63,6 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 	float fEmissiveAmount = 1.0f;
 	//if (nViewLightingOnly)
 		//vEmissive = float3(0.0f, 0.0f, 0.0f);
+	return vDiffuse;
 	return float4(lerp(vDiffuse.rgb + (saturate(vEmissive) * fEmissiveAmount), vFinalLight.rgb, 1.0f - vEmissive.r), 1.0f);
 }

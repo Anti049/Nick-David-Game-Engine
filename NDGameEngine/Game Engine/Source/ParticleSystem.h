@@ -17,7 +17,7 @@ public:
 
 	bool										LoadEmitter(string szEmitter);
 	bool										UnloadEmitter(string szEmitter);
-	unsigned int								CreateEmitter(string szEmitter);
+	unsigned int								CreateEmitter(string szEmitter, unsigned int unNumParticles);
 	bool										FreeEmitter(string szEmitter);
 	void										UpdateEmitter(unsigned int unEmitter, float fDelta);
 
@@ -26,5 +26,5 @@ public:
 private:
 	map<string, Emitter*>						m_mLoadedEmitters;
 	vector<Emitter*>							m_vActiveEmitters;
-	ConstantBuffer<cbParticleFlyweight>			m_pActiveFlyweight;
+	ConstantBuffer<cbParticleFlyweight>*			m_pActiveFlyweight;
 };

@@ -819,12 +819,12 @@ RenderMesh* MeshDatabase::CreateParticle(void)
 	str << "Particle " << particleCount++;
 	string szMeshName = str.str();
 
-	std::vector<VERTEX_POSITION> vVertices;
+	std::vector<ParticleVertex> vVertices;
 	std::vector<unsigned int> vIndices;
-	VERTEX_POSITION vVertex;
+	ParticleVertex vVertex;
 	vVertices.push_back(vVertex);
 	vIndices.push_back(0);
 
-	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices);
+	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices, true);
 	return m_pMeshMap[szMeshName];
 }
