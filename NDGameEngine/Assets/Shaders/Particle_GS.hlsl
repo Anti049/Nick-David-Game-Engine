@@ -2,10 +2,12 @@
 #include "../../Game Engine/Source/ConstantBuffers.h"
 #include "../../Game Engine/Source/VertexFormats.h"
 
+StructuredBuffer<ParticleVertex> BufferIn : register(t0);
+
 [maxvertexcount(4)]
-void main(point ParticleVertex particles[1], inout TriangleStream<ParticlePixel> output)
+void main(point ParticleVertex particles[1], uint index : SV_PrimitiveID, inout TriangleStream<ParticlePixel> output)
 {
-	ParticleVertex particle = particles[0];
+	ParticleVertex particle = BufferIn[index];
 
 	ParticlePixel input = (ParticlePixel)0;
 	input.m_vColor = particle.m_vColor;

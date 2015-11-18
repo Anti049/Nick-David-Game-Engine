@@ -33,7 +33,6 @@ void Particle::Initialize(Flyweight* pFlyweight)
 		m_vVertex.m_vVelocity = m_vVelocity;
 		m_vVertex.m_fScale = m_fScale;
 		m_vVertex.m_vColor = m_vColor;
-		VertexBufferManager::GetInstance()->GetVertexBuffer<ParticleVertex>().UpdateVerts()
 		//VertexBufferManager::GetInstance()->GetVertexBuffer<ParticleVertex>().UpdateVerts(m_pShape->GetMesh()->GetStartVertex(), &m_vVertex, 1);
 	}
 	m_pShape->SetWorldMatrix(Matrix::CreateTranslation(m_vPosition));
@@ -48,11 +47,11 @@ void Particle::Update(Flyweight* pFlyweight)
 	m_fScale += pFlyweight->GetScaleDelta() * pFlyweight->GetDeltaTime();
 	m_vColor += pFlyweight->GetColorDelta() * pFlyweight->GetDeltaTime();
 
-	//m_vVertex.m_vPosition = float4(m_vPosition.x, m_vPosition.y, m_vPosition.z, 1.0f);
-	//m_vVertex.m_vVelocity = m_vVelocity;
-	//m_vVertex.m_fScale = m_fScale;
-	//m_vVertex.m_vColor = m_vColor;
-	//VertexBufferManager::GetInstance()->GetVertexBuffer<ParticleVertex>().UpdateVerts(m_pShape->GetMesh()->GetStartVertex(), &m_vVertex, 1);
+	m_vVertex.m_vPosition = float4(m_vPosition.x, m_vPosition.y, m_vPosition.z, 1.0f);
+	m_vVertex.m_vVelocity = m_vVelocity;
+	m_vVertex.m_fScale = m_fScale;
+	m_vVertex.m_vColor = m_vColor;
+	VertexBufferManager::GetInstance()->GetVertexBuffer<ParticleVertex>().UpdateVerts(m_pShape->GetMesh()->GetStartVertex(), &m_vVertex, 1);
 }
 
 void Particle::KillParticle(void)

@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "ParticleSystem.h"
 #include "Flyweight.h"
+#include "RenderShape.h"
 
 Emitter::Emitter(void)
 {
@@ -38,6 +39,12 @@ void Emitter::Initialize(unsigned int unNumParticles)
 	vector<ParticleVertex> m_pParticles;
 	for (unsigned int i = 0; i < m_unNumParticles; i++)
 	{
+		ParticleVertex vVertex;
+		vVertex.m_vPosition = float4(m_pFlyweight->GetStartPosition());
+		vVertex.m_vPosition.w = 1.0f;
+		vVertex.m_vVelocity = m_pFlyweight->GetStartVelocity();
+		vVertex.m_fScale = m_pFlyweight->GetStartScale();
+		vVertex.m_vColor = m_pFlyweight->GetStartColor();
 		m_pParticles.push_back(m_vAliveParticles[i]->m_vVertex);
 	}
 	ParticleBuffer = new StructuredBuffer<ParticleVertex>(Renderer::m_pDevice, MAX_PARTICLES, &m_pParticles[0]);
@@ -70,6 +77,12 @@ void Emitter::Update(float fDelta)
 	ParticleBuffer->Bind(Renderer::m_pImmediateContext);
 	Renderer::m_pImmediateContext->CSSetShader(ParticleSystem::m_pComputeParticles, NULL, 0);
 	Renderer::m_pImmediateContext->Dispatch(m_unNumParticles, 1, 1);
+	ID3D11UnorderedAccessView* uavNull[] = {NULL};
+	Renderer::m_pImmediateContext->CSSetUnorderedAccessViews(0, 1, uavNull, 0);
+	ID3D11ShaderResourceView* computeSRV = ParticleBuffer->GetSRV();
+	Renderer::m_pImmediateContext->GSSetShaderResources(0, 1, &computeSRV);
+	computeSRV = NULL;
+	Renderer::m_pImmediateContext->GSSetShaderResources(0, 1, &computeSRV);
 
 	m_pFlyweight->SetDeltaTime(fDelta);
 	vector<Particle*> vDeadParticles;

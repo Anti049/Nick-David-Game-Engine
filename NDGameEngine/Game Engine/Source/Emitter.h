@@ -25,6 +25,7 @@ public:
 	void							SetFlyweight(Flyweight* pFlyweight)				{ m_pFlyweight = pFlyweight; }
 
 private:
+	RenderShape*					m_pShape;
 	Flyweight*						m_pFlyweight;
 	ID3D11ComputeShader*			m_pComputeShader;
 	vector<Particle*>				m_vAliveParticles;
