@@ -129,7 +129,7 @@ struct ParticleVertex
 {
 	float4		m_vPosition		SEMANTIC(POSITION);
 	float4		m_vColor		SEMANTIC(COLOR0);
-	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
+	float4		m_vStartPos		SEMANTIC(START_POSITION);
 	float3		m_vVelocity		SEMANTIC(VELOCITY0);
 	float		m_fScale		SEMANTIC(SCALE0);
 	float		m_fLifetime		SEMANTIC(LIFETIME0);

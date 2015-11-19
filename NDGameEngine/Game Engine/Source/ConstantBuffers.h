@@ -46,19 +46,20 @@ CONSTANT_BUFFER_END
 
 CONSTANT_BUFFER_BEGIN(cbParticleFlyweight, b3)
 {
-	// Change per second
-	float		fDeltaTime;
-	float		fLifetime;
-	float3		vStartPosition;
-	float3		vPositionDelta;
-	float3		vStartVelocity;
-	float3		vVelocityDelta;
-	float		fStartScale;
-	float		fScaleDelta;
-	float4		vStartColor;
-	float4		vColorDelta;
-	float4		fPadding1;
-	float4		fPadding2;
+	struct
+	{
+		// Change per second
+		float		fDeltaTime;
+		float3		vStartPosition;
+		float		fLifetime;
+		float3		vPositionDelta;
+		float		fStartScale;
+		float3		vStartVelocity;
+		float		fScaleDelta;
+		float3		vVelocityDelta;
+		float4		vStartColor;
+		float4		vColorDelta;
+	} ActiveFlyweight;
 #ifdef __cplusplus
 	const static int REGISTER_SLOT = 3;
 #endif

@@ -205,7 +205,6 @@
     <ClInclude Include="Source\LightManager.h" />
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\MeshDatabase.h" />
-    <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\ParticleSystem.h" />
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\RasterizerStateManager.h" />
@@ -248,7 +247,6 @@
     <ClCompile Include="Source\LightManager.cpp" />
     <ClCompile Include="Source\Material.cpp" />
     <ClCompile Include="Source\MeshDatabase.cpp" />
-    <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\ParticleSystem.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -16,6 +16,7 @@ Engine* pEngine = nullptr;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	SetUnhandledExceptionFilter(ErrorFunction);
+	srand(unsigned int(time(0)));
 
 	HWND hWnd;
 

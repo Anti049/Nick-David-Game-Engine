@@ -12,6 +12,7 @@ public:
 	~RenderShape(void);
 
 	static void				IndexedPrimitiveRenderFunc(RenderNode* pNode);
+	static void				ParticleRenderFunc(RenderNode* pNode);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Accessors

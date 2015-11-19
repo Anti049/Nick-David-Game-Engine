@@ -40,18 +40,20 @@ template <typename Type>
 StructuredBuffer<Type>::StructuredBuffer(ID3D11Device* pDevice, int nElements, const Type* pData, unsigned int unBindFlags, bool bDynamic)
 	: m_nElements(nElements), m_pBuffer(nullptr), m_pSRV(nullptr), m_pUAV(nullptr)
 {
+	HRESULT hr;
+
 	D3D11_SUBRESOURCE_DATA contents;
 	ZeroMemory(&contents, sizeof(contents));
 	contents.pSysMem = pData;
 
 	CD3D11_BUFFER_DESC structDesc(sizeof(Type) * nElements, D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE, D3D11_USAGE_DEFAULT, 0, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, sizeof(Type));
-	Renderer::m_pDevice->CreateBuffer(&structDesc, &contents, &m_pBuffer);
+	hr = Renderer::m_pDevice->CreateBuffer(&structDesc, &contents, &m_pBuffer);
 
 	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(m_pBuffer, DXGI_FORMAT_UNKNOWN, 0, nElements);
-	Renderer::m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV);
+	hr = Renderer::m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV);
 
 	CD3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc(m_pBuffer, DXGI_FORMAT_UNKNOWN, 0, nElements, 0);
-	Renderer::m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV);
+	hr = Renderer::m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV);
 }
 
 template <typename Type>

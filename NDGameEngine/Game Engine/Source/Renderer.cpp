@@ -201,9 +201,9 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLight2->nCastsShadow = false;
 	pDirLight2->fSpecularPower = 512.0f;
 	pDirLight2->fSpecularIntensity = 10.0f;
-	pDirLight2->vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
+	pDirLight2->vColor = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 	pDirLight2->fAmbient = 0.25f;
-	m_pLightManager->AddDirLight(pDirLight2);
+	//m_pLightManager->AddDirLight(pDirLight2);
 
 	DXGI_SWAP_CHAIN_DESC tempDesc;
 	Renderer::m_pSwapChain->GetDesc(&tempDesc);
@@ -215,10 +215,9 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
 	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
 
-	m_pParticleSystem = new ParticleSystem;
-	m_pParticleSystem->Initialize();
-	m_pParticleSystem->CreateEmitter("Test", 100);
-	m_pParticleSystem->LoadEmitter("Test");
+	ParticleSystem::GetInstance()->Initialize();
+	ParticleSystem::GetInstance()->CreateEmitter("Test", MAX_PARTICLES);
+	ParticleSystem::GetInstance()->LoadEmitter("Test");
 }
 
 void Renderer::InitializeDirectX(void)
@@ -321,8 +320,8 @@ void Renderer::Terminate(void)
 	SafeDelete(m_pSpotLightCBuffer);
 	SafeDelete(m_pRenderOptionsCBuffer);
 
-	m_pParticleSystem->Terminate();
-	SafeDelete(m_pParticleSystem);
+	ParticleSystem::GetInstance()->Terminate();
+	ParticleSystem::DeleteInstance();
 
 	VertexBufferManager::DeleteInstance();
 	IndexBuffer::DeleteInstance();
@@ -425,7 +424,7 @@ void Renderer::InitializeTextureSamplers(void)
 
 void Renderer::Render(void)
 {
-	m_pParticleSystem->Update();
+	//ParticleSystem::GetInstance()->Update();
 
 	m_pMainRenderTarget->SetClearColor(m_vClearColor);
 	m_pGBuffer->m_pRenderTarget->SetClearColor(m_vGBufferClearColor);

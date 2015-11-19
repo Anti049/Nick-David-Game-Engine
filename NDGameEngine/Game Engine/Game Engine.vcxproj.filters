@@ -180,9 +180,6 @@
     <ClInclude Include="Source\Emitter.h">
       <Filter>Header Files\Rendering System\Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Particle.h">
-      <Filter>Header Files\Rendering System\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ParticleSystem.h">
       <Filter>Header Files\Rendering System\Effects</Filter>
     </ClInclude>
@@ -294,9 +291,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Emitter.cpp">
-      <Filter>Source Files\Rendering System\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Particle.cpp">
       <Filter>Source Files\Rendering System\Effects</Filter>
     </ClCompile>
     <ClCompile Include="Source\ParticleSystem.cpp">

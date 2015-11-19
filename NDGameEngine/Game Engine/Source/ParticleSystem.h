@@ -8,8 +8,13 @@ class Emitter;
 class ParticleSystem
 {
 public:
-	ParticleSystem(void);
-	~ParticleSystem(void);
+	static ParticleSystem*						GetInstance(void)
+	{
+		if (!s_pInstance)
+			s_pInstance = new ParticleSystem;
+		return s_pInstance;
+	}
+	static void									DeleteInstance(void)		{ SafeDelete(s_pInstance); }
 
 	void										Initialize(void);
 	void										Terminate(void);
@@ -24,7 +29,11 @@ public:
 	static ID3D11ComputeShader*					m_pComputeParticles;
 
 private:
+	static ParticleSystem*						s_pInstance;
+	ParticleSystem(void);
+	~ParticleSystem(void);
+
 	map<string, Emitter*>						m_mLoadedEmitters;
 	vector<Emitter*>							m_vActiveEmitters;
-	ConstantBuffer<cbParticleFlyweight>*			m_pActiveFlyweight;
+	ConstantBuffer<cbParticleFlyweight>*		m_pActiveFlyweight;
 };

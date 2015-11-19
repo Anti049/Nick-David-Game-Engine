@@ -1,7 +1,9 @@
 #ifndef _SHADER_INCLUDES_H_
 #define _SHADER_INCLUDES_H_
 
-#define MAX_PARTICLES 100
+#define MAX_PARTICLES 10000
+
+static unsigned int groupDimX, groupDimY, groupDimZ;
 
 #ifdef __cplusplus
 

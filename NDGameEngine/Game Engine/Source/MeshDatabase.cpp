@@ -812,19 +812,12 @@ RenderMesh* MeshDatabase::CreateScreenQuadTex(std::string& szMeshName, float fLe
 	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices);
 	return m_pMeshMap[szMeshName];
 }
-RenderMesh* MeshDatabase::CreateParticle(void)
+RenderMesh* MeshDatabase::CreateParticles(std::string& szMeshName, vector<ParticleVertex> vParticles)
 {
-	static int particleCount = 0;
-	stringstream str;
-	str << "Particle " << particleCount++;
-	string szMeshName = str.str();
-
-	std::vector<ParticleVertex> vVertices;
 	std::vector<unsigned int> vIndices;
-	ParticleVertex vVertex;
-	vVertices.push_back(vVertex);
-	vIndices.push_back(0);
+	for (unsigned int i = 0; i < vParticles.size(); i++)
+		vIndices.push_back(i);
 
-	m_pMeshMap[szMeshName] = BuildMesh(vVertices, vIndices, true);
+	m_pMeshMap[szMeshName] = BuildMesh(vParticles, vIndices, true, D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 	return m_pMeshMap[szMeshName];
 }

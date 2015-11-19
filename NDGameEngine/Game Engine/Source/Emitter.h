@@ -2,7 +2,6 @@
 
 #include "StructuredBuffers.h"
 
-class Particle;
 class Flyweight;
 class RenderShape;
 
@@ -12,8 +11,8 @@ public:
 	Emitter(void);
 	~Emitter(void);
 
-	void							Initialize(unsigned int unNumParticles);
-	void							CreateParticle(Particle* pParticle);
+	void							Initialize(unsigned int unNumParticles, string szName);
+	void							CreateParticle(void);
 	void							AddParticles(unsigned int unNumParticles);
 	void							Update(float fDelta);
 
@@ -27,8 +26,8 @@ public:
 private:
 	RenderShape*					m_pShape;
 	Flyweight*						m_pFlyweight;
-	ID3D11ComputeShader*			m_pComputeShader;
-	vector<Particle*>				m_vAliveParticles;
+	vector<ParticleVertex>			m_vAliveParticles;
 	vector<float>					m_fStartTimes;
 	unsigned int					m_unNumParticles;
+	string							m_szName;
 };

@@ -2,7 +2,7 @@
 #include "../../Game Engine/Source/ConstantBuffers.h"
 #include "../../Game Engine/Source/VertexFormats.h"
 
-ParticleVertex main(ParticleVertex input)
+ParticleVertex main(ParticleVertex input, uint instanceID : SV_InstanceID)
 {
 	ParticleVertex output = input;
 	//output.m_vPosition = float4(mWorld._41, mWorld._42, mWorld._43, 1.0f);
