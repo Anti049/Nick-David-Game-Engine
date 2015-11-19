@@ -54,7 +54,7 @@ void TW_CALL ToggleViewGBuffer(void* pClientData)
 	((Renderer*)pClientData)->m_bViewGBuffer = !((Renderer*)pClientData)->m_bViewGBuffer;
 	string value = ((Renderer*)pClientData)->m_bViewGBuffer ? "true" : "false";
 	string szParam;
-	string buttons[] = { "Diffuse", "Specular", "Normal", "Depth" };
+	string buttons[] = { "Diffuse", "Specular", "Normal", "Depth", "Emissive" };
 	for (int i = 0; i < ArraySize(buttons); i++)
 	{
 		szParam = " RendererBar/'Show " + buttons[i] + " GBuffer' visible=" + value;
@@ -206,37 +206,25 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_pLightManager->AddDirLight(pDirLight);
 
 	DirLightStruct* pDirLight2 = new DirLightStruct;
-	pDirLight2->vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, -1.0f);
+	pDirLight2->vDirection = DirectX::SimpleMath::Vector3(-0.25f, -1.0f, -1.0f);
 	pDirLight2->nEnabled = true;
 	pDirLight2->nCastsShadow = false;
 	pDirLight2->fSpecularPower = 512.0f;
 	pDirLight2->fSpecularIntensity = 10.0f;
 	pDirLight2->vColor = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 	pDirLight2->fAmbient = 0.25f;
-	//m_pLightManager->AddDirLight(pDirLight2);
+	m_pLightManager->AddDirLight(pDirLight2);
 
-	/*cbPointLight* pPointLight = new cbPointLight;
-	pPointLight->PointLight.vPosition = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-	pPointLight->PointLight.fSpecularIntensity = 10.0f;
-	pPointLight->PointLight.fSpecularPower = 512.0f;
-	pPointLight->PointLight.fRange = 5.0f;
-	pPointLight->PointLight.nEnabled = true;
-	pPointLight->PointLight.vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
-	pPointLight->PointLight.vAttenuation = Vector3(1.0f, 0.0f, 0.0f);
-	pPointLight->PointLight.fAmbient = 0.5f;
-	PointLightStruct* pPointL = new PointLightStruct;
-	memcpy(pPointL, &pPointLight->PointLight, sizeof(PointLightStruct));
-	m_pLightManager->AddPointLight(pPointL);*/
-
-	DXGI_SWAP_CHAIN_DESC tempDesc;
-	Renderer::m_pSwapChain->GetDesc(&tempDesc);
-	m_pGBuffer = new GBuffer;
-	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
-
-	RenderShape* pDirLightQuad = new RenderShape;
-	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
-	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
-	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+	PointLightStruct* pPointLight = new PointLightStruct;
+	pPointLight->vPosition = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	pPointLight->fSpecularIntensity = 10.0f;
+	pPointLight->fSpecularPower = 512.0f;
+	pPointLight->fRange = 5.0f;
+	pPointLight->nEnabled = true;
+	pPointLight->vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->vAttenuation = Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->fAmbient = 0.5f;
+	m_pLightManager->AddPointLight(pPointLight);
 }
 
 void Renderer::InitializeDirectX(void)
@@ -443,8 +431,6 @@ void Renderer::InitializeTextureSamplers(void)
 
 void Renderer::Render(void)
 {
-	//ParticleSystem::GetInstance()->Update();
-
 	m_pMainRenderTarget->SetClearColor(m_vClearColor);
 	m_pGBuffer->m_pRenderTarget->SetClearColor(m_vGBufferClearColor);
 

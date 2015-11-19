@@ -40,17 +40,32 @@
     <Filter Include="Header Files\Rendering System\Managers">
       <UniqueIdentifier>{67dd2806-f6ab-45ad-b546-296f97a75ee5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\Vertex">
-      <UniqueIdentifier>{c722c8fb-22f8-43d9-b61b-748162bbe87d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Pixel">
-      <UniqueIdentifier>{ee7a0200-14dc-47b9-b0c6-963745c21bf3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Headers">
       <UniqueIdentifier>{b9764726-ed30-478c-94de-cb547aebab60}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Rendering System\Templates">
       <UniqueIdentifier>{5fc17d5b-5b06-4042-b96b-f051cceefef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering System\Effects">
+      <UniqueIdentifier>{d00be828-966b-4a0c-8d7a-df51987fc038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering System\Effects">
+      <UniqueIdentifier>{e839636b-f869-4c29-9f77-7f567f833232}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Source">
+      <UniqueIdentifier>{68c3a95d-e7e1-4c53-bc88-192a2fa462a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Source\Geometry">
+      <UniqueIdentifier>{da5a49f3-bce5-4415-a0e1-20df02c35bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Source\Compute">
+      <UniqueIdentifier>{7d5bc3c7-c1ea-4f90-bef3-63d9240571da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Source\Pixel">
+      <UniqueIdentifier>{ee7a0200-14dc-47b9-b0c6-963745c21bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Source\Vertex">
+      <UniqueIdentifier>{c722c8fb-22f8-43d9-b61b-748162bbe87d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +183,21 @@
     <ClInclude Include="Source\ConstantBufferTemplate.h">
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Emitter.h">
+      <Filter>Header Files\Rendering System\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Flyweight.h">
+      <Filter>Header Files\Rendering System\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ParticleSystem.h">
+      <Filter>Header Files\Rendering System\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StructuredBuffers.h">
+      <Filter>Shaders\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StructuredBufferTemplate.h">
+      <Filter>Header Files\Rendering System\Templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinMain.cpp">
@@ -266,68 +296,89 @@
     <ClCompile Include="Source\RasterizerStateManager.cpp">
       <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Emitter.cpp">
+      <Filter>Source Files\Rendering System\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Flyweight.cpp">
+      <Filter>Source Files\Rendering System\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ParticleSystem.cpp">
+      <Filter>Source Files\Rendering System\Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Assets\Shaders\Flat2D_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Flat2D_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Flat3D_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Flat3D_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture2D_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture3D_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture2D_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Texture3D_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\FLight_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\FLight_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\GBuffer_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\GBuffer_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\ViewGBuffer_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\ViewGBuffer_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\DeferredDirLight_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\DeferredDirLight_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\DeferredPointLight_VS.hlsl">
-      <Filter>Shaders\Vertex</Filter>
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\DeferredPointLight_PS.hlsl">
-      <Filter>Shaders\Pixel</Filter>
+      <Filter>Shaders\Source\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\ParticleSystem_CS.hlsl">
+      <Filter>Shaders\Source\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Particle_GS.hlsl">
+      <Filter>Shaders\Source\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Particle_PS.hlsl">
+      <Filter>Shaders\Source\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Particle_VS.hlsl">
+      <Filter>Shaders\Source\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\Shaders\LightingSupport.hlsli">
       <Filter>Shaders\Headers</Filter>
     </None>
-    <None Include="..\Assets\Shaders\TexturesAndSamplers.hlsli">
+    <None Include="..\Assets\Shaders\ShaderRegisters.hlsli">
       <Filter>Shaders\Headers</Filter>
     </None>
   </ItemGroup>
