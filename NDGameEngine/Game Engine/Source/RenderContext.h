@@ -18,6 +18,7 @@ public:
 	static void				Context3DTextureRenderFunc(RenderNode* pNode);
 	static void				Context3DForwardLightingRenderFunc(RenderNode* pNode);
 	static void				ContextGBufferRenderFunc(RenderNode* pNode);
+	static void				ContextParticleRenderFunc(RenderNode* pNode);
 	static void				ContextDRDirLightRenderFunc(RenderNode* pNode);
 	static void				ContextDRPointLightRenderFunc(RenderNode* pNode);
 

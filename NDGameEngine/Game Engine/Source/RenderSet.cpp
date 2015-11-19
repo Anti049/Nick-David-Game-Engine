@@ -35,6 +35,43 @@ void RenderSet::AddNode(RenderNode* pNode)
 		m_pHead = m_pTail = pNode;
 }
 
+void RenderSet::RemoveNode(RenderNode* pNode)
+{
+	if (m_pHead == m_pTail)
+		m_pHead = m_pTail = nullptr;
+	else if (pNode == m_pHead)
+	{
+		m_pHead = pNode->GetNextNode();
+	}
+	else if (pNode == m_pTail)
+	{
+		RenderNode* pPrev = m_pHead;
+		while (pPrev != pNode)
+		{
+			if (pPrev->GetNextNode() == pNode)
+			{
+				m_pTail = pPrev;
+				break;
+			}
+			pPrev = pPrev->GetNextNode();
+		}
+	}
+	else
+	{
+		RenderNode* pPrev = m_pHead;
+		while (pPrev != pNode)
+		{
+			if (pPrev->GetNextNode() == pNode)
+			{
+				pPrev->SetNextNode(pNode->GetNextNode());
+				break;
+			}
+			pPrev = pPrev->GetNextNode();
+		}
+	}
+	pNode->SetNextNode(nullptr);
+}
+
 void RenderSet::ClearSet(void)
 {
 	RenderNode* pNode = m_pHead;

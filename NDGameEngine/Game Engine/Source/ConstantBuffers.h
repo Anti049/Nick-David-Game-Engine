@@ -36,17 +36,32 @@ CONSTANT_BUFFER_BEGIN(cbRenderOptions, b2)
 	int			nViewGBufferSpecular;
 	int			nViewGBufferNormal;
 	int			nViewGBufferDepth;
+	int			nViewGBufferEmissive;
 	int			nViewLightingOnly;
 #ifdef __cplusplus
 	const static int REGISTER_SLOT = 2;
-	cbRenderOptions(void)
+#endif
+}
+CONSTANT_BUFFER_END
+
+CONSTANT_BUFFER_BEGIN(cbParticleFlyweight, b3)
+{
+	struct
 	{
-		nViewGBufferDiffuse = 1;
-		nViewGBufferSpecular = 0;
-		nViewGBufferNormal = 0;
-		nViewGBufferDepth = 0;
-		nViewLightingOnly = 0;
-	}
+		// Change per second
+		float		fDeltaTime;
+		float3		vStartPosition;
+		float		fLifetime;
+		float3		vPositionDelta;
+		float		fStartScale;
+		float3		vStartVelocity;
+		float		fScaleDelta;
+		float3		vVelocityDelta;
+		float4		vStartColor;
+		float4		vColorDelta;
+	} ActiveFlyweight;
+#ifdef __cplusplus
+	const static int REGISTER_SLOT = 3;
 #endif
 }
 CONSTANT_BUFFER_END

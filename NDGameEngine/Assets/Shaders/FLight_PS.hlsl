@@ -2,7 +2,7 @@
 #include "../../Game Engine/Source/VertexFormats.h"
 #include "../../Game Engine/Source/ConstantBuffers.h"
 #include "../../Game Engine/Source/LightBuffers.h"
-#include "TexturesAndSamplers.hlsli"
+#include "ShaderRegisters.hlsli"
 #include "LightingSupport.hlsli"
 
 float4 main(PIXEL_POSNORMTEXPOS input) SEMANTIC(SV_TARGET)

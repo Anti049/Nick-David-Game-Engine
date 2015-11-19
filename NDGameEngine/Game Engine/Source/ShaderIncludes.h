@@ -1,6 +1,10 @@
 #ifndef _SHADER_INCLUDES_H_
 #define _SHADER_INCLUDES_H_
 
+#define MAX_PARTICLES 10000
+
+static unsigned int groupDimX, groupDimY, groupDimZ;
+
 #ifdef __cplusplus
 
 #include "Precompiled.h"
@@ -13,6 +17,8 @@ typedef Matrix		float4x4;
 #define regAlign __declspec(align(16))
 #define CONSTANT_BUFFER_BEGIN(cb_name, reg) struct regAlign cb_name 
 #define CONSTANT_BUFFER_END ;
+#include "StructuredBufferTemplate.h"
+#define STRUCTURED_BUFFER(sb_name, reg, type) static StructuredBuffer<type>* sb_name = nullptr;
 
 #else
 
@@ -21,6 +27,7 @@ typedef Matrix		float4x4;
 #define SEMANTIC(s_name) : s_name
 #define CONSTANT_BUFFER_BEGIN(cb_name, reg) cbuffer cb_name : register(reg)
 #define CONSTANT_BUFFER_END 
+#define STRUCTURED_BUFFER(sb_name, reg, type) RWStructuredBuffer<type> sb_name : register(reg);
 
 #endif
 

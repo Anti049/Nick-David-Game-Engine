@@ -3,7 +3,10 @@
 
 #include "ShaderIncludes.h"
 #ifdef __cplusplus
-enum ShaderType { eVERTEX_POS2D, eVERTEX_POSCOLOR2D, eVERTEX_POSTEX2D, eVERTEX_POSITION, eVERTEX_POSCOLOR, eVERTEX_POSTEX, eVERTEX_POSNORMTEX };
+enum ShaderType { eVERTEX_POS2D, eVERTEX_POSCOLOR2D, eVERTEX_POSTEX2D, eVERTEX_POSITION, eVERTEX_POSCOLOR, eVERTEX_POSTEX, eVERTEX_POSNORMTEX, ePARTICLE_VERTEX };
+#endif
+#ifndef __cplusplus
+#define BOOL unsigned int
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -117,6 +120,34 @@ struct GBufferPixelOut
 	float4		m_vSpecular		SEMANTIC(SV_TARGET1);
 	float4		m_vNormal		SEMANTIC(SV_TARGET2);
 	float4		m_vDepth		SEMANTIC(SV_TARGET3);
+	float4		m_vEmissive		SEMANTIC(SV_TARGET4);
+};
+
+//////////////////////////////////////////////////////////////////////////
+// Particles
+struct ParticleVertex
+{
+	float4		m_vPosition		SEMANTIC(POSITION);
+	float4		m_vColor		SEMANTIC(COLOR0);
+	float4		m_vStartPos		SEMANTIC(START_POSITION);
+	float3		m_vVelocity		SEMANTIC(VELOCITY0);
+	float		m_fScale		SEMANTIC(SCALE0);
+	float		m_fLifetime		SEMANTIC(LIFETIME0);
+	BOOL		m_bEmissive		SEMANTIC(EMISSIVE0);
+#ifdef __cplusplus
+	const static int REGISTER_SLOT = 0;
+#endif
+};
+struct ParticlePixel
+{
+	float4		m_vPosition		SEMANTIC(SV_POSITION);
+	float4		m_vWorldPos		SEMANTIC(POSITION);
+	float4		m_vColor		SEMANTIC(COLOR0);
+	float2		m_vTexCoord		SEMANTIC(TEX_COORD0);
+	float3		m_vVelocity		SEMANTIC(VELOCITY0);
+	float		m_fScale		SEMANTIC(SCALE0);
+	float		m_fLifetime		SEMANTIC(LIFETIME0);
+	BOOL		m_bEmissive		SEMANTIC(EMISSIVE0);
 };
 
 #endif

@@ -10,6 +10,7 @@ public:
 
 	void						Render(void);
 	virtual void				AddNode(RenderNode* pNode);
+	virtual void				RemoveNode(RenderNode* pNode);
 	void						ClearSet(void);
 
 	//////////////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@ public:
 	inline ID3D11ComputeShader*			GetComputeShader(void)			{ return m_pComputeShader;	}
 	inline ID3D11InputLayout*			GetInputLayout(void)			{ return m_pInputLayout; }
 
-	bool								LoadCompiledShaderData(char** byteCode, size_t& byteCodeSize, const char* fileName);
+	static bool							LoadCompiledShaderData(char** byteCode, size_t& byteCodeSize, const char* fileName);
 
 private:
 	ID3D11VertexShader*					m_pVertexShader;

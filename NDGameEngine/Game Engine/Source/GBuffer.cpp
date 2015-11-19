@@ -54,6 +54,7 @@ void GBuffer::Initialize(unsigned int unWidth, unsigned int unHeight)
 	m_pGBufferTargets[SPECULAR]->Create(unWidth, unHeight, DXGI_FORMAT_R10G10B10A2_UNORM, "GBufferSpecular");
 	m_pGBufferTargets[NORMAL]->Create(unWidth, unHeight, DXGI_FORMAT_R10G10B10A2_UNORM, "GBufferNormal");
 	m_pGBufferTargets[DEPTH]->Create(unWidth, unHeight, DXGI_FORMAT_R8G8B8A8_UNORM, "GBufferDepth");
+	m_pGBufferTargets[EMISSIVE]->Create(unWidth, unHeight, DXGI_FORMAT_R8G8B8A8_UNORM, "GBufferEmissve");
 	for (int i = 0; i < BUFFER_COUNT; i++)
 		m_pRenderTarget->AddTarget(m_pGBufferTargets[i]);
 
@@ -83,6 +84,7 @@ void GBuffer::RenderGBuffers(void)
 		m_pGBufferTargets[SPECULAR]->GetSRV(),
 		m_pGBufferTargets[NORMAL]->GetSRV(),
 		m_pGBufferTargets[DEPTH]->GetSRV(),
+		m_pGBufferTargets[EMISSIVE]->GetSRV(),
 	};
 	Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
 
@@ -102,12 +104,14 @@ void GBuffer::SetViewGBuffer(GBufferTarget eTarget)
 		cbRenderOptions* tRenderOptions = Renderer::m_pRenderOptionsCBuffer->MapDiscard(Renderer::m_pImmediateContext);
 		Renderer::m_pRenderOptionsCBuffer->Unmap(Renderer::m_pImmediateContext);
 		if (eTarget == DIFFUSE)
-			Renderer::SetRenderOptionsData(1, 0, 0, 0, tRenderOptions->nViewLightingOnly);
-		if (eTarget == SPECULAR)
-			Renderer::SetRenderOptionsData(0, 1, 0, 0, tRenderOptions->nViewLightingOnly);
-		if (eTarget == NORMAL)
-			Renderer::SetRenderOptionsData(0, 0, 1, 0, tRenderOptions->nViewLightingOnly);
-		if (eTarget == DEPTH)
-			Renderer::SetRenderOptionsData(0, 0, 0, 1, tRenderOptions->nViewLightingOnly);
+			Renderer::SetRenderOptionsData(1, 0, 0, 0, 0, tRenderOptions->nViewLightingOnly);
+		if (eTarget == SPECULAR)					   
+			Renderer::SetRenderOptionsData(0, 1, 0, 0, 0, tRenderOptions->nViewLightingOnly);
+		if (eTarget == NORMAL)						   
+			Renderer::SetRenderOptionsData(0, 0, 1, 0, 0, tRenderOptions->nViewLightingOnly);
+		if (eTarget == DEPTH)						   
+			Renderer::SetRenderOptionsData(0, 0, 0, 1, 0, tRenderOptions->nViewLightingOnly);
+		if (eTarget == EMISSIVE)						   
+			Renderer::SetRenderOptionsData(0, 0, 0, 0, 1, tRenderOptions->nViewLightingOnly);
 	}
 }
