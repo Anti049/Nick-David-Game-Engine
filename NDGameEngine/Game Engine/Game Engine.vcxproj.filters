@@ -316,6 +316,12 @@
     <FxCompile Include="..\Assets\Shaders\DeferredDirLight_PS.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\DeferredPointLight_VS.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\DeferredPointLight_PS.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\Shaders\LightingSupport.hlsli">

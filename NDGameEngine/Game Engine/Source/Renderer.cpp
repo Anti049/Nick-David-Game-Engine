@@ -179,7 +179,18 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pFloor->SetMaterial(pFloorMat);
 	AddRenderShape(pFloor, "GBuffer");
 
+	DXGI_SWAP_CHAIN_DESC tempDesc;
+	Renderer::m_pSwapChain->GetDesc(&tempDesc);
+	m_pGBuffer = new GBuffer;
+	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
+
+	RenderShape* pDirLightQuad = new RenderShape;
+	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
+	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
+	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+
 	m_pLightManager = new LightManager;
+
 	pTestDirLight = new cbDirectionalLight;
 	pTestDirLight->DirLight.vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
 	pTestDirLight->DirLight.nEnabled = true;
@@ -192,15 +203,30 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	memcpy(pDirLight, &pTestDirLight->DirLight, sizeof(DirLightStruct));
 	m_pLightManager->AddDirLight(pDirLight);
 
-	DXGI_SWAP_CHAIN_DESC tempDesc;
-	Renderer::m_pSwapChain->GetDesc(&tempDesc);
-	m_pGBuffer = new GBuffer;
-	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
+	cbDirectionalLight* pTestDirLight2 = new cbDirectionalLight;
+	pTestDirLight2->DirLight.vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
+	pTestDirLight2->DirLight.nEnabled = true;
+	pTestDirLight2->DirLight.nCastsShadow = false;
+	pTestDirLight2->DirLight.fSpecularPower = 512.0f;
+	pTestDirLight2->DirLight.fSpecularIntensity = 10.0f;
+	pTestDirLight2->DirLight.vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
+	pTestDirLight2->DirLight.fAmbient = 0.5f;
+	DirLightStruct* pDirLight2 = new DirLightStruct;
+	memcpy(pDirLight2, &pTestDirLight2->DirLight, sizeof(DirLightStruct));
+	m_pLightManager->AddDirLight(pDirLight2);
 
-	RenderShape* pDirLightQuad = new RenderShape;
-	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
-	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
-	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+	cbPointLight* pPointLight = new cbPointLight;
+	pPointLight->PointLight.vPosition = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	pPointLight->PointLight.fSpecularIntensity = 10.0f;
+	pPointLight->PointLight.fSpecularPower = 512.0f;
+	pPointLight->PointLight.fRange = 5.0f;
+	pPointLight->PointLight.nEnabled = true;
+	pPointLight->PointLight.vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->PointLight.vAttenuation = Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->PointLight.fAmbient = 0.5f;
+	PointLightStruct* pPointL = new PointLightStruct;
+	memcpy(pPointL, &pPointLight->PointLight, sizeof(PointLightStruct));
+	m_pLightManager->AddPointLight(pPointL);
 }
 
 void Renderer::InitializeDirectX(void)
