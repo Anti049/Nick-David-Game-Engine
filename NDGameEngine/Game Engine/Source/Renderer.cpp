@@ -204,18 +204,18 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_pLightManager->AddDirLight(pDirLight);
 
 	cbDirectionalLight* pTestDirLight2 = new cbDirectionalLight;
-	pTestDirLight2->DirLight.vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
+	pTestDirLight2->DirLight.vDirection = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 1.0f);
 	pTestDirLight2->DirLight.nEnabled = true;
 	pTestDirLight2->DirLight.nCastsShadow = false;
 	pTestDirLight2->DirLight.fSpecularPower = 512.0f;
 	pTestDirLight2->DirLight.fSpecularIntensity = 10.0f;
-	pTestDirLight2->DirLight.vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
+	pTestDirLight2->DirLight.vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
 	pTestDirLight2->DirLight.fAmbient = 0.5f;
 	DirLightStruct* pDirLight2 = new DirLightStruct;
 	memcpy(pDirLight2, &pTestDirLight2->DirLight, sizeof(DirLightStruct));
 	m_pLightManager->AddDirLight(pDirLight2);
 
-	cbPointLight* pPointLight = new cbPointLight;
+	/*cbPointLight* pPointLight = new cbPointLight;
 	pPointLight->PointLight.vPosition = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	pPointLight->PointLight.fSpecularIntensity = 10.0f;
 	pPointLight->PointLight.fSpecularPower = 512.0f;
@@ -226,7 +226,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pPointLight->PointLight.fAmbient = 0.5f;
 	PointLightStruct* pPointL = new PointLightStruct;
 	memcpy(pPointL, &pPointLight->PointLight, sizeof(PointLightStruct));
-	m_pLightManager->AddPointLight(pPointL);
+	m_pLightManager->AddPointLight(pPointL);*/
 }
 
 void Renderer::InitializeDirectX(void)
@@ -479,14 +479,12 @@ void Renderer::Render(void)
 void Renderer::ComputeLighting(void)
 {
 	// Directional Light
-	m_pRenderOptionsCBuffer->Bind(m_pImmediateContext);
-	pTestDirLight->DirLight.vDirection.Normalize();
-	DirLightStruct* pLight = m_pLightManager->GetDirLight(0);
-	if (pLight)
-		pLight = &pTestDirLight->DirLight;
-
-	SetDirLightData(pLight);
-	m_pLightingContextList->Render();
+	for (unsigned int i = 0; i < m_pLightManager->GetNumDirLights(); i++)
+	{
+		m_pLightManager->SetActiveIndex(i);
+		m_pLightManager->BindDirLight(i);
+		m_pLightingContextList->Render();
+	}
 
 	m_pBlendStateManager->ApplyState(BS_DEFAULT);
 	m_pDepthStencilStateManager->ApplyState(DSS_DEFAULT);
