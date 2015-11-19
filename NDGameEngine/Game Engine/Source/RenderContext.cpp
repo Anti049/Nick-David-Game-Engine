@@ -264,7 +264,6 @@ void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 			Renderer::m_pGBuffer->m_pGBufferTargets[SPECULAR]->GetSRV(),
 			Renderer::m_pGBuffer->m_pGBufferTargets[NORMAL]->GetSRV(),
 			Renderer::m_pGBuffer->m_pGBufferTargets[DEPTH]->GetSRV(),
-			Renderer::m_pGBuffer->m_pGBufferTargets[EMISSIVE]->GetSRV(),
 		};
 		Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
 
