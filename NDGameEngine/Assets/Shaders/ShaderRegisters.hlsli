@@ -31,4 +31,5 @@ SamplerState			sLinearWrapSampler				: register(s5);
 SamplerState			sLinearClampSampler				: register(s6);
 SamplerComparisonState	sLinearBorderCompareSampler		: register(s7);
 
+
 #endif //_TEXTURES_AND_SAMPLERS_HLSLI_
