@@ -183,6 +183,16 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pFloor->SetMaterial(pFloorMat);
 	AddRenderShape(pFloor, "GBuffer");
 
+	DXGI_SWAP_CHAIN_DESC tempDesc;
+	Renderer::m_pSwapChain->GetDesc(&tempDesc);
+	m_pGBuffer = new GBuffer;
+	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
+
+	RenderShape* pDirLightQuad = new RenderShape;
+	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
+	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
+	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+
 	m_pLightManager = new LightManager;
 
 	DirLightStruct* pDirLight = new DirLightStruct;
@@ -196,28 +206,25 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	m_pLightManager->AddDirLight(pDirLight);
 
 	DirLightStruct* pDirLight2 = new DirLightStruct;
-	pDirLight2->vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, -1.0f);
+	pDirLight2->vDirection = DirectX::SimpleMath::Vector3(-0.25f, -1.0f, -1.0f);
 	pDirLight2->nEnabled = true;
 	pDirLight2->nCastsShadow = false;
 	pDirLight2->fSpecularPower = 512.0f;
 	pDirLight2->fSpecularIntensity = 10.0f;
 	pDirLight2->vColor = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 	pDirLight2->fAmbient = 0.25f;
-	//m_pLightManager->AddDirLight(pDirLight2);
+	m_pLightManager->AddDirLight(pDirLight2);
 
-	DXGI_SWAP_CHAIN_DESC tempDesc;
-	Renderer::m_pSwapChain->GetDesc(&tempDesc);
-	m_pGBuffer = new GBuffer;
-	m_pGBuffer->Initialize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
-
-	RenderShape* pDirLightQuad = new RenderShape;
-	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
-	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
-	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
-
-	ParticleSystem::GetInstance()->Initialize();
-	ParticleSystem::GetInstance()->CreateEmitter("Test", MAX_PARTICLES);
-	ParticleSystem::GetInstance()->LoadEmitter("Test");
+	PointLightStruct* pPointLight = new PointLightStruct;
+	pPointLight->vPosition = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	pPointLight->fSpecularIntensity = 10.0f;
+	pPointLight->fSpecularPower = 512.0f;
+	pPointLight->fRange = 5.0f;
+	pPointLight->nEnabled = true;
+	pPointLight->vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->vAttenuation = Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->fAmbient = 0.5f;
+	m_pLightManager->AddPointLight(pPointLight);
 }
 
 void Renderer::InitializeDirectX(void)
@@ -424,8 +431,6 @@ void Renderer::InitializeTextureSamplers(void)
 
 void Renderer::Render(void)
 {
-	//ParticleSystem::GetInstance()->Update();
-
 	m_pMainRenderTarget->SetClearColor(m_vClearColor);
 	m_pGBuffer->m_pRenderTarget->SetClearColor(m_vGBufferClearColor);
 
