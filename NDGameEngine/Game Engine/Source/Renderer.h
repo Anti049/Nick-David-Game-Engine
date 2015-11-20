@@ -133,6 +133,8 @@ private:
 	map<std::string, RenderContext*>			m_pGeometryContextMap;
 	RenderSet*									m_pLightingContextList;
 	map<std::string, RenderContext*>			m_pLightingContextMap;
+	RenderSet*									m_pPointLightContextList;
+	map<std::string, RenderContext*>			m_pPointLightContextMap;
 	bool										m_bViewGBuffer;
 
 	ParticleSystem*								m_pParticleSystem;

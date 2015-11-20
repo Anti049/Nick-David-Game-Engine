@@ -198,6 +198,9 @@
     <ClInclude Include="Source\StructuredBufferTemplate.h">
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
+    <ClInclude Include="Source\RenderShapePLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinMain.cpp">
@@ -305,6 +308,9 @@
     <ClCompile Include="Source\ParticleSystem.cpp">
       <Filter>Source Files\Rendering System\Effects</Filter>
     </ClCompile>
+    <ClCompile Include="Source\RenderShapePLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Assets\Shaders\Flat2D_VS.hlsl">
@@ -372,6 +378,12 @@
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Particle_VS.hlsl">
       <Filter>Shaders\Source\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\PassThroughBlack_VS.hlsl">
+      <Filter>Shaders\Source\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\Black_PS.hlsl">
+      <Filter>Shaders\Source\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

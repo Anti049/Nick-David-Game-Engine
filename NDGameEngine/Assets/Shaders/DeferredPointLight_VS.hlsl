@@ -1,5 +1,6 @@
 #include "../../Game Engine/Source/ShaderIncludes.h"
 #include "../../Game Engine/Source/ConstantBuffers.h"
+#include "../../Game Engine/Source/LightBuffers.h"
 #include "../../Game Engine/Source/VertexFormats.h"
 
 PIXEL_POSTEXPOS main(VERTEX_POSITION input)

@@ -19,7 +19,7 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 	vSpecular = tSpecularGBuffer.Sample(sLinearClampSampler, vTexCoord);
 	vNormal = tNormalGBuffer.Sample(sLinearClampSampler, vTexCoord).xyz * 2.0f - 1.0f;
 	fDepth = tDepthGBuffer.Sample(sLinearClampSampler, vTexCoord).r;
-	if (fDepth == 0.0f)
+	if (fDepth == 0.0f && fDepth < input.m_vPixelPos.z)
 		discard;
 	vPosWorld = CalculateWorldSpacePosition(input.m_vPixelPos.xy, fDepth, mInvViewProj);
 	vToLight = (PointLight.vPosition - vPosWorld).xyz;
@@ -30,16 +30,17 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 
 	if (PointLight.nEnabled == 1)
 	{
+		//return float4(PointLight.vColor, 1.0f);
 		// Diffuse
-		fNDotL = saturate(dot(vNormal, vToLight));
-		vFinalDiffuse = fNDotL * float4(PointLight.vColor, 1.0f);
+		fNDotL = saturate(dot(normalize(vNormal), vToLight));
+		vFinalDiffuse = fNDotL * float4(PointLight.vColor, 0.0f);
 		// Ambient
-		vFinalAmbient = float4(PointLight.vColor, 1.0f) * PointLight.fAmbient/* * vDiffuse.w*/;
+		vFinalAmbient = float4(PointLight.vColor, 0.0f)/* * vDiffuse.w*/;
 		// Specular
 		vDirectionToCamera = normalize(vCameraPosition - vPosWorld.xyz);
 		vReflectionVector = reflect(-vToLight, normalize(vNormal));
 		fSpecMod = PointLight.fSpecularIntensity * pow(saturate(dot(vReflectionVector, vDirectionToCamera)), PointLight.fSpecularPower);
-		vFinalSpecular = vDiffuse.w * vSpecular * fSpecMod * (fNDotL > 0.0f) * float4(PointLight.vColor, 1.0f);
+		vFinalSpecular = vDiffuse.w * vSpecular * fSpecMod * (fNDotL > 0.0f) * float4(PointLight.vColor, 0.0f);
 		
 		if (nViewLightingOnly != 1)
 		{
@@ -48,7 +49,7 @@ float4 main(PIXEL_POSTEXPOS input) SEMANTIC(SV_TARGET)
 		}
 		float4 vDiffuseSpecular = vFinalDiffuse + vFinalSpecular;
 		// Return
-		return fAttenuation * (vFinalAmbient + vDiffuseSpecular);
+		return /*fAttenuation * */(vFinalAmbient + vDiffuseSpecular);
 	}
 	return vDiffuse;
 }

@@ -302,6 +302,7 @@ void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 			Renderer::m_pBlendStateManager->ApplyState(BS_ADDITIVE);
 
 		ContextSharedRenderFunc(pNode);
+		Renderer::m_pImmediateContext->ClearDepthStencilView(Renderer::m_pMainRenderTarget->GetDSV(), D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 }
 
@@ -337,12 +338,10 @@ void RenderContext::ContextDRPointLightRenderFunc(RenderNode* pNode)
 		};
 		Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
 
-		// Set Depth Stencil State and Blend State
-		// TOOK OUT BLEND STATE TO FIX BLENDING WITH SKYBOX
 		Renderer::m_pDepthStencilStateManager->ApplyState(DSS_NO_DEPTH);
-		//if (Renderer::m_pLightManager->GetActiveIndex())
 		Renderer::m_pBlendStateManager->ApplyState(BS_ADDITIVE);
 
 		ContextSharedRenderFunc(pNode);
+		Renderer::m_pImmediateContext->ClearDepthStencilView(Renderer::m_pMainRenderTarget->GetDSV(), D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 }

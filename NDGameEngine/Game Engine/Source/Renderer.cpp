@@ -19,6 +19,7 @@
 #include "LightManager.h"
 #include "GBuffer.h"
 #include "ParticleSystem.h"
+#include "RenderShapePLight.h"
 
 #pragma region Static Initialization
 Renderer*							Renderer::s_pInstance						= nullptr;
@@ -213,18 +214,23 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLight2->fSpecularIntensity = 10.0f;
 	pDirLight2->vColor = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 	pDirLight2->fAmbient = 0.25f;
-	m_pLightManager->AddDirLight(pDirLight2);
+	//m_pLightManager->AddDirLight(pDirLight2);
 
 	PointLightStruct* pPointLight = new PointLightStruct;
-	pPointLight->vPosition = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-	pPointLight->fSpecularIntensity = 10.0f;
+	pPointLight->vPosition = Vector4(0.0f, 0.0f, -1.0f, 1.0f);
+	pPointLight->fSpecularIntensity = 1.0f;
 	pPointLight->fSpecularPower = 512.0f;
-	pPointLight->fRange = 5.0f;
+	pPointLight->fRange = 10.0f;
 	pPointLight->nEnabled = true;
 	pPointLight->vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
-	pPointLight->vAttenuation = Vector3(1.0f, 0.0f, 0.0f);
-	pPointLight->fAmbient = 0.5f;
+	pPointLight->vAttenuation = Vector3(1.0f, 2.0f / pPointLight->fRange, 1.0f / (pPointLight->fRange * pPointLight->fRange));
 	m_pLightManager->AddPointLight(pPointLight);
+
+	RenderShape* pPointLightSphere = new RenderShapePLight;
+	pPointLightSphere->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSITION>(std::string("../Assets/Art/3D/lightSphere.fbx")));
+	((RenderShapePLight*)pPointLightSphere)->SetRenderFunc(RenderShapePLight::IndexedPrimitiveRenderFunc);
+	pPointLightSphere->SetContext(m_pPointLightContextMap["DeferredPointLight"]);
+	m_pPointLightContextMap["DeferredPointLight"]->GetRenderSet()->AddNode(pPointLightSphere);
 }
 
 void Renderer::InitializeDirectX(void)
@@ -313,6 +319,7 @@ void Renderer::Terminate(void)
 	SafeDelete(m_pMainRenderTarget);
 	SafeDelete(m_pGeometryContextList);
 	SafeDelete(m_pLightingContextList);
+	SafeDelete(m_pPointLightContextList);
 	SafeDelete(m_pMeshDatabase);
 	SafeDelete(m_pTextureDatabase);
 	SafeDelete(m_pBlendStateManager);
@@ -479,6 +486,13 @@ void Renderer::ComputeLighting(void)
 		m_pLightManager->BindDirLight(i);
 		m_pLightingContextList->Render();
 	}
+	// Directional Light
+	for (unsigned int i = 0; i < m_pLightManager->GetNumPointLights(); i++)
+	{
+		m_pLightManager->SetActiveIndex(i);
+		m_pLightManager->BindPointLight(i);
+		m_pPointLightContextList->Render();
+	}
 
 	m_pBlendStateManager->ApplyState(BS_DEFAULT);
 	m_pDepthStencilStateManager->ApplyState(DSS_DEFAULT);
@@ -505,8 +519,37 @@ void Renderer::SetupGeometryContexts(void)
 void Renderer::SetupLightingContexts(void)
 {
 	m_pLightingContextList = new RenderSet;
+	m_pPointLightContextList = new RenderSet;
 	// DeferredDirLight
 	CreateContext(m_pLightingContextMap, m_pLightingContextList, "DeferredDirLight", RenderContext::ContextDRDirLightRenderFunc, eVERTEX_POSTEX2D);
+	// DeferredPointLight
+	m_pPointLightContextMap["DeferredPointLight"] = new RenderContext;
+	m_pPointLightContextMap["DeferredPointLight"]->SetRenderSet(new RenderSet);
+	m_pPointLightContextMap["DeferredPointLight"]->SetRenderFunc(RenderContext::ContextDRPointLightRenderFunc);
+	ShaderTechnique* pTechnique = new ShaderTechnique;
+	pTechnique->SetName(string("DeferredPointLight"));
+	//////////////////////////////////////////////////////////////////////////
+	// Pass 0
+	ShaderPass* pPass0 = new ShaderPass;
+	pPass0->CreateInputLayout(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str(), eVERTEX_POSITION);
+	pPass0->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str());
+	pPass0->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + "Black" + string("_PS.cso")).c_str());
+	pTechnique->AddPass(pPass0);
+	// Pass 1
+	ShaderPass* pPass1 = new ShaderPass;
+	pPass1->CreateInputLayout(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str(), eVERTEX_POSITION);
+	pPass1->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str());
+	pPass1->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + "Black" + string("_PS.cso")).c_str());
+	pTechnique->AddPass(pPass1);
+	// Pass 2
+	ShaderPass* pPass2 = new ShaderPass;
+	pPass2->CreateInputLayout(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str(), eVERTEX_POSITION);
+	pPass2->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str());
+	pPass2->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_PS.cso")).c_str());
+	pTechnique->AddPass(pPass2);
+	//////////////////////////////////////////////////////////////////////////
+	m_pPointLightContextMap["DeferredPointLight"]->SetShaderTechnique(pTechnique);
+	m_pPointLightContextList->AddNode(m_pPointLightContextMap["DeferredPointLight"]);
 }
 
 void Renderer::CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* pSet, string szShaderName, RenderNode::RenderFunc pFunc, ShaderType eType)

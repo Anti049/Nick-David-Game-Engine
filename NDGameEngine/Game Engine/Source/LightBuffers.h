@@ -30,16 +30,14 @@ struct regAlign PointLightStruct
 	float3				vColor;
 	// Enabled State
 	int					nEnabled;
-	// Maximum Distance of the Light
-	float				fRange;
-	// Controls the Size of the Specular Reflection. Smaller Value, Larger Reflection
-	float				fSpecularPower;
 	// X = Constant, Y = Linear, Z = Quadratic
 	float3				vAttenuation;
+	// Controls the Size of the Specular Reflection. Smaller Value, Larger Reflection
+	float				fSpecularPower;
 	// Controls the Brightness of the Specular Reflection
 	float				fSpecularIntensity;
-	// Ambient
-	float				fAmbient;
+	// Maximum Distance of the Light
+	float				fRange;
 };
 struct regAlign PLightShadowStruct
 {
