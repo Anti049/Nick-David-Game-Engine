@@ -1,7 +1,7 @@
 #include "../../Game Engine/Source/ShaderIncludes.h"
 #include "../../Game Engine/Source/ConstantBuffers.h"
 #include "../../Game Engine/Source/VertexFormats.h"
-#include "TexturesAndSamplers.hlsli"
+#include "ShaderRegisters.hlsli"
 
 float4 main(PIXEL_POSTEX input) SEMANTIC(SV_TARGET)
 {
@@ -15,6 +15,8 @@ float4 main(PIXEL_POSTEX input) SEMANTIC(SV_TARGET)
 		vColor.xyz = tNormalGBuffer.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
 	if (nViewGBufferDepth)
 		vColor.xyz = tDepthGBuffer.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
+	if (nViewGBufferEmissive)
+		vColor.xyz = tEmissiveGBuffer.Sample(sLinearWrapSampler, input.m_vTexCoord).xyz;
 
 	return vColor;
 }

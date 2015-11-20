@@ -11,7 +11,8 @@ public:
 	VertexBuffer(void);
 	~VertexBuffer(void);
 
-	unsigned int				AddVerts(const VertexFormat* pVertices, unsigned int unNumVerts);
+	unsigned int				AddVerts(const VertexFormat* pVertices, unsigned int unNumVerts, bool bDynamic = false);
+	void						UpdateVerts(unsigned int unStartIndex, const VertexFormat* pVertices, unsigned int unNumVerts);
 	void						Clear(void)
 	{
 		SafeRelease(&m_pVertexBuffer);
@@ -23,12 +24,14 @@ public:
 
 private:
 	ID3D11Buffer*				m_pVertexBuffer;
+	bool						m_bDynamic;
 };
 
 template <typename VertexFormat>
 VertexBuffer<VertexFormat>::VertexBuffer(void) 
 {
 	m_pVertexBuffer = 0;
+	m_bDynamic = false;
 }
 
 template <typename VertexFormat>
@@ -38,8 +41,9 @@ VertexBuffer<VertexFormat>::~VertexBuffer(void)
 }
 
 template <typename VertexFormat>
-unsigned int VertexBuffer<VertexFormat>::AddVerts(const VertexFormat* pVertices, unsigned int unNumVerts)
+unsigned int VertexBuffer<VertexFormat>::AddVerts(const VertexFormat* pVertices, unsigned int unNumVerts, bool bDynamic)
 {
+	m_bDynamic = bDynamic;
 	size_t ret;
 	// Test if this buffer has already been finalized
 	if(!m_pVertexBuffer)
@@ -47,10 +51,10 @@ unsigned int VertexBuffer<VertexFormat>::AddVerts(const VertexFormat* pVertices,
 		ret = 0;
 
 		D3D11_BUFFER_DESC vbd;
-		vbd.Usage = D3D11_USAGE_DEFAULT;
+		vbd.Usage = bDynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 		vbd.ByteWidth = sizeof(VertexFormat) * unNumVerts;
 		vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vbd.CPUAccessFlags = 0;
+		vbd.CPUAccessFlags = bDynamic ? D3D11_CPU_ACCESS_WRITE : NULL;
 		vbd.MiscFlags = 0;
 		vbd.StructureByteStride = 0;
 		D3D11_SUBRESOURCE_DATA vinitData;
@@ -86,4 +90,16 @@ unsigned int VertexBuffer<VertexFormat>::AddVerts(const VertexFormat* pVertices,
 		ret = oldBuffeSize;
 	}
 	return (unsigned int)ret;
+}
+
+template <typename VertexFormat>
+void VertexBuffer<VertexFormat>::UpdateVerts(unsigned int unStartIndex, const VertexFormat* pVertices, unsigned int unNumVerts)
+{
+	if (m_pVertexBuffer && m_bDynamic)
+	{
+		D3D11_MAPPED_SUBRESOURCE resource;
+		Renderer::m_pImmediateContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		memcpy((VertexFormat*)resource.pData + unStartIndex, pVertices, sizeof(VertexFormat) * unNumVerts);
+		Renderer::m_pImmediateContext->Unmap(m_pVertexBuffer, NULL);
+	}
 }

@@ -18,7 +18,9 @@ public:
 	static void				Context3DTextureRenderFunc(RenderNode* pNode);
 	static void				Context3DForwardLightingRenderFunc(RenderNode* pNode);
 	static void				ContextGBufferRenderFunc(RenderNode* pNode);
+	static void				ContextParticleRenderFunc(RenderNode* pNode);
 	static void				ContextDRDirLightRenderFunc(RenderNode* pNode);
+	static void				ContextDRPointLightRenderFunc(RenderNode* pNode);
 
 	void					EffectsSetTextureMap(RenderTextureTypes eTextureType, ID3D11ShaderResourceView* pTexture);
 	void					EffectsSetTextureMapsAll(ID3D11ShaderResourceView** pTexture, unsigned int unStartIndex = eAmbient, unsigned int unCount = eCount);

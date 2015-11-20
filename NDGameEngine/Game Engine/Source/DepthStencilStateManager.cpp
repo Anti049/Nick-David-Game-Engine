@@ -26,16 +26,6 @@ bool DepthStencilStateManager::ApplyState(DSStates eState)
 
 void DepthStencilStateManager::CreateStates(void)
 {
-	D3D11_DEPTH_STENCIL_DESC willDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
-	willDesc.DepthEnable = false;
-	willDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	willDesc.StencilEnable = false;
-	willDesc.DepthEnable = true;
-	willDesc.DepthEnable = true;
-	willDesc.DepthFunc = D3D11_COMPARISON_GREATER;
-	willDesc.StencilEnable = true;
-	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-
 	D3D11_DEPTH_STENCIL_DESC dssDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
 	dssDesc.DepthEnable = FALSE;
 
@@ -50,41 +40,29 @@ void DepthStencilStateManager::CreateStates(void)
 	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_LESS_EQUAL]);
 	m_unStencilRefs[DSS_LESS_EQUAL] = 0;
 
-	dssDesc.DepthFunc = D3D11_COMPARISON_GREATER;
-	dssDesc.StencilEnable = TRUE;
-	dssDesc.FrontFace.StencilPassOp = 
-		dssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-	dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_1]);
+	D3D11_DEPTH_STENCIL_DESC willDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
+	willDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	willDesc.DepthEnable = true;
+	willDesc.DepthFunc = D3D11_COMPARISON_GREATER;
+	willDesc.StencilEnable = true;
+	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	// Pass 0
+	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_1]);
 	m_unStencilRefs[DSS_DEFERRED_LIGHT_1] = 0x1;
-
-	willDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	// Pass 1
+	willDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	willDesc.FrontFace.StencilFunc = willDesc.BackFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
-
-	dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	dssDesc.FrontFace.StencilFunc = 
-		dssDesc.BackFace.StencilFunc = D3D11_COMPARISON_EQUAL;
-	dssDesc.FrontFace.StencilPassOp = 
-		dssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_2]);
+	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_2]);
 	m_unStencilRefs[DSS_DEFERRED_LIGHT_2] = 0x1;
-
-	dssDesc.FrontFace.StencilPassOp = 
-		dssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-
+	// Pass Outside
 	willDesc.DepthEnable = false;
 	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-
-	/*dssDesc.FrontFace.StencilFunc = 
-		dssDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
-
-	dssDesc.FrontFace.StencilFailOp = 
-		dssDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;*/
-	dssDesc.DepthEnable = FALSE;
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_LIGHT_OUTSIDE_FINAL]);
+	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_LIGHT_OUTSIDE_FINAL]);
 	m_unStencilRefs[DSS_LIGHT_OUTSIDE_FINAL] = 0x2;
-
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_LIGHT_INSIDE_FINAL]);
+	// Pass Inside
+	willDesc.DepthEnable = false;
+	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_LIGHT_INSIDE_FINAL]);
 	m_unStencilRefs[DSS_LIGHT_INSIDE_FINAL] = 0x1;
 }

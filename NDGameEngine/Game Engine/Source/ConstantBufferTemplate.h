@@ -70,6 +70,14 @@ void ConstantBuffer<Type>::Unmap(ID3D11DeviceContext* pContext)
 }
 
 template <typename Type>
+void ConstantBuffer<Type>::ModifyData(ID3D11DeviceContext* pContext, Type* tData)
+{
+	Type* pData = MapDiscard(pContext);
+	memcpy(pData, tData, sizeof(Type));
+	Unmap(pContext);
+}
+
+template <typename Type>
 void ConstantBuffer<Type>::Bind(ID3D11DeviceContext* pContext)
 {
 	pContext->VSSetConstantBuffers(REGISTER_SLOT(Type), 1, &m_pBuffer);
@@ -77,4 +85,5 @@ void ConstantBuffer<Type>::Bind(ID3D11DeviceContext* pContext)
 	pContext->DSSetConstantBuffers(REGISTER_SLOT(Type), 1, &m_pBuffer);
 	pContext->HSSetConstantBuffers(REGISTER_SLOT(Type), 1, &m_pBuffer);
 	pContext->PSSetConstantBuffers(REGISTER_SLOT(Type), 1, &m_pBuffer);
+	pContext->CSSetConstantBuffers(REGISTER_SLOT(Type), 1, &m_pBuffer);
 }

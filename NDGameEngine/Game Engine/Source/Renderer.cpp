@@ -18,6 +18,8 @@
 #include "Material.h"
 #include "LightManager.h"
 #include "GBuffer.h"
+#include "ParticleSystem.h"
+#include "RenderShapePLight.h"
 
 #pragma region Static Initialization
 Renderer*							Renderer::s_pInstance						= nullptr;
@@ -53,8 +55,8 @@ void TW_CALL ToggleViewGBuffer(void* pClientData)
 	((Renderer*)pClientData)->m_bViewGBuffer = !((Renderer*)pClientData)->m_bViewGBuffer;
 	string value = ((Renderer*)pClientData)->m_bViewGBuffer ? "true" : "false";
 	string szParam;
-	string buttons[] = { "Diffuse", "Specular", "Normal", "Depth" };
-	for (int i = 0; i < 4; i++)
+	string buttons[] = { "Diffuse", "Specular", "Normal", "Depth", "Emissive" };
+	for (int i = 0; i < ArraySize(buttons); i++)
 	{
 		szParam = " RendererBar/'Show " + buttons[i] + " GBuffer' visible=" + value;
 		TwDefine(szParam.c_str());
@@ -81,6 +83,10 @@ void TW_CALL ShowDepthGBuffer(void* pClientData)
 { 
 	((Renderer*)pClientData)->m_pGBuffer->SetViewGBuffer(DEPTH); 
 }
+void TW_CALL ShowEmissiveGBuffer(void* pClientData)
+{
+	((Renderer*)pClientData)->m_pGBuffer->SetViewGBuffer(EMISSIVE); 
+}
 void TW_CALL ShowLightingOnly(void* pClientData)		
 { 
 	cbRenderOptions* tRenderOptions = ((Renderer*)pClientData)->m_pRenderOptionsCBuffer->MapDiscard(Renderer::m_pImmediateContext);
@@ -91,8 +97,6 @@ void TW_CALL ShowLightingOnly(void* pClientData)
 
 	((Renderer*)pClientData)->m_pRenderOptionsCBuffer->Unmap(Renderer::m_pImmediateContext);
 }
-
-cbDirectionalLight* pTestDirLight = nullptr;
 
 Renderer::Renderer(void)
 {
@@ -166,6 +170,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pTestMat->SetAmbient(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_A.dds"));
 	pTestMat->SetSpecular(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
 	pTestMat->SetNormal(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_N.dds"));
+	//pTestMat->SetEmissive(m_pTextureDatabase->LoadTexture(L"../assets/Art/2D/Test_S.dds"));
 	pTest->SetMaterial(pTestMat);
 	AddRenderShape(pTest, "GBuffer");
 
@@ -179,19 +184,6 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pFloor->SetMaterial(pFloorMat);
 	AddRenderShape(pFloor, "GBuffer");
 
-	m_pLightManager = new LightManager;
-	pTestDirLight = new cbDirectionalLight;
-	pTestDirLight->DirLight.vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
-	pTestDirLight->DirLight.nEnabled = true;
-	pTestDirLight->DirLight.nCastsShadow = false;
-	pTestDirLight->DirLight.fSpecularPower = 512.0f;
-	pTestDirLight->DirLight.fSpecularIntensity = 10.0f;
-	pTestDirLight->DirLight.vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
-	pTestDirLight->DirLight.fAmbient = 0.5f;
-	DirLightStruct* pDirLight = new DirLightStruct;
-	memcpy(pDirLight, &pTestDirLight->DirLight, sizeof(DirLightStruct));
-	m_pLightManager->AddDirLight(pDirLight);
-
 	DXGI_SWAP_CHAIN_DESC tempDesc;
 	Renderer::m_pSwapChain->GetDesc(&tempDesc);
 	m_pGBuffer = new GBuffer;
@@ -201,6 +193,44 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLightQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Directional Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
 	pDirLightQuad->SetContext(m_pLightingContextMap["DeferredDirLight"]);
 	m_pLightingContextMap["DeferredDirLight"]->GetRenderSet()->AddNode(pDirLightQuad);
+
+	m_pLightManager = new LightManager;
+
+	DirLightStruct* pDirLight = new DirLightStruct;
+	pDirLight->vDirection = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 1.0f);
+	pDirLight->nEnabled = true;
+	pDirLight->nCastsShadow = false;
+	pDirLight->fSpecularPower = 512.0f;
+	pDirLight->fSpecularIntensity = 10.0f;
+	pDirLight->vColor = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
+	pDirLight->fAmbient = 0.5f;
+	m_pLightManager->AddDirLight(pDirLight);
+
+	DirLightStruct* pDirLight2 = new DirLightStruct;
+	pDirLight2->vDirection = DirectX::SimpleMath::Vector3(-0.25f, -1.0f, -1.0f);
+	pDirLight2->nEnabled = true;
+	pDirLight2->nCastsShadow = false;
+	pDirLight2->fSpecularPower = 512.0f;
+	pDirLight2->fSpecularIntensity = 10.0f;
+	pDirLight2->vColor = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
+	pDirLight2->fAmbient = 0.25f;
+	//m_pLightManager->AddDirLight(pDirLight2);
+
+	PointLightStruct* pPointLight = new PointLightStruct;
+	pPointLight->vPosition = Vector4(0.0f, 0.0f, -1.0f, 1.0f);
+	pPointLight->fSpecularIntensity = 1.0f;
+	pPointLight->fSpecularPower = 512.0f;
+	pPointLight->fRange = 10.0f;
+	pPointLight->nEnabled = true;
+	pPointLight->vColor = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
+	pPointLight->vAttenuation = Vector3(1.0f, 2.0f / pPointLight->fRange, 1.0f / (pPointLight->fRange * pPointLight->fRange));
+	m_pLightManager->AddPointLight(pPointLight);
+
+	RenderShape* pPointLightSphere = new RenderShapePLight;
+	pPointLightSphere->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSITION>(std::string("../Assets/Art/3D/lightSphere.fbx")));
+	((RenderShapePLight*)pPointLightSphere)->SetRenderFunc(RenderShapePLight::IndexedPrimitiveRenderFunc);
+	pPointLightSphere->SetContext(m_pPointLightContextMap["DeferredPointLight"]);
+	m_pPointLightContextMap["DeferredPointLight"]->GetRenderSet()->AddNode(pPointLightSphere);
 }
 
 void Renderer::InitializeDirectX(void)
@@ -262,7 +292,7 @@ void Renderer::InitializeConstantBuffers(void)
 	//////////////////////////////////////////////////////////////////////////
 	// Render Options
 	m_pRenderOptionsCBuffer = new ConstantBuffer<cbRenderOptions>(m_pDevice, "Render Options Buffer");
-	SetRenderOptionsData(1, 0, 0, 0, 0);
+	SetRenderOptionsData(1, 0, 0, 0, 0, 0);
 	//////////////////////////////////////////////////////////////////////////
 	// Directional Light
 	m_pDirLightCBuffer = new ConstantBuffer<cbDirectionalLight>(m_pDevice, "Directional Light Buffer");
@@ -286,11 +316,10 @@ void Renderer::Terminate(void)
 	SafeRelease(&m_pZBuffer);
 	SafeRelease(&m_pDepthStencilView);
 
-	SafeDelete(pTestDirLight);
-
 	SafeDelete(m_pMainRenderTarget);
 	SafeDelete(m_pGeometryContextList);
 	SafeDelete(m_pLightingContextList);
+	SafeDelete(m_pPointLightContextList);
 	SafeDelete(m_pMeshDatabase);
 	SafeDelete(m_pTextureDatabase);
 	SafeDelete(m_pBlendStateManager);
@@ -304,6 +333,9 @@ void Renderer::Terminate(void)
 	SafeDelete(m_pPointLightCBuffer);
 	SafeDelete(m_pSpotLightCBuffer);
 	SafeDelete(m_pRenderOptionsCBuffer);
+
+	ParticleSystem::GetInstance()->Terminate();
+	ParticleSystem::DeleteInstance();
 
 	VertexBufferManager::DeleteInstance();
 	IndexBuffer::DeleteInstance();
@@ -333,15 +365,10 @@ void Renderer::SetUpUI(void)
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Specular GBuffer", ShowSpecularGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Normal GBuffer", ShowNormalGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Depth GBuffer", ShowDepthGBuffer, this);
+	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Emissive GBuffer", ShowEmissiveGBuffer, this);
 	Engine::m_cUIManager.GetUI("RendererBar")->AddButton("Show Lighting Only", ShowLightingOnly, this);
 	m_bViewGBuffer = true;
 	ToggleViewGBuffer(this);
-
-	Engine::m_cUIManager.GetUI("RendererBar")->AddSeparator(" group='Directional Light'");
-	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.nEnabled, "Enabled", TW_TYPE_BOOL32);
-	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.vDirection, "Direction", TW_TYPE_DIR3F);
-	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.fAmbient, "Ambient Level", TW_TYPE_FLOAT, 3, ParamEtc::MIN_VAL, 0.0f, ParamEtc::MAX_VAL, 1.0f, ParamEtc::STEP, 0.01f);
-	Engine::m_cUIManager.GetUI("RendererBar")->AddParam(&pTestDirLight->DirLight.vColor, "Color", TW_TYPE_COLOR3F);
 }
 
 void Renderer::InitializeTextureSamplers(void)
@@ -453,14 +480,19 @@ void Renderer::Render(void)
 void Renderer::ComputeLighting(void)
 {
 	// Directional Light
-	m_pRenderOptionsCBuffer->Bind(m_pImmediateContext);
-	pTestDirLight->DirLight.vDirection.Normalize();
-	DirLightStruct* pLight = m_pLightManager->GetDirLight(0);
-	if (pLight)
-		pLight = &pTestDirLight->DirLight;
-
-	SetDirLightData(pLight);
-	m_pLightingContextList->Render();
+	for (unsigned int i = 0; i < m_pLightManager->GetNumDirLights(); i++)
+	{
+		m_pLightManager->SetActiveIndex(i);
+		m_pLightManager->BindDirLight(i);
+		m_pLightingContextList->Render();
+	}
+	// Directional Light
+	for (unsigned int i = 0; i < m_pLightManager->GetNumPointLights(); i++)
+	{
+		m_pLightManager->SetActiveIndex(i);
+		m_pLightManager->BindPointLight(i);
+		m_pPointLightContextList->Render();
+	}
 
 	m_pBlendStateManager->ApplyState(BS_DEFAULT);
 	m_pDepthStencilStateManager->ApplyState(DSS_DEFAULT);
@@ -481,12 +513,43 @@ void Renderer::SetupGeometryContexts(void)
 	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "FLight", RenderContext::Context3DForwardLightingRenderFunc, eVERTEX_POSNORMTEX);
 	// GBuffer
 	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "GBuffer", RenderContext::ContextGBufferRenderFunc, eVERTEX_POSNORMTEX);
+	// Particle
+	CreateContext(m_pGeometryContextMap, m_pGeometryContextList, "Particle", RenderContext::ContextParticleRenderFunc, ePARTICLE_VERTEX);
 }
 void Renderer::SetupLightingContexts(void)
 {
 	m_pLightingContextList = new RenderSet;
+	m_pPointLightContextList = new RenderSet;
 	// DeferredDirLight
 	CreateContext(m_pLightingContextMap, m_pLightingContextList, "DeferredDirLight", RenderContext::ContextDRDirLightRenderFunc, eVERTEX_POSTEX2D);
+	// DeferredPointLight
+	m_pPointLightContextMap["DeferredPointLight"] = new RenderContext;
+	m_pPointLightContextMap["DeferredPointLight"]->SetRenderSet(new RenderSet);
+	m_pPointLightContextMap["DeferredPointLight"]->SetRenderFunc(RenderContext::ContextDRPointLightRenderFunc);
+	ShaderTechnique* pTechnique = new ShaderTechnique;
+	pTechnique->SetName(string("DeferredPointLight"));
+	//////////////////////////////////////////////////////////////////////////
+	// Pass 0
+	ShaderPass* pPass0 = new ShaderPass;
+	pPass0->CreateInputLayout(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str(), eVERTEX_POSITION);
+	pPass0->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str());
+	pPass0->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + "Black" + string("_PS.cso")).c_str());
+	pTechnique->AddPass(pPass0);
+	// Pass 1
+	ShaderPass* pPass1 = new ShaderPass;
+	pPass1->CreateInputLayout(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str(), eVERTEX_POSITION);
+	pPass1->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str());
+	pPass1->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + "Black" + string("_PS.cso")).c_str());
+	pTechnique->AddPass(pPass1);
+	// Pass 2
+	ShaderPass* pPass2 = new ShaderPass;
+	pPass2->CreateInputLayout(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str(), eVERTEX_POSITION);
+	pPass2->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_VS.cso")).c_str());
+	pPass2->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + "DeferredPointLight" + string("_PS.cso")).c_str());
+	pTechnique->AddPass(pPass2);
+	//////////////////////////////////////////////////////////////////////////
+	m_pPointLightContextMap["DeferredPointLight"]->SetShaderTechnique(pTechnique);
+	m_pPointLightContextList->AddNode(m_pPointLightContextMap["DeferredPointLight"]);
 }
 
 void Renderer::CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* pSet, string szShaderName, RenderNode::RenderFunc pFunc, ShaderType eType)
@@ -500,6 +563,7 @@ void Renderer::CreateContext(map<std::string, RenderContext*>& pMap, RenderSet* 
 	pPass->CreateInputLayout(string(string("../Assets/Shaders/") + szShaderName + string("_VS.cso")).c_str(), eType);
 	pPass->CreateVertexShaderFromCompiledFile(string(string("../Assets/Shaders/") + szShaderName + string("_VS.cso")).c_str());
 	pPass->CreatePixelShaderFromCompiledFile(string(string("../Assets/Shaders/") + szShaderName + string("_PS.cso")).c_str());
+	pPass->CreateGeometryShaderFromCompiledFile(string(string("../Assets/Shaders/") + szShaderName + string("_GS.cso")).c_str());
 	pTechnique->AddPass(pPass);
 	pMap[szShaderName]->SetShaderTechnique(pTechnique);
 	pSet->AddNode(pMap[szShaderName]);
@@ -511,6 +575,15 @@ void Renderer::AddRenderShape(RenderShape* pShape, string szContext)
 	{
 		pShape->SetContext(m_pGeometryContextMap[szContext]);
 		m_pGeometryContextMap[szContext]->GetRenderSet()->AddNode(pShape);
+	}
+}
+
+void Renderer::RemoveRenderShape(RenderShape* pShape, string szContext)
+{
+	if (m_pGeometryContextMap.find(szContext) != m_pGeometryContextMap.end() && pShape)
+	{
+		pShape->SetContext(nullptr);
+		m_pGeometryContextMap[szContext]->GetRenderSet()->RemoveNode((RenderNode*)pShape);
 	}
 }
 
@@ -537,7 +610,7 @@ void Renderer::SetCameraData(void)
 	m_pCameraCBuffer->Unmap(m_pImmediateContext);
 	m_pCameraCBuffer->Bind(m_pImmediateContext);
 }
-void Renderer::SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpecular, int bViewGBufferNormal, int bViewGBufferDepth, int bViewLightingOnly)
+void Renderer::SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpecular, int bViewGBufferNormal, int bViewGBufferDepth, int bViewGBufferEmissive, int bViewLightingOnly)
 {
 	cbRenderOptions* tRenderOptionsData = m_pRenderOptionsCBuffer->MapDiscard(m_pImmediateContext);
 
@@ -545,6 +618,7 @@ void Renderer::SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpe
 	tRenderOptionsData->nViewGBufferSpecular = bViewGBufferSpecular;
 	tRenderOptionsData->nViewGBufferNormal = bViewGBufferNormal;
 	tRenderOptionsData->nViewGBufferDepth = bViewGBufferDepth;
+	tRenderOptionsData->nViewGBufferEmissive = bViewGBufferEmissive;
 	tRenderOptionsData->nViewLightingOnly = bViewLightingOnly;
 
 	m_pRenderOptionsCBuffer->Unmap(m_pImmediateContext);
@@ -552,6 +626,7 @@ void Renderer::SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpe
 }
 void Renderer::SetDirLightData(DirLightStruct* pDirLight)
 {
+	pDirLight->vDirection.Normalize();
 	cbDirectionalLight* pLight = m_pDirLightCBuffer->MapDiscard(m_pImmediateContext);
 
 	memcpy(&pLight->DirLight, pDirLight, sizeof(DirLightStruct));

@@ -48,3 +48,8 @@ VertexBuffer<VERTEX_POSNORMTEX>& VertexBufferManager::GetVertexBuffer(void)
 {
 	return GetPosNormTexBuffer();
 }
+template <>
+VertexBuffer<ParticleVertex>& VertexBufferManager::GetVertexBuffer(void)
+{
+	return GetParticleBuffer();
+}

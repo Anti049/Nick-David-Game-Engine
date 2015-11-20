@@ -41,6 +41,8 @@ using namespace SimpleMath;
 #include <fbxsdk/fileio/fbxiosettings.h>
 #include "Debugger.h"
 #include "Input.h"
+#define ArraySize(arr) sizeof(arr) / sizeof(arr[0])
+#define RandomFloat(lower, upper, precision) (float)((rand() % ((upper + 1) * precision) + ((lower) * precision)) / (float)precision)
 
 //////////////////////////////////////////////////////////////////////////
 // Exception Handling

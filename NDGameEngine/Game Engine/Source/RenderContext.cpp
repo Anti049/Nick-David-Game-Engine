@@ -235,6 +235,33 @@ void RenderContext::ContextGBufferRenderFunc(RenderNode* pNode)
 	}
 }
 
+void RenderContext::ContextParticleRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<ParticleVertex>().GetVertexBuffer();
+		unsigned int unStride = sizeof(ParticleVertex), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		Renderer::SetCameraData();
+
+		ContextSharedRenderFunc(pNode);
+	}
+}
+
 void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 {
 	RenderContext* pContext = (RenderContext*)pNode;
@@ -264,6 +291,7 @@ void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 			Renderer::m_pGBuffer->m_pGBufferTargets[SPECULAR]->GetSRV(),
 			Renderer::m_pGBuffer->m_pGBufferTargets[NORMAL]->GetSRV(),
 			Renderer::m_pGBuffer->m_pGBufferTargets[DEPTH]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[EMISSIVE]->GetSRV(),
 		};
 		Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
 
@@ -274,5 +302,46 @@ void RenderContext::ContextDRDirLightRenderFunc(RenderNode* pNode)
 			Renderer::m_pBlendStateManager->ApplyState(BS_ADDITIVE);
 
 		ContextSharedRenderFunc(pNode);
+		Renderer::m_pImmediateContext->ClearDepthStencilView(Renderer::m_pMainRenderTarget->GetDSV(), D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+}
+
+void RenderContext::ContextDRPointLightRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11InputLayout*		pInputLayout	= pShaderPass->GetInputLayout();
+
+		// Set Input Layout
+		Renderer::m_pImmediateContext->IASetInputLayout(pInputLayout);
+		// Set Primitive Topology
+		Renderer::m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// Set Vertex Buffer
+		ID3D11Buffer* pVertexBuffer = VertexBufferManager::GetInstance()->GetVertexBuffer<VERTEX_POSITION>().GetVertexBuffer();
+		unsigned int unStride = sizeof(VERTEX_POSITION), unOffset = 0;
+		Renderer::m_pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &unStride, &unOffset);
+
+		// Clear all Textures and Enable Textures
+		pContext->SetTexturesEnabled(true);
+
+		Renderer::SetCameraData();
+
+		ID3D11ShaderResourceView* pGBufferTextures[] = 
+		{
+			Renderer::m_pGBuffer->m_pGBufferTargets[DIFFUSE]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[SPECULAR]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[NORMAL]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[DEPTH]->GetSRV(),
+		};
+		Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
+
+		Renderer::m_pDepthStencilStateManager->ApplyState(DSS_NO_DEPTH);
+		Renderer::m_pBlendStateManager->ApplyState(BS_ADDITIVE);
+
+		ContextSharedRenderFunc(pNode);
+		Renderer::m_pImmediateContext->ClearDepthStencilView(Renderer::m_pMainRenderTarget->GetDSV(), D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 }
