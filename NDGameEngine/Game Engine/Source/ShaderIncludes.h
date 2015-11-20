@@ -3,6 +3,9 @@
 
 #define MAX_PARTICLES 10000
 
+#define COMPUTE_SHADER_TILE_GROUP_DIM 16
+#define COMPUTE_SHADER_TILE_GROUP_SIZE (COMPUTE_SHADER_TILE_GROUP_DIM*COMPUTE_SHADER_TILE_GROUP_DIM)
+
 static unsigned int groupDimX, groupDimY, groupDimZ;
 
 #ifdef __cplusplus

@@ -216,7 +216,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLight2->fAmbient = 0.25f;
 	//m_pLightManager->AddDirLight(pDirLight2);
 
-	PointLightStruct* pPointLight = new PointLightStruct;
+	/*PointLightStruct* pPointLight = new PointLightStruct;
 	pPointLight->vPosition = Vector4(0.0f, 0.0f, -1.0f, 1.0f);
 	pPointLight->fSpecularIntensity = 1.0f;
 	pPointLight->fSpecularPower = 512.0f;
@@ -230,7 +230,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pPointLightSphere->SetMesh(m_pMeshDatabase->LoadFromFile<VERTEX_POSITION>(std::string("../Assets/Art/3D/lightSphere.fbx")));
 	((RenderShapePLight*)pPointLightSphere)->SetRenderFunc(RenderShapePLight::IndexedPrimitiveRenderFunc);
 	pPointLightSphere->SetContext(m_pPointLightContextMap["DeferredPointLight"]);
-	m_pPointLightContextMap["DeferredPointLight"]->GetRenderSet()->AddNode(pPointLightSphere);
+	m_pPointLightContextMap["DeferredPointLight"]->GetRenderSet()->AddNode(pPointLightSphere);*/
 }
 
 void Renderer::InitializeDirectX(void)

@@ -4,6 +4,13 @@
 #include "ShaderIncludes.h"
 #include "VertexFormats.h"
 
+struct FramebufferFlatElement
+{
+	unsigned int rb;
+	unsigned int ga;
+};
+
 STRUCTURED_BUFFER(ParticleBuffer, u0, ParticleVertex);
+STRUCTURED_BUFFER(FrameBuffer, u0, FramebufferFlatElement);
 
 #endif

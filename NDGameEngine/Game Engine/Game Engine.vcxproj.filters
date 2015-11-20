@@ -199,7 +199,7 @@
       <Filter>Header Files\Rendering System\Templates</Filter>
     </ClInclude>
     <ClInclude Include="Source\RenderShapePLight.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -309,7 +309,7 @@
       <Filter>Source Files\Rendering System\Effects</Filter>
     </ClCompile>
     <ClCompile Include="Source\RenderShapePLight.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,6 +384,9 @@
     </FxCompile>
     <FxCompile Include="..\Assets\Shaders\Black_PS.hlsl">
       <Filter>Shaders\Source\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Assets\Shaders\PrintScreen_CS.hlsl">
+      <Filter>Shaders\Source\Compute</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
