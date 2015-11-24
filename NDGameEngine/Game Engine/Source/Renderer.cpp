@@ -214,7 +214,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pDirLight2->fSpecularIntensity = 10.0f;
 	pDirLight2->vColor = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 	pDirLight2->fAmbient = 0.25f;
-	//m_pLightManager->AddDirLight(pDirLight2);
+	m_pLightManager->AddDirLight(pDirLight2);
 
 	/*PointLightStruct* pPointLight = new PointLightStruct;
 	pPointLight->vPosition = Vector4(0.0f, 0.0f, -1.0f, 1.0f);
