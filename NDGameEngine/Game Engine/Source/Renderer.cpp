@@ -236,7 +236,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	pPointLightSphere->SetContext(m_pPointLightContextMap["DeferredPointLight"]);
 	m_pPointLightContextMap["DeferredPointLight"]->GetRenderSet()->AddNode(pPointLightSphere);*/
 
-	D3D11_BUFFER_DESC uavBufferDesc;
+	/*D3D11_BUFFER_DESC uavBufferDesc;
 	ZeroMemory(&uavBufferDesc, sizeof(uavBufferDesc));
 	uavBufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
 	uavBufferDesc.ByteWidth = m_nScreenWidth * m_nScreenHeight * 4;
@@ -252,9 +252,9 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	descView.Buffer.FirstElement = 0;
 	descView.Format = DXGI_FORMAT_UNKNOWN;      
 	descView.Buffer.NumElements = descBuf.ByteWidth / descBuf.StructureByteStride; 
-	m_pDevice->CreateUnorderedAccessView(m_pUnorderedBuffer, &descView, &m_pUAV);
+	m_pDevice->CreateUnorderedAccessView(m_pUnorderedBuffer, &descView, &m_pUAV);*/
 
-	pComputeContext = new RenderContext;
+	/*pComputeContext = new RenderContext;
 	ShaderPass* pBFPass = new ShaderPass;
 	pComputeContext->SetRenderSet(new RenderSet);
 	pComputeContext->SetRenderFunc(RenderContext::ContextComputeRenderFunc);
@@ -266,7 +266,7 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	RenderShape* pComputeQuad = new RenderShape;
 	pComputeQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Compute Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
 	pComputeQuad->SetContext(pComputeContext);
-	pComputeContext->GetRenderSet()->AddNode(pComputeQuad);
+	pComputeContext->GetRenderSet()->AddNode(pComputeQuad);*/
 }
 
 void Renderer::InitializeDirectX(void)
@@ -515,8 +515,8 @@ void Renderer::Render(void)
 
 void Renderer::ComputeLighting(void)
 {
-	pComputeContext->RenderProcess();
-	/*// Directional Light
+	//pComputeContext->RenderProcess();
+	// Directional Light
 	for (unsigned int i = 0; i < m_pLightManager->GetNumDirLights(); i++)
 	{
 		m_pLightManager->SetActiveIndex(i);
@@ -529,7 +529,7 @@ void Renderer::ComputeLighting(void)
 		m_pLightManager->SetActiveIndex(i);
 		m_pLightManager->BindPointLight(i);
 		m_pPointLightContextList->Render();
-	}*/
+	}
 
 	m_pBlendStateManager->ApplyState(BS_DEFAULT);
 	m_pDepthStencilStateManager->ApplyState(DSS_DEFAULT);
