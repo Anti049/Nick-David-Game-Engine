@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "Material.h"
 #include "Texture.h"
-#include "Renderer.h"
+#include RendererPath
 #include "TextureDatabase.h"
 
 Material::Material(void)
@@ -28,16 +28,16 @@ Material::Material(Texture* pAmbient, Texture* pDiffuse, Texture* pSpecular, Tex
 
 Material::~Material(void)
 {
-	/*Renderer::m_pTextureDatabase->RemoveTexture(m_pAmbient);
+	/*RendererType::m_pTextureDatabase->RemoveTexture(m_pAmbient);
 	SafeDelete(m_pAmbient);
-	Renderer::m_pTextureDatabase->RemoveTexture(m_pDiffuse);
+	RendererType::m_pTextureDatabase->RemoveTexture(m_pDiffuse);
 	SafeDelete(m_pDiffuse);
-	Renderer::m_pTextureDatabase->RemoveTexture(m_pSpecular);
+	RendererType::m_pTextureDatabase->RemoveTexture(m_pSpecular);
 	SafeDelete(m_pSpecular);
-	Renderer::m_pTextureDatabase->RemoveTexture(m_pEmissive);
+	RendererType::m_pTextureDatabase->RemoveTexture(m_pEmissive);
 	SafeDelete(m_pEmissive);
-	Renderer::m_pTextureDatabase->RemoveTexture(m_pNormal);
+	RendererType::m_pTextureDatabase->RemoveTexture(m_pNormal);
 	SafeDelete(m_pNormal);
-	Renderer::m_pTextureDatabase->RemoveTexture(m_pReflect);
+	RendererType::m_pTextureDatabase->RemoveTexture(m_pReflect);
 	SafeDelete(m_pReflect);*/
 }

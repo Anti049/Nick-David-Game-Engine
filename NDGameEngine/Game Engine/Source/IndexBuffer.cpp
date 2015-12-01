@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "IndexBuffer.h"
-#include "Renderer.h"
+#include RendererPath
 
 IndexBuffer* IndexBuffer::s_pInstance = nullptr;
 
@@ -29,7 +29,7 @@ unsigned int IndexBuffer::AddIndices(unsigned int* pIndices, unsigned int unIndi
 		descriptor.StructureByteStride = 0;
 		D3D11_SUBRESOURCE_DATA contents;
 		contents.pSysMem = pIndices;
-		Renderer::m_pDevice->CreateBuffer(&descriptor, &contents, &m_pIndexBuffer);
+		RendererType::m_pDevice->CreateBuffer(&descriptor, &contents, &m_pIndexBuffer);
 		SetD3DName(m_pIndexBuffer, "Index Buffer");
 	}
 	else
@@ -47,8 +47,8 @@ unsigned int IndexBuffer::AddIndices(unsigned int* pIndices, unsigned int unIndi
 		descriptor.ByteWidth += (sizeof(unsigned int) * unIndices);
 
 		ID3D11Buffer* newIndexBufferPtr;
-		Renderer::m_pDevice->CreateBuffer(&descriptor, &contents, &newIndexBufferPtr);
-		Renderer::m_pImmediateContext->CopySubresourceRegion(newIndexBufferPtr, 0, 0, 0, 0, m_pIndexBuffer, 0, 0);
+		RendererType::m_pDevice->CreateBuffer(&descriptor, &contents, &newIndexBufferPtr);
+		RendererType::m_pImmediateContext->CopySubresourceRegion(newIndexBufferPtr, 0, 0, 0, 0, m_pIndexBuffer, 0, 0);
 		SafeRelease(&m_pIndexBuffer);
 		m_pIndexBuffer = newIndexBufferPtr;
 

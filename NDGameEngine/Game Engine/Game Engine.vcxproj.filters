@@ -67,6 +67,12 @@
     <Filter Include="Shaders\Source\Vertex">
       <UniqueIdentifier>{c722c8fb-22f8-43d9-b61b-748162bbe87d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering System\Managers\Renderer">
+      <UniqueIdentifier>{ab9d48ea-4ab8-4552-9183-ebfbb1f537e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering System\Managers\Renderer">
+      <UniqueIdentifier>{afadfc6b-09e9-4799-ab00-eb56250af465}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine.h">
@@ -97,9 +103,6 @@
       <Filter>Header Files\Rendering System\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Source\IndexBuffer.h">
-      <Filter>Header Files\Rendering System\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer.h">
       <Filter>Header Files\Rendering System\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Source\MeshDatabase.h">
@@ -201,6 +204,18 @@
     <ClInclude Include="Source\RenderShapePLight.h">
       <Filter>Header Files\Rendering System</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Renderer.h">
+      <Filter>Header Files\Rendering System\Managers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX11Renderer.h">
+      <Filter>Header Files\Rendering System\Managers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UnitTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OGLRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\WinMain.cpp">
@@ -228,9 +243,6 @@
       <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\IndexBuffer.cpp">
-      <Filter>Source Files\Rendering System\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer.cpp">
       <Filter>Source Files\Rendering System\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\MeshDatabase.cpp">
@@ -310,6 +322,18 @@
     </ClCompile>
     <ClCompile Include="Source\RenderShapePLight.cpp">
       <Filter>Source Files\Rendering System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX11Renderer.cpp">
+      <Filter>Source Files\Rendering System\Managers\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UnitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source Files\Rendering System\Managers\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\OGLRenderer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

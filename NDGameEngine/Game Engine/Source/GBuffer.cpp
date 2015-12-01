@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "GBuffer.h"
-#include "Renderer.h"
+#include RendererPath
 #include "RenderContext.h"
 #include "RenderShape.h"
 #include "MeshDatabase.h"
@@ -45,7 +45,7 @@ void GBuffer::Unbind(void)
 void GBuffer::Initialize(unsigned int unWidth, unsigned int unHeight)
 {
 	m_pRenderTarget = new RenderTarget;
-	m_pRenderTarget->Initialize(std::string("GBuffer"), unWidth, unHeight, Renderer::m_pMainRenderTarget->GetDepthTexture(), Renderer::m_pMainRenderTarget->GetDSV());
+	m_pRenderTarget->Initialize(std::string("GBuffer"), unWidth, unHeight, RendererType::m_pMainRenderTarget->GetDepthTexture(), RendererType::m_pMainRenderTarget->GetDSV());
 	m_pRenderTarget->SetClearColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	for (int i = 0; i < BUFFER_COUNT; i++)
@@ -70,7 +70,7 @@ void GBuffer::Initialize(unsigned int unWidth, unsigned int unHeight)
 	m_pViewGBuffer->SetShaderTechnique(pGBufferTechnique);
 
 	pView = new RenderShape;
-	pView->SetMesh(Renderer::m_pMeshDatabase->CreateScreenQuadTex(std::string("GBuffer View Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
+	pView->SetMesh(RendererType::m_pMeshDatabase->CreateScreenQuadTex(std::string("GBuffer View Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
 	pView->SetContext(m_pViewGBuffer);
 	pView->SetMaterial(new Material);
 	m_pViewGBuffer->GetRenderSet()->AddNode(pView);
@@ -86,7 +86,7 @@ void GBuffer::RenderGBuffers(void)
 		m_pGBufferTargets[DEPTH]->GetSRV(),
 		m_pGBufferTargets[EMISSIVE]->GetSRV(),
 	};
-	Renderer::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
+	RendererType::m_pImmediateContext->PSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
 
 	static bool bFirst = true;
 	if (bFirst)
@@ -101,17 +101,17 @@ void GBuffer::SetViewGBuffer(GBufferTarget eTarget)
 {
 	if (eTarget != BUFFER_COUNT)
 	{
-		cbRenderOptions* tRenderOptions = Renderer::m_pRenderOptionsCBuffer->MapDiscard(Renderer::m_pImmediateContext);
-		Renderer::m_pRenderOptionsCBuffer->Unmap(Renderer::m_pImmediateContext);
+		cbRenderOptions* tRenderOptions = RendererType::m_pRenderOptionsCBuffer->MapDiscard(RendererType::m_pImmediateContext);
+		RendererType::m_pRenderOptionsCBuffer->Unmap(RendererType::m_pImmediateContext);
 		if (eTarget == DIFFUSE)
-			Renderer::SetRenderOptionsData(1, 0, 0, 0, 0, tRenderOptions->nViewLightingOnly);
+			RendererType::SetRenderOptionsData(1, 0, 0, 0, 0, tRenderOptions->nViewLightingOnly);
 		if (eTarget == SPECULAR)					   
-			Renderer::SetRenderOptionsData(0, 1, 0, 0, 0, tRenderOptions->nViewLightingOnly);
+			RendererType::SetRenderOptionsData(0, 1, 0, 0, 0, tRenderOptions->nViewLightingOnly);
 		if (eTarget == NORMAL)						   
-			Renderer::SetRenderOptionsData(0, 0, 1, 0, 0, tRenderOptions->nViewLightingOnly);
+			RendererType::SetRenderOptionsData(0, 0, 1, 0, 0, tRenderOptions->nViewLightingOnly);
 		if (eTarget == DEPTH)						   
-			Renderer::SetRenderOptionsData(0, 0, 0, 1, 0, tRenderOptions->nViewLightingOnly);
+			RendererType::SetRenderOptionsData(0, 0, 0, 1, 0, tRenderOptions->nViewLightingOnly);
 		if (eTarget == EMISSIVE)						   
-			Renderer::SetRenderOptionsData(0, 0, 0, 0, 1, tRenderOptions->nViewLightingOnly);
+			RendererType::SetRenderOptionsData(0, 0, 0, 0, 1, tRenderOptions->nViewLightingOnly);
 	}
 }

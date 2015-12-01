@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "LightManager.h"
 #include "LightBuffers.h"
-#include "Renderer.h"
+#include RendererPath
 
 LightManager::LightManager(void)
 {
@@ -29,17 +29,17 @@ LightManager::~LightManager(void)
 void LightManager::BindDirLight(unsigned int unIndex)
 {
 	if (unIndex < m_pDirLights.size())
-		Renderer::SetDirLightData(m_pDirLights[unIndex]);
+		RendererType::SetDirLightData(m_pDirLights[unIndex]);
 }
 
 void LightManager::BindPointLight(unsigned int unIndex)
 {
 	if (unIndex < m_pPointLights.size())
-		Renderer::SetPointLightData(m_pPointLights[unIndex]);
+		RendererType::SetPointLightData(m_pPointLights[unIndex]);
 }
 
 void LightManager::BindSpotLight(unsigned int unIndex)
 {
 	if (unIndex < m_pSpotLights.size())
-		Renderer::SetSpotLightData(m_pSpotLights[unIndex]);
+		RendererType::SetSpotLightData(m_pSpotLights[unIndex]);
 }

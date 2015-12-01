@@ -19,20 +19,6 @@ using namespace std;
 #include <windows.h>
 
 //////////////////////////////////////////////////////////////////////////
-// DirectX
-#include <d3d11.h>
-#pragma comment(lib, "d3d11.lib")
-#include <SimpleMath.h>
-#include <initguid.h>
-#include <dxgidebug.h>
-#pragma comment(lib,"dxguid.lib")
-#include <dxgi.h>
-#pragma comment(lib, "dxgi.lib")
-#include <DDSTextureLoader.h>
-using namespace DirectX;
-using namespace SimpleMath;
-
-//////////////////////////////////////////////////////////////////////////
 // Utility
 #include <vld.h>
 #include "XTime.h"
@@ -112,3 +98,35 @@ static Type CLAMP(Type value, Type min, Type max)
 #define SetD3DName(pObject, szName)
 #endif
 #endif
+
+//////////////////////////////////////////////////////////////////////////
+// DirectX
+#define OPENGL 10
+#define DIRECTX11 11
+#define DIRECTX12 12
+
+#define RENDERER_TESTING FALSE
+#define RENDER_TYPE OPENGL
+
+#if (RENDER_TYPE == OPENGL)
+#define RendererPath "OGLRenderer.h"
+#define RendererType OGLRenderer
+#elif (RENDER_TYPE == DIRECTX11)
+#define RendererPath "DX11Renderer.h"
+#define RendererType DX11Renderer
+#elif (RENDER_TYPE == DIRECTX12)
+#define RendererPath "DX12Renderer.h"
+#define RendererType DX12Renderer
+#endif
+
+#include <d3d11.h>
+#pragma comment(lib, "d3d11.lib")
+#include <SimpleMath.h>
+#include <initguid.h>
+#include <dxgidebug.h>
+#pragma comment(lib,"dxguid.lib")
+#include <dxgi.h>
+#pragma comment(lib, "dxgi.lib")
+#include <DDSTextureLoader.h>
+using namespace DirectX;
+using namespace SimpleMath;

@@ -191,6 +191,7 @@
     <ClInclude Include="Source\ConstantBuffers.h" />
     <ClInclude Include="Source\Debugger.h" />
     <ClInclude Include="Source\DepthStencilStateManager.h" />
+    <ClInclude Include="Source\DX11Renderer.h" />
     <ClInclude Include="Source\Emitter.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\EngineUI.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Source\LightManager.h" />
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\MeshDatabase.h" />
+    <ClInclude Include="Source\OGLRenderer.h" />
     <ClInclude Include="Source\ParticleSystem.h" />
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\RasterizerStateManager.h" />
@@ -225,6 +227,7 @@
     <ClInclude Include="Source\Texture2D.h" />
     <ClInclude Include="Source\Texture3D.h" />
     <ClInclude Include="Source\TextureDatabase.h" />
+    <ClInclude Include="Source\UnitTest.h" />
     <ClInclude Include="Source\VertexBuffer.hpp" />
     <ClInclude Include="Source\VertexBufferManager.h" />
     <ClInclude Include="Source\VertexFormats.h" />
@@ -235,6 +238,7 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Debugger.cpp" />
     <ClCompile Include="Source\DepthStencilStateManager.cpp" />
+    <ClCompile Include="Source\DX11Renderer.cpp" />
     <ClCompile Include="Source\Emitter.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\EngineUI.cpp" />
@@ -248,6 +252,7 @@
     <ClCompile Include="Source\LightManager.cpp" />
     <ClCompile Include="Source\Material.cpp" />
     <ClCompile Include="Source\MeshDatabase.cpp" />
+    <ClCompile Include="Source\OGLRenderer.cpp" />
     <ClCompile Include="Source\ParticleSystem.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -269,6 +274,7 @@
     <ClCompile Include="Source\Texture2D.cpp" />
     <ClCompile Include="Source\Texture3D.cpp" />
     <ClCompile Include="Source\TextureDatabase.cpp" />
+    <ClCompile Include="Source\UnitTest.cpp" />
     <ClCompile Include="Source\VertexBufferManager.cpp" />
     <ClCompile Include="Source\WinMain.cpp" />
     <ClCompile Include="Source\XTime.cpp" />

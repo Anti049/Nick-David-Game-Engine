@@ -2,7 +2,7 @@
 #include "RenderShape.h"
 #include "RenderMesh.h"
 #include "RenderContext.h"
-#include "Renderer.h"
+#include RendererPath
 #include "Material.h"
 #include "Texture.h"
 
@@ -54,11 +54,11 @@ void RenderShape::IndexedPrimitiveRenderFunc(RenderNode* pNode)
 		}
 		// Set Per Object Data
 		DirectX::SimpleMath::Matrix mWorld = pShape->GetWorldMatrix();
-		DirectX::SimpleMath::Matrix mViewProjection = Renderer::m_cActiveCamera.GetViewMatrix() * Renderer::m_cActiveCamera.GetProjectionMatrix();
+		DirectX::SimpleMath::Matrix mViewProjection = RendererType::m_cActiveCamera.GetViewMatrix() * RendererType::m_cActiveCamera.GetProjectionMatrix();
 		DirectX::SimpleMath::Matrix mMVP = mWorld * mViewProjection;
-		Renderer::SetPerObjectData(mMVP, mWorld, bHasNormal);
+		RendererType::SetPerObjectData(mMVP, mWorld, bHasNormal);
 		// Draw Indexed
-		Renderer::m_pImmediateContext->DrawIndexed(pMesh->GetNumIndices(), pMesh->GetStartIndex(), pMesh->GetStartVertex());
+		RendererType::m_pImmediateContext->DrawIndexed(pMesh->GetNumIndices(), pMesh->GetStartIndex(), pMesh->GetStartVertex());
 	}
 }
 
@@ -94,11 +94,11 @@ void RenderShape::ParticleRenderFunc(RenderNode* pNode)
 		}
 		// Set Per Object Data
 		DirectX::SimpleMath::Matrix mWorld = pShape->GetWorldMatrix();
-		DirectX::SimpleMath::Matrix mViewProjection = Renderer::m_cActiveCamera.GetViewMatrix() * Renderer::m_cActiveCamera.GetProjectionMatrix();
+		DirectX::SimpleMath::Matrix mViewProjection = RendererType::m_cActiveCamera.GetViewMatrix() * RendererType::m_cActiveCamera.GetProjectionMatrix();
 		DirectX::SimpleMath::Matrix mMVP = mWorld * mViewProjection;
-		Renderer::SetPerObjectData(mMVP, mWorld, bHasNormal);
+		RendererType::SetPerObjectData(mMVP, mWorld, bHasNormal);
 		// Draw Indexed
-		//Renderer::m_pImmediateContext->DrawIndexed(pMesh->GetNumIndices(), pMesh->GetStartIndex(), pMesh->GetStartVertex());
-		//Renderer::m_pImmediateContext->DrawIndexedInstanced(1, nNumParticles, 0, 0, 0);
+		//RendererType::m_pImmediateContext->DrawIndexed(pMesh->GetNumIndices(), pMesh->GetStartIndex(), pMesh->GetStartVertex());
+		//RendererType::m_pImmediateContext->DrawIndexedInstanced(1, nNumParticles, 0, 0, 0);
 	}
 }

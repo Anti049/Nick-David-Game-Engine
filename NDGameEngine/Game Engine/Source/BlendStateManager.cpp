@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "BlendStateManager.h"
-#include "Renderer.h"
+#include RendererPath
 
 BlendStateManager::BlendStateManager(void)
 {
@@ -19,7 +19,7 @@ bool BlendStateManager::ApplyState(BStates eState)
 	if (eState >= BS_COUNT)
 		return false;
 
-	Renderer::m_pImmediateContext->OMSetBlendState(m_pBlendStates[eState], 0, 0xffffffff);
+	RendererType::m_pImmediateContext->OMSetBlendState(m_pBlendStates[eState], 0, 0xffffffff);
 	m_eCurrentState = eState;
 	return true;
 }
@@ -37,14 +37,14 @@ void BlendStateManager::CreateStates(void)
 	desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	Renderer::m_pDevice->CreateBlendState(&desc, &m_pBlendStates[BS_DEFAULT]);
+	RendererType::m_pDevice->CreateBlendState(&desc, &m_pBlendStates[BS_DEFAULT]);
 
 	desc.RenderTarget[0].BlendEnable = TRUE;
 	desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	Renderer::m_pDevice->CreateBlendState(&desc, &m_pBlendStates[BS_ALPHA]);
+	RendererType::m_pDevice->CreateBlendState(&desc, &m_pBlendStates[BS_ALPHA]);
 
 	desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 	desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	Renderer::m_pDevice->CreateBlendState(&desc, &m_pBlendStates[BS_ADDITIVE]);
+	RendererType::m_pDevice->CreateBlendState(&desc, &m_pBlendStates[BS_ADDITIVE]);
 }

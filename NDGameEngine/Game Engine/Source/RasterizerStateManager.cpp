@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "RasterizerStateManager.h"
-#include "Renderer.h"
+#include RendererPath
 
 RasterizerStateManager::RasterizerStateManager(void)
 {
@@ -19,7 +19,7 @@ bool RasterizerStateManager::ApplyState(RStates eState)
 	if (eState >= RS_COUNT)
 		return false;
 
-	Renderer::m_pImmediateContext->RSSetState(m_pRasterizerStates[eState]);
+	RendererType::m_pImmediateContext->RSSetState(m_pRasterizerStates[eState]);
 	m_eCurrentState = eState;
 	return true;
 }
@@ -38,15 +38,15 @@ void RasterizerStateManager::CreateStates(void)
 	desc.ScissorEnable = FALSE;
 	desc.MultisampleEnable = FALSE;
 	desc.AntialiasedLineEnable = FALSE;
-	Renderer::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_DEFAULT]);
+	RendererType::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_DEFAULT]);
 
 	desc.FillMode = D3D11_FILL_WIREFRAME;
-	Renderer::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_LINE]);
+	RendererType::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_LINE]);
 
 	desc.FillMode = D3D11_FILL_SOLID;
 	desc.FrontCounterClockwise = TRUE;
-	Renderer::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_CCW]);
+	RendererType::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_CCW]);
 
 	desc.CullMode = D3D11_CULL_NONE;
-	Renderer::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_NOCULL]);
+	RendererType::m_pDevice->CreateRasterizerState(&desc, &m_pRasterizerStates[RS_NOCULL]);
 }

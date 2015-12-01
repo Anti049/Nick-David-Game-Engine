@@ -2,6 +2,12 @@
 
 #include "EngineUIManager.h"
 
+class Renderer;
+
+#if RENDERER_TESTING
+enum RendererTestLevel { CLEAR_SCREEN, RENDER_FLAT_2D, RENDER_FLAT_3D, RENDER_TEXTURED, RENDER_LIT, RENDER_GBUFFER, RENDER_DEFERRED, NUM_RENDER_TESTS };
+#endif
+
 class Engine
 {
 public:
@@ -16,6 +22,10 @@ public:
 	void Render(void);
 	void Update(float fDelta);
 
+#if RENDERER_TESTING
+	void TestRenderer(unsigned int unTestLevel = NUM_RENDER_TESTS);
+#endif
+
 	static EngineUIManager m_cUIManager;
 
 private:
@@ -24,4 +34,5 @@ private:
 	int m_nScreenHeight;
 	bool m_bFullscreen;
 
+	Renderer* m_pRenderer;
 };

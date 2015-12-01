@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "DepthStencilStateManager.h"
-#include "Renderer.h"
+#include RendererPath
 
 DepthStencilStateManager::DepthStencilStateManager(void)
 {
@@ -19,7 +19,7 @@ bool DepthStencilStateManager::ApplyState(DSStates eState)
 	if (eState >= DSS_COUNT)
 		return false;
 
-	Renderer::m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilStates[eState], m_unStencilRefs[eState]);
+	RendererType::m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilStates[eState], m_unStencilRefs[eState]);
 	m_eCurrentState = eState;
 	return true;
 }
@@ -29,15 +29,15 @@ void DepthStencilStateManager::CreateStates(void)
 	D3D11_DEPTH_STENCIL_DESC dssDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
 	dssDesc.DepthEnable = FALSE;
 
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_NO_DEPTH]);
+	RendererType::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_NO_DEPTH]);
 	m_unStencilRefs[DSS_NO_DEPTH] = 0;
 
 	dssDesc.DepthEnable = TRUE;
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_DEFAULT]);
+	RendererType::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_DEFAULT]);
 	m_unStencilRefs[DSS_DEFAULT] = 0;
 
 	dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	Renderer::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_LESS_EQUAL]);
+	RendererType::m_pDevice->CreateDepthStencilState(&dssDesc, &m_pDepthStencilStates[DSS_LESS_EQUAL]);
 	m_unStencilRefs[DSS_LESS_EQUAL] = 0;
 
 	D3D11_DEPTH_STENCIL_DESC willDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
@@ -47,22 +47,22 @@ void DepthStencilStateManager::CreateStates(void)
 	willDesc.StencilEnable = true;
 	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	// Pass 0
-	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_1]);
+	RendererType::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_1]);
 	m_unStencilRefs[DSS_DEFERRED_LIGHT_1] = 0x1;
 	// Pass 1
 	willDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	willDesc.FrontFace.StencilFunc = willDesc.BackFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
-	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_2]);
+	RendererType::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_DEFERRED_LIGHT_2]);
 	m_unStencilRefs[DSS_DEFERRED_LIGHT_2] = 0x1;
 	// Pass Outside
 	willDesc.DepthEnable = false;
 	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_LIGHT_OUTSIDE_FINAL]);
+	RendererType::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_LIGHT_OUTSIDE_FINAL]);
 	m_unStencilRefs[DSS_LIGHT_OUTSIDE_FINAL] = 0x2;
 	// Pass Inside
 	willDesc.DepthEnable = false;
 	willDesc.FrontFace.StencilPassOp = willDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	Renderer::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_LIGHT_INSIDE_FINAL]);
+	RendererType::m_pDevice->CreateDepthStencilState(&willDesc, &m_pDepthStencilStates[DSS_LIGHT_INSIDE_FINAL]);
 	m_unStencilRefs[DSS_LIGHT_INSIDE_FINAL] = 0x1;
 }

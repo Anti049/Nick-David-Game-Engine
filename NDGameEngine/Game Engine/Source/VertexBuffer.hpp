@@ -1,7 +1,7 @@
 #pragma once
 
 //#include "Precompiled.h"
-#include "Renderer.h"
+#include RendererPath
 #include "VertexFormats.h"
 
 template <typename VertexFormat>
@@ -59,7 +59,7 @@ unsigned int VertexBuffer<VertexFormat>::AddVerts(const VertexFormat* pVertices,
 		vbd.StructureByteStride = 0;
 		D3D11_SUBRESOURCE_DATA vinitData;
 		vinitData.pSysMem = pVertices;
-		Renderer::m_pDevice->CreateBuffer( &vbd, &vinitData, &m_pVertexBuffer);
+		RendererType::m_pDevice->CreateBuffer( &vbd, &vinitData, &m_pVertexBuffer);
 
 		string szType = typeid(VertexFormat).name();
 		szType = szType.substr(14);
@@ -81,8 +81,8 @@ unsigned int VertexBuffer<VertexFormat>::AddVerts(const VertexFormat* pVertices,
 		ibd.ByteWidth += sizeof(VertexFormat) * unNumVerts;
 
 		ID3D11Buffer* newVertexBufferPtr;
-		Renderer::m_pDevice->CreateBuffer(&ibd, &iinitData, &newVertexBufferPtr);
-		Renderer::m_pImmediateContext->CopySubresourceRegion(newVertexBufferPtr, 0, 0, 0, 0, m_pVertexBuffer, 0, 0);
+		RendererType::m_pDevice->CreateBuffer(&ibd, &iinitData, &newVertexBufferPtr);
+		RendererType::m_pImmediateContext->CopySubresourceRegion(newVertexBufferPtr, 0, 0, 0, 0, m_pVertexBuffer, 0, 0);
 		SafeRelease(&m_pVertexBuffer);
 		m_pVertexBuffer = newVertexBufferPtr;
 
@@ -98,8 +98,8 @@ void VertexBuffer<VertexFormat>::UpdateVerts(unsigned int unStartIndex, const Ve
 	if (m_pVertexBuffer && m_bDynamic)
 	{
 		D3D11_MAPPED_SUBRESOURCE resource;
-		Renderer::m_pImmediateContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		RendererType::m_pImmediateContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 		memcpy((VertexFormat*)resource.pData + unStartIndex, pVertices, sizeof(VertexFormat) * unNumVerts);
-		Renderer::m_pImmediateContext->Unmap(m_pVertexBuffer, NULL);
+		RendererType::m_pImmediateContext->Unmap(m_pVertexBuffer, NULL);
 	}
 }

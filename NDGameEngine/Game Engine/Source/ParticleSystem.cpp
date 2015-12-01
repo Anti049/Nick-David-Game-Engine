@@ -3,7 +3,7 @@
 #include "ShaderIncludes.h"
 #include "Emitter.h"
 #include "Flyweight.h"
-#include "Renderer.h"
+#include RendererPath
 #include "ShaderPass.h"
 
 ParticleSystem* ParticleSystem::s_pInstance = nullptr;
@@ -25,11 +25,11 @@ void ParticleSystem::Initialize(void)
 	size_t byteCodeSize;
 	if(ShaderPass::LoadCompiledShaderData(&byteCode, byteCodeSize, "../Assets/Shaders/ParticleSystem_CS.cso"))
 	{
-		HRESULT hr = Renderer::m_pDevice->CreateComputeShader(byteCode, byteCodeSize, nullptr, &m_pComputeParticles);
+		HRESULT hr = RendererType::m_pDevice->CreateComputeShader(byteCode, byteCodeSize, nullptr, &m_pComputeParticles);
 		delete [] byteCode;
 	}
 
-	m_pActiveFlyweight = new ConstantBuffer<cbParticleFlyweight>(Renderer::m_pDevice, "Flyweight");
+	m_pActiveFlyweight = new ConstantBuffer<cbParticleFlyweight>(RendererType::m_pDevice, "Flyweight");
 
 	int numGroups = 0;
 	if(MAX_PARTICLES % 1024 != 0)
@@ -120,11 +120,11 @@ void ParticleSystem::UpdateEmitter(unsigned int unEmitter, float fDelta)
 		Flyweight* pFlyweight = m_vActiveEmitters[unEmitter]->GetFlyweight();
 		pFlyweight->SetDeltaTime(fDelta);
 
-		cbParticleFlyweight* pActiveFlyweight = m_pActiveFlyweight->MapDiscard(Renderer::m_pImmediateContext);
+		cbParticleFlyweight* pActiveFlyweight = m_pActiveFlyweight->MapDiscard(RendererType::m_pImmediateContext);
 		cbParticleFlyweight* pData = &pFlyweight->GetData();
 		memcpy(pActiveFlyweight, pData, sizeof(cbParticleFlyweight));
-		m_pActiveFlyweight->Unmap(Renderer::m_pImmediateContext);
-		m_pActiveFlyweight->Bind(Renderer::m_pImmediateContext);
+		m_pActiveFlyweight->Unmap(RendererType::m_pImmediateContext);
+		m_pActiveFlyweight->Bind(RendererType::m_pImmediateContext);
 
 		m_vActiveEmitters[unEmitter]->Update(fDelta);
 	}

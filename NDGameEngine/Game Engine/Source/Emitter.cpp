@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "Emitter.h"
 #include "StructuredBuffers.h"
-#include "Renderer.h"
+#include RendererPath
 #include "ParticleSystem.h"
 #include "Flyweight.h"
 #include "RenderShape.h"
@@ -40,10 +40,10 @@ void Emitter::Initialize(unsigned int unNumParticles, string szName)
 		vIndices.push_back(i);
 
 	m_pShape = new RenderShape;
-	m_pShape->SetMesh(Renderer::m_pMeshDatabase->CreateParticles(m_szName, m_vAliveParticles));
+	m_pShape->SetMesh(RendererType::m_pMeshDatabase->CreateParticles(m_szName, m_vAliveParticles));
 	m_pShape->SetRenderFunc(RenderShape::ParticleRenderFunc);
-	Renderer::GetInstance()->AddRenderShape(m_pShape, "Particle");
-	ParticleBuffer = new StructuredBuffer<ParticleVertex>(Renderer::m_pDevice, m_unNumParticles, &m_vAliveParticles[0]);
+	RendererType::GetInstance()->AddRenderShape(m_pShape, "Particle");
+	ParticleBuffer = new StructuredBuffer<ParticleVertex>(RendererType::m_pDevice, m_unNumParticles, &m_vAliveParticles[0]);
 }
 
 void Emitter::AddParticles(unsigned int unNumParticles)
@@ -79,19 +79,19 @@ void Emitter::Update(float fDelta)
 	m_pFlyweight->SetDeltaTime(fDelta);
 
 	ID3D11ShaderResourceView* computeSRV = NULL;
-	Renderer::m_pImmediateContext->GSSetShaderResources(0, 1, &computeSRV);
-	ParticleBuffer->Bind(Renderer::m_pImmediateContext);
-	Renderer::m_pImmediateContext->CSSetShader(ParticleSystem::m_pComputeParticles, NULL, 0);
+	RendererType::m_pImmediateContext->GSSetShaderResources(0, 1, &computeSRV);
+	ParticleBuffer->Bind(RendererType::m_pImmediateContext);
+	RendererType::m_pImmediateContext->CSSetShader(ParticleSystem::m_pComputeParticles, NULL, 0);
 
 	int numGroups = 0;
 	if(MAX_PARTICLES % 1024 != 0)
 		numGroups = (MAX_PARTICLES / 1024) + 1;
 	else
 		numGroups = MAX_PARTICLES/1024;
-	Renderer::m_pImmediateContext->Dispatch(numGroups, 1, 1);
+	RendererType::m_pImmediateContext->Dispatch(numGroups, 1, 1);
 
 	ID3D11UnorderedAccessView* uavNull[] = {NULL};
-	Renderer::m_pImmediateContext->CSSetUnorderedAccessViews(0, 1, uavNull, 0);
+	RendererType::m_pImmediateContext->CSSetUnorderedAccessViews(0, 1, uavNull, 0);
 	computeSRV = ParticleBuffer->GetSRV();
-	Renderer::m_pImmediateContext->GSSetShaderResources(0, 1, &computeSRV);
+	RendererType::m_pImmediateContext->GSSetShaderResources(0, 1, &computeSRV);
 }

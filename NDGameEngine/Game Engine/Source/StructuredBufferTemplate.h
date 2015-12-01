@@ -47,13 +47,13 @@ StructuredBuffer<Type>::StructuredBuffer(ID3D11Device* pDevice, int nElements, c
 	contents.pSysMem = pData;
 
 	CD3D11_BUFFER_DESC structDesc(sizeof(Type) * nElements, D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE, D3D11_USAGE_DEFAULT, 0, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, sizeof(Type));
-	hr = Renderer::m_pDevice->CreateBuffer(&structDesc, &contents, &m_pBuffer);
+	hr = RendererType::m_pDevice->CreateBuffer(&structDesc, &contents, &m_pBuffer);
 
 	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(m_pBuffer, DXGI_FORMAT_UNKNOWN, 0, nElements);
-	hr = Renderer::m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV);
+	hr = RendererType::m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV);
 
 	CD3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc(m_pBuffer, DXGI_FORMAT_UNKNOWN, 0, nElements, 0);
-	hr = Renderer::m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV);
+	hr = RendererType::m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV);
 }
 
 template <typename Type>

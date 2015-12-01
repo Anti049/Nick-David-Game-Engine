@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "ShaderPass.h"
-#include "Renderer.h"
+#include RendererPath
 
 ShaderPass::ShaderPass(void)
 {
@@ -29,7 +29,7 @@ bool ShaderPass::CreateVertexShaderFromCompiledFile(const char* fileName)
 	if(!LoadCompiledShaderData(&byteCode, byteCodeSize, fileName))
 		return false;
 
-	HRESULT hr = Renderer::m_pDevice->CreateVertexShader(
+	HRESULT hr = RendererType::m_pDevice->CreateVertexShader(
 		byteCode, byteCodeSize, nullptr, &m_pVertexShader);
 
 	delete [] byteCode;
@@ -47,7 +47,7 @@ bool ShaderPass::CreateGeometryShaderFromCompiledFile(const char* fileName)
 	if(!LoadCompiledShaderData(&byteCode, byteCodeSize, fileName))
 		return false;
 
-	HRESULT hr = Renderer::m_pDevice->CreateGeometryShader(
+	HRESULT hr = RendererType::m_pDevice->CreateGeometryShader(
 		byteCode, byteCodeSize, nullptr, &m_pGeometryShader);
 
 	delete [] byteCode;
@@ -65,7 +65,7 @@ bool ShaderPass::CreateHullShaderFromCompiledFile(const char* fileName)
 	if(!LoadCompiledShaderData(&byteCode, byteCodeSize, fileName))
 		return false;
 
-	HRESULT hr = Renderer::m_pDevice->CreateHullShader(
+	HRESULT hr = RendererType::m_pDevice->CreateHullShader(
 		byteCode, byteCodeSize, nullptr, &m_pHullShader);
 
 	delete [] byteCode;
@@ -83,7 +83,7 @@ bool ShaderPass::CreateDomainShaderFromCompiledFile(const char* fileName)
 	if(!LoadCompiledShaderData(&byteCode, byteCodeSize, fileName))
 		return false;
 
-	HRESULT hr = Renderer::m_pDevice->CreateDomainShader(
+	HRESULT hr = RendererType::m_pDevice->CreateDomainShader(
 		byteCode, byteCodeSize, nullptr, &m_pDomainShader);
 
 	delete [] byteCode;
@@ -101,7 +101,7 @@ bool ShaderPass::CreatePixelShaderFromCompiledFile(const char* fileName)
 	if(!LoadCompiledShaderData(&byteCode, byteCodeSize, fileName))
 		return false;
 
-	HRESULT hr = Renderer::m_pDevice->CreatePixelShader(
+	HRESULT hr = RendererType::m_pDevice->CreatePixelShader(
 		byteCode, byteCodeSize, nullptr, &m_pPixelShader);
 
 	delete [] byteCode;
@@ -119,7 +119,7 @@ bool ShaderPass::CreateComputeShaderFromCompiledFile(const char* fileName)
 	if(!LoadCompiledShaderData(&byteCode, byteCodeSize, fileName))
 		return false;
 
-	HRESULT hr = Renderer::m_pDevice->CreateComputeShader(
+	HRESULT hr = RendererType::m_pDevice->CreateComputeShader(
 		byteCode, byteCodeSize, nullptr, &m_pComputeShader);
 
 	delete [] byteCode;
@@ -151,7 +151,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 			{
 				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == eVERTEX_POSCOLOR2D)
 		{
@@ -161,7 +161,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == eVERTEX_POSTEX2D)
 		{
@@ -171,7 +171,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == eVERTEX_POSITION)
 		{
@@ -180,7 +180,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 			{
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == eVERTEX_POSCOLOR)
 		{
@@ -190,7 +190,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == eVERTEX_POSTEX)
 		{
@@ -200,7 +200,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == eVERTEX_POSNORMTEX)
 		{
@@ -211,7 +211,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"TEX_COORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 		else if (eType == ePARTICLE_VERTEX)
 		{
@@ -226,7 +226,7 @@ bool ShaderPass::CreateInputLayout(const char* fileName, ShaderType eType)
 				{"LIFETIME", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"EMISSIVE", 0, DXGI_FORMAT_R32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			Renderer::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
+			RendererType::m_pDevice->CreateInputLayout(pInput, unElements, vs_byte_code, vs_byte_code_size, &m_pInputLayout);
 		}
 
 		delete [] vs_byte_code;

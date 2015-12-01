@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "RenderMesh.h"
-#include "Renderer.h"
+#include RendererPath
 #include "IndexBuffer.h"
 
 RenderMesh::RenderMesh(void)

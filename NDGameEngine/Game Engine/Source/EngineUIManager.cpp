@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "EngineUIManager.h"
-#include "Renderer.h"
+#include RendererPath
 
 Vector2 EngineUIManager::m_vDefaultSize;
 map<int, vector<Vector2>> m_mUIMap;
@@ -18,13 +18,13 @@ EngineUIManager::~EngineUIManager(void)
 void EngineUIManager::Initialize(Vector2 vDefaultSize /* = Vector2(250, 350) */)
 {
 	DXGI_SWAP_CHAIN_DESC tempDesc;
-	Renderer::m_pSwapChain->GetDesc(&tempDesc);
+	RendererType::m_pSwapChain->GetDesc(&tempDesc);
 
 	m_nScreenWidth = tempDesc.BufferDesc.Width;
 	m_nScreenHeight = tempDesc.BufferDesc.Height;
 	m_vDefaultSize = vDefaultSize;
 
-	TwInit(TW_DIRECT3D11, Renderer::m_pDevice);
+	TwInit(TW_DIRECT3D11, RendererType::m_pDevice);
 	TwWindowSize(tempDesc.BufferDesc.Width, tempDesc.BufferDesc.Height);
 	TwDefine(" GLOBAL fontsize=3 ");
 }

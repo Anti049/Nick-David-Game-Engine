@@ -2,7 +2,7 @@
 #include "TextureDatabase.h"
 #include "Texture2D.h"
 #include "Texture3D.h"
-#include "Renderer.h"
+#include RendererPath
 
 TextureDatabase::TextureDatabase(void)
 {
@@ -20,7 +20,7 @@ Texture* TextureDatabase::LoadTexture(wstring szFilePath)
 	{
 		ID3D11Resource* pTexture = nullptr;
 		ID3D11ShaderResourceView* pSRV = nullptr;
-		HRESULT hr = CreateDDSTextureFromFile(Renderer::m_pDevice, szFilePath.c_str(), &pTexture, &pSRV);
+		HRESULT hr = CreateDDSTextureFromFile(RendererType::m_pDevice, szFilePath.c_str(), &pTexture, &pSRV);
 
 		D3D11_RESOURCE_DIMENSION tDimension;
 		pTexture->GetType(&tDimension);
