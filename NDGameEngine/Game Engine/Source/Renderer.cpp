@@ -48,7 +48,11 @@ ConstantBuffer<cbDirectionalLight>*	Renderer::m_pDirLightCBuffer				= nullptr;
 ConstantBuffer<cbPointLight>*		Renderer::m_pPointLightCBuffer				= nullptr;
 ConstantBuffer<cbSpotLight>*		Renderer::m_pSpotLightCBuffer				= nullptr;
 ConstantBuffer<cbRenderOptions>*	Renderer::m_pRenderOptionsCBuffer			= nullptr;
+ID3D11Buffer*						Renderer::m_pUnorderedBuffer				= nullptr;
+ID3D11UnorderedAccessView*			Renderer::m_pUAV							= nullptr;
 #pragma endregion Static Initialization
+
+RenderContext* pComputeContext = nullptr;
 
 void TW_CALL ToggleViewGBuffer(void* pClientData)		
 { 
@@ -231,6 +235,38 @@ void Renderer::Initialize(HWND hWnd, int nScreenWidth, int nScreenHeight, bool b
 	((RenderShapePLight*)pPointLightSphere)->SetRenderFunc(RenderShapePLight::IndexedPrimitiveRenderFunc);
 	pPointLightSphere->SetContext(m_pPointLightContextMap["DeferredPointLight"]);
 	m_pPointLightContextMap["DeferredPointLight"]->GetRenderSet()->AddNode(pPointLightSphere);*/
+
+	D3D11_BUFFER_DESC uavBufferDesc;
+	ZeroMemory(&uavBufferDesc, sizeof(uavBufferDesc));
+	uavBufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+	uavBufferDesc.ByteWidth = m_nScreenWidth * m_nScreenHeight * 4;
+	uavBufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	uavBufferDesc.StructureByteStride = 4;
+	m_pDevice->CreateBuffer(&uavBufferDesc, NULL, &m_pUnorderedBuffer);
+	D3D11_BUFFER_DESC descBuf;
+	ZeroMemory( &descBuf, sizeof(descBuf) );
+	m_pUnorderedBuffer->GetDesc( &descBuf );
+	D3D11_UNORDERED_ACCESS_VIEW_DESC descView;
+	ZeroMemory( &descView, sizeof(descView) );
+	descView.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+	descView.Buffer.FirstElement = 0;
+	descView.Format = DXGI_FORMAT_UNKNOWN;      
+	descView.Buffer.NumElements = descBuf.ByteWidth / descBuf.StructureByteStride; 
+	m_pDevice->CreateUnorderedAccessView(m_pUnorderedBuffer, &descView, &m_pUAV);
+
+	pComputeContext = new RenderContext;
+	ShaderPass* pBFPass = new ShaderPass;
+	pComputeContext->SetRenderSet(new RenderSet);
+	pComputeContext->SetRenderFunc(RenderContext::ContextComputeRenderFunc);
+	pBFPass->CreateComputeShaderFromCompiledFile("../Assets/Shaders/PrintScreen_CS.cso");
+	ShaderTechnique* pBFTechnique = new ShaderTechnique;
+	pBFTechnique->AddPass(pBFPass);
+	pComputeContext->SetShaderTechnique(pBFTechnique);
+
+	RenderShape* pComputeQuad = new RenderShape;
+	pComputeQuad->SetMesh(m_pMeshDatabase->CreateScreenQuadTex(string("Compute Light Quad"), -1.0f, 1.0f, 1.0f, -1.0f));
+	pComputeQuad->SetContext(pComputeContext);
+	pComputeContext->GetRenderSet()->AddNode(pComputeQuad);
 }
 
 void Renderer::InitializeDirectX(void)
@@ -479,7 +515,8 @@ void Renderer::Render(void)
 
 void Renderer::ComputeLighting(void)
 {
-	// Directional Light
+	pComputeContext->RenderProcess();
+	/*// Directional Light
 	for (unsigned int i = 0; i < m_pLightManager->GetNumDirLights(); i++)
 	{
 		m_pLightManager->SetActiveIndex(i);
@@ -492,7 +529,7 @@ void Renderer::ComputeLighting(void)
 		m_pLightManager->SetActiveIndex(i);
 		m_pLightManager->BindPointLight(i);
 		m_pPointLightContextList->Render();
-	}
+	}*/
 
 	m_pBlendStateManager->ApplyState(BS_DEFAULT);
 	m_pDepthStencilStateManager->ApplyState(DSS_DEFAULT);

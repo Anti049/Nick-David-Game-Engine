@@ -53,6 +53,44 @@ void RenderContext::EffectsClearTextureMaps(bool bEnabled)
 	SafeDelete(pTextures);
 }
 
+void RenderContext::ContextComputeRenderFunc(RenderNode* pNode)
+{
+	RenderContext* pContext = (RenderContext*)pNode;
+	ShaderTechnique* pShaderTechnique = pContext->GetShaderTechnique();
+	if (pShaderTechnique)
+	{
+		ShaderPass* pShaderPass = pShaderTechnique->GetPass(0);
+		ID3D11ComputeShader* pCompute = pShaderPass->GetComputeShader();
+
+		// Set Constant Buffers
+		Renderer::SetCameraData();
+		// Set Shader Resources
+		ID3D11ShaderResourceView* pGBufferTextures[] = 
+		{
+			Renderer::m_pGBuffer->m_pGBufferTargets[DIFFUSE]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[SPECULAR]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[NORMAL]->GetSRV(),
+			Renderer::m_pGBuffer->m_pGBufferTargets[DEPTH]->GetSRV(),
+		};
+		Renderer::m_pImmediateContext->CSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pGBufferTextures);
+		// Set Unordered Access Views
+		Renderer::m_pImmediateContext->CSSetUnorderedAccessViews(0, 1, &Renderer::m_pUAV, NULL);
+		// Set Shader
+		Renderer::m_pImmediateContext->CSSetShader(pCompute, NULL, NULL);
+
+		// Dispatch
+		unsigned int unDispatchWidth = (Renderer::m_pMainRenderTarget->GetWidth() + BLOCK_SIZE - 1) / BLOCK_SIZE;
+		unsigned int unDispatchHeight = (Renderer::m_pMainRenderTarget->GetHeight() + BLOCK_SIZE - 1) / BLOCK_SIZE;
+		Renderer::m_pImmediateContext->Dispatch(unDispatchWidth, unDispatchHeight, 1);
+
+		Renderer::m_pImmediateContext->CSSetShader(NULL, NULL, NULL);
+		ID3D11UnorderedAccessView* pNullUAV = NULL;
+		Renderer::m_pImmediateContext->CSSetUnorderedAccessViews(0, 1, &pNullUAV, NULL);
+		ID3D11ShaderResourceView* pNullSRV[4] = {NULL, NULL, NULL, NULL};
+		Renderer::m_pImmediateContext->CSSetShaderResources(9, sizeof(pGBufferTextures) / sizeof(pGBufferTextures[0]), pNullSRV);
+	}
+}
+
 void RenderContext::ContextSharedRenderFunc(RenderNode* pNode)
 {
 	RenderContext* pContext = (RenderContext*)pNode;

@@ -28,7 +28,7 @@ void WriteSample(uint2 coords, uint sampleIndex, float4 value)
 	FrameBuffer[GetFramebufferSampleAddress(coords, sampleIndex)] = PackRGBA16(value);
 }
 
-[numthreads(COMPUTE_SHADER_TILE_GROUP_DIM, COMPUTE_SHADER_TILE_GROUP_DIM, 1)]
+[numthreads(BLOCK_SIZE, BLOCK_SIZE, 1)]
 void main(uint3 groupId          : SV_GroupID,
 		  uint3 dispatchThreadId : SV_DispatchThreadID,
 		  uint3 groupThreadId    : SV_GroupThreadID,

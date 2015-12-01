@@ -11,6 +11,7 @@ public:
 	RenderContext(void);
 	~RenderContext(void);
 
+	static void				ContextComputeRenderFunc(RenderNode* pNode);
 	static void				ContextSharedRenderFunc(RenderNode* pNode);
 	static void				Context2DFlatRenderFunc(RenderNode* pNode);
 	static void				Context3DFlatRenderFunc(RenderNode* pNode);

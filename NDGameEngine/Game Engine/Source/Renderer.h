@@ -94,6 +94,9 @@ public:
 	static void									SetRenderOptionsData(int bViewGBufferDiffuse, int bViewGBufferSpecular, int bViewGBufferNormal, int bViewGBufferDepth, int bViewGBufferEmissive, int bViewLightingOnly);
 	static ConstantBuffer<cbRenderOptions>*		m_pRenderOptionsCBuffer;
 
+	static ID3D11Buffer*						m_pUnorderedBuffer;
+	static ID3D11UnorderedAccessView*			m_pUAV;
+
 	static void									SetDirLightData(DirLightStruct* pDirLight);
 	static ConstantBuffer<cbDirectionalLight>*	m_pDirLightCBuffer;
 	static void									SetPointLightData(PointLightStruct* pPointLight);
